@@ -2,10 +2,14 @@ import {createProfileTemplate} from './components/profile.js';
 import {createMenuTemplate} from './components/menu.js';
 import {createSortTemplate} from './components/sort.js';
 import {createShowMoretempalte} from './components/show-more.js';
-import {createFilmsTemplate, createFilmsListTemplate, createFilmsTopRatedTemplate, createFilmsMostCommentedTemplate, createFimlCardTemplate, createFilmDetailtemplate} from './components/films';
+import {createFilmsTemplate, createFilmsListTemplate, createFilmsTopRatedTemplate, createFilmsMostCommentedTemplate, createFimlCardTemplate} from './components/films';
+import {createFilmDetailtemplate} from './components/film-detail';
 
 const COUNT_FILMS = 5;
 const COUNT_FILMS_EXTRA = 2;
+
+const headerContainer = document.querySelector(`.header`);
+const mainContainer = document.querySelector(`.main`);
 
 const renderItem = (container, template, place = `beforeend`) => {
   container.insertAdjacentHTML(place, template);
@@ -19,11 +23,7 @@ const getFilms = (count) => {
   return fimlsTemplate;
 };
 
-const headerContainer = document.querySelector(`.header`);
-
 renderItem(headerContainer, createProfileTemplate());
-
-const mainContainer = document.querySelector(`.main`);
 
 renderItem(mainContainer, createMenuTemplate());
 renderItem(mainContainer, createSortTemplate());
