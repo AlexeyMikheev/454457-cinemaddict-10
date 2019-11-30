@@ -1,4 +1,6 @@
 
+import {getFormatedDuration, getEllipsisDescription, getFormatedComments} from '../utils.js';
+
 const createFilmsTemplate = () =>
   `<section class="films"></section>`;
 
@@ -20,23 +22,43 @@ const createFilmsMostCommentedTemplate = () =>
     <div class="films-list__container"></div>
   </section/`;
 
-const createFimlCardTemplate = () =>
-  `<article class="film-card">
-  <h3 class="film-card__title">The Man with the Golden Arm</h3>
-  <p class="film-card__rating">9.0</p>
+const createFimlCardTemplate = (filmCard) => {
+
+  const {title, rating, year, duration, genre, poster, description, comments, isFavorite, IsWatched} = filmCard;
+
+  const formatedDuration = getFormatedDuration(duration);
+  const formatedDescription = getEllipsisDescription(description);
+  const formatedComments = getFormatedComments(comments);
+
+  const activeClass = isFavorite || IsWatched ? `film-card__controls-item--active` : ``;
+
+  return `<article class="film-card">
+  <h3 class="film-card__title">${title}</h3>
+  <p class="film-card__rating">${rating}</p>
   <p class="film-card__info">
-    <span class="film-card__year">1955</span>
-    <span class="film-card__duration">1h 59m</span>
-    <span class="film-card__genre">Drama</span>
+    <span class="film-card__year">${year}</span>
+    <span class="film-card__duration">${formatedDuration}</span>
+    <span class="film-card__genre">${genre}</span>
   </p>
-  <img src="./images/posters/the-man-with-the-golden-arm.jpg" alt="" class="film-card__poster">
-  <p class="film-card__description">Frankie Machine (Frank Sinatra) is released from the federal Narcotic Farm in Lexington, Kentucky with a set of drums and a new outlook on…</p>
-  <a class="film-card__comments">18 comments</a>
+  <img src="./images/posters/${poster}" alt="" class="film-card__poster">
+  <p class="film-card__description">${formatedDescription}</p>
+  <a class="film-card__comments">${formatedComments}</a>
   <form class="film-card__controls">
     <button class="film-card__controls-item button film-card__controls-item--add-to-watchlist">Add to watchlist</button>
-    <button class="film-card__controls-item button film-card__controls-item--mark-as-watched  film-card__controls-item--active">Mark as watched</button>
-    <button class="film-card__controls-item button film-card__controls-item--favorite">Mark as favorite</button>
+    <button class="film-card__controls-item button film-card__controls-item--mark-as-watched ${activeClass} film-card__controls-item--active">Mark as watched</button>
+    <button class="film-card__controls-item button film-card__controls-item--favorite ${activeClass}">Mark as favorite</button>
   </form>
 </article>`;
+};
 
-export {createFilmsTemplate, createFilmsListTemplate, createFilmsTopRatedTemplate, createFilmsMostCommentedTemplate, createFimlCardTemplate};
+const createFimlsCardsTemplates = (filmsCards) =>{
+  let fimlCardsTemplates = ``;
+
+  filmsCards.forEach((filmsCard) => {
+    fimlCardsTemplates += createFimlCardTemplate(filmsCard);
+  });
+
+  return fimlCardsTemplates;
+};
+
+export {createFilmsTemplate, createFilmsListTemplate, createFilmsTopRatedTemplate, createFilmsMostCommentedTemplate, createFimlsCardsTemplates};
