@@ -12,4 +12,12 @@ const ProfileRating = {
   MOVIE_BUFF: {min: 21, name: `movie buff`},
 };
 
-export {Filters, ProfileRating};
+const Emotion = {
+  SMILE: `smile`,
+  SLEEPING: `sleeping`,
+  PUKE: `puke`,
+  ANGRY: `angry`
+
+};
+
+export {Filters, ProfileRating, Emotion};

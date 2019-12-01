@@ -34,8 +34,8 @@ const getEllipsisDescription = (description) =>{
   return (description.length > MAX_DESCRIPTION_LENGTH) ? `${description.substring(MIN_DESCRIPTION_LENGTH, (MAX_DESCRIPTION_LENGTH - DESCRIPTION_SPACE))}...` : description;
 };
 
-const getFormatedComments = (commentsCount) =>{
-  return commentsCount > MANY_COMMENTS_COUNT ? `${commentsCount} comments` : `${commentsCount} comment`;
+const getFormatedComments = (comments) =>{
+  return comments.length > MANY_COMMENTS_COUNT ? `${comments.length} comments` : `${comments.length} comment`;
 };
 
 const getFormatedRating = (totalWatchedFilms) =>{

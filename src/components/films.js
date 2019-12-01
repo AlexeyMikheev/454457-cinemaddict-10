@@ -24,11 +24,13 @@ const createFilmsMostCommentedTemplate = () =>
 
 const createFilmCardTemplate = (filmCard) => {
 
-  const {title, rating, year, duration, genre, poster, description, comments, IsWaitingWatched, IsWatched, isFavorite} = filmCard;
+  const {title, rating, releaseDate, duration, genres, poster, description, comments, IsWaitingWatched, IsWatched, isFavorite} = filmCard;
 
+  const releaseYear = releaseDate.getFullYear();
   const formatedDuration = getFormatedDuration(duration);
   const formatedDescription = getEllipsisDescription(description);
   const formatedComments = getFormatedComments(comments);
+  const formatedGenres = genres.length > 0 ? genres[0] : ``;
 
   const activeClass = isFavorite || IsWatched || IsWaitingWatched ? `film-card__controls-item--active` : ``;
 
@@ -36,9 +38,9 @@ const createFilmCardTemplate = (filmCard) => {
   <h3 class="film-card__title">${title}</h3>
   <p class="film-card__rating">${rating}</p>
   <p class="film-card__info">
-    <span class="film-card__year">${year}</span>
+    <span class="film-card__year">${releaseYear}</span>
     <span class="film-card__duration">${formatedDuration}</span>
-    <span class="film-card__genre">${genre}</span>
+    <span class="film-card__genre">${formatedGenres}</span>
   </p>
   <img src="./images/posters/${poster}" alt="" class="film-card__poster">
   <p class="film-card__description">${formatedDescription}</p>

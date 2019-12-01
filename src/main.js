@@ -12,7 +12,7 @@ import {generateFilters} from './mock/filters.js';
 
 const COUNT_FILMS = 15;
 const ONE_TASKS_PAGE_COUNT = 5;
-const COUNT_FILMS_EXTRA = 2;
+// const COUNT_FILMS_EXTRA = 2;
 
 const headerContainer = document.querySelector(`.header`);
 const mainContainer = document.querySelector(`.main`);
@@ -106,7 +106,7 @@ const addMoreButton = () => {
     const moreButton = filmsList.querySelector(`.films-list__show-more`);
     moreButton.addEventListener(`click`, () => {
       currentPage++;
-      renderFilmsCardsByPageNumber(displayedFilmsCards, currentPage);
+      renderFilmsCardsByPageNumber(filmsCards, currentPage);
 
       if (!getMoreButtonVisibility()) {
         moreButton.remove();
@@ -139,11 +139,11 @@ const filmsListContainer = filmsContainer.querySelector(`.films-list .films-list
 let currentPage = 0;
 
 const filmsCards = createFilmCards(COUNT_FILMS);
-const [editableDisplayedFilmCard, ...displayedFilmsCards] = filmsCards;
+// const [editableDisplayedFilmCard, ...displayedFilmsCards] = filmsCards;
 // renderItem(tasksContainer, createTaskEditTemplate(editableDisplayedTask));
 
-refreshFilters(displayedFilmsCards);
-renderFilmsCardsByPageNumber(displayedFilmsCards, currentPage);
+refreshFilters(filmsCards);
+renderFilmsCardsByPageNumber(filmsCards, currentPage);
 
 addMoreButton();
 
@@ -164,6 +164,6 @@ renderItem(headerContainer, createProfileTemplate(totalWatchedFilms));
 
 addStatistic();
 
-//renderItem(footer, createFilmDetailtemplate(), `afterend`);
+renderItem(footer, createFilmDetailtemplate(filmsCards[0]), `afterend`);
 
 
