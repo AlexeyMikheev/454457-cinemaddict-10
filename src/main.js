@@ -6,6 +6,7 @@ import {createFilmsTemplate, createFilmsListTemplate, createFilmsTopRatedTemplat
 import {createFilmDetailtemplate} from './components/film-detail';
 
 import {createFilmCards} from './mock/filmCard.js';
+import {generateFilters} from './mock/filters.js';
 
 const COUNT_FILMS = 15;
 const COUNT_FILMS_EXTRA = 2;
@@ -19,7 +20,8 @@ const renderItem = (container, template, place = `beforeend`) => {
 
 renderItem(headerContainer, createProfileTemplate());
 
-renderItem(mainContainer, createMenuTemplate());
+const filters = generateFilters();
+renderItem(mainContainer, createMenuTemplate(filters));
 renderItem(mainContainer, createSortTemplate());
 
 renderItem(mainContainer, createFilmsTemplate());
@@ -32,7 +34,7 @@ const filmsList = filmsContainer.querySelector(`.films-list`);
 renderItem(filmsList, createShowMoretempalte());
 
 const filmsListContainer = filmsContainer.querySelector(`.films-list .films-list__container`);
-debugger;
+
 const filmsCards = createFilmCards(COUNT_FILMS);
 renderItem(filmsListContainer, createFimlsCardsTemplates(filmsCards));
 
