@@ -1,4 +1,4 @@
-import {getFormatedDuration} from '../utils.js';
+import {getFormatedDuration, getFormatedDiffrenceDate} from '../utils.js';
 
 const createGenresTemplate = (genres) =>{
   return genres.map((genre)=>{
@@ -8,8 +8,12 @@ const createGenresTemplate = (genres) =>{
 
 const createCommentsTemplate = (comments) =>{
   if (comments.length > 0) {
+
+    let currentDate = new Date();
+
     const commentsContentTemplate = comments.map((comment)=>{
       const {emotion, text, author, commentDate} = comment;
+      const formatedDifferenceDate = getFormatedDiffrenceDate(commentDate, currentDate);
 
       return `<li class="film-details__comment">
               <span class="film-details__comment-emoji">
@@ -19,7 +23,7 @@ const createCommentsTemplate = (comments) =>{
                 <p class="film-details__comment-text">${text}</p>
                 <p class="film-details__comment-info">
                   <span class="film-details__comment-author">${author}</span>
-                  <span class="film-details__comment-day">2 days ago</span>
+                  <span class="film-details__comment-day">${formatedDifferenceDate}</span>
                   <button class="film-details__comment-delete">Delete</button>
                 </p>
               </div>

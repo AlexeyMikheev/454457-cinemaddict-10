@@ -1,4 +1,4 @@
-import {ProfileRating} from './const.js';
+import {ProfileRating, Months} from './const.js';
 
 const MINUTE_IN_HOUR = 60;
 
@@ -7,6 +7,8 @@ const MAX_DESCRIPTION_LENGTH = 140;
 const DESCRIPTION_SPACE = 1;
 
 const MANY_COMMENTS_COUNT = 1;
+
+const ONE_DAY = 86400000;
 
 const getHours = (duration) => {
   return Math.floor(duration / MINUTE_IN_HOUR);
@@ -28,6 +30,33 @@ const getFormatedDuration = (duration) => {
   }
 
   return formatedDuration;
+};
+
+const getFormatedValue = (value) => {
+  return value < 10 ? `0${value}` : String(value);
+};
+
+export const getFormatCommentDate = (date) => {
+  const year = date.getFullYear();
+  const month = date.getMonth();
+  const day = date.getDate();
+  const hours = getFormatedValue(date.getHours() % 12);
+  const minutes = getFormatedValue(date.getMinutes());
+
+  return `${year}/${month}/${day} ${hours}:${minutes}`;
+};
+
+const getFormatedDiffrenceDate = (date, currentDate) => {
+  const differenceTimestamp = currentDate.valueOf() - date.valueOf();
+  if (differenceTimestamp < ONE_DAY) {
+    return `Today`;
+  } else {
+    const differenceDays = differenceTimestamp % ONE_DAY;
+    if (differenceDays > 3) {
+      return getFormatCommentDate(date);
+    }
+    return (differenceDays > 1) ? `${differenceDays} days ago` : `${differenceDays} day ago`;
+  }
 };
 
 const getEllipsisDescription = (description) =>{
@@ -52,4 +81,4 @@ const getFormatedRating = (totalWatchedFilms) =>{
   return formatedProfileRating;
 };
 
-export {getFormatedDuration, getEllipsisDescription, getFormatedComments, getFormatedRating};
+export {getFormatedDuration, getEllipsisDescription, getFormatedComments, getFormatedRating, getFormatedDiffrenceDate};
