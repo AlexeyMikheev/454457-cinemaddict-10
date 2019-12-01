@@ -2,7 +2,7 @@ import {createProfileTemplate} from './components/profile.js';
 import {createMenuTemplate} from './components/menu.js';
 import {createSortTemplate} from './components/sort.js';
 import {createMoreTemplate} from './components/show-more.js';
-import {createFilmsTemplate, createFilmsListTemplate, createFilmsTopRatedTemplate, createFilmsMostCommentedTemplate, createFimlsCardsTemplates} from './components/films';
+import {createFilmsTemplate, createFilmsListTemplate, createFilmsTopRatedTemplate, createFilmsMostCommentedTemplate, createFilmsCardsTemplates} from './components/films';
 import {createFilmDetailtemplate} from './components/film-detail';
 import {createFooterStatisticTemplate} from './components/footer-statistic.js';
 
@@ -24,20 +24,37 @@ const renderItem = (container, template, place = `beforeend`) => {
   container.insertAdjacentHTML(place, template);
 };
 
-const getFimlsCardsByPageNumber = (fimlsCards, pageNumber, countTasks = ONE_TASKS_PAGE_COUNT) =>{
-  const startIndex = pageNumber * countTasks;
-  const endIndex = startIndex + countTasks;
-  return fimlsCards.slice(startIndex, endIndex);
+const getSortedByDescFilms = (films, propertyName) =>{
+  return films.slice().sort((prevFilm, nextFilm)=>{
+    if (prevFilm[propertyName] > nextFilm[propertyName]) {
+      return -1;
+    }
+    if (prevFilm[propertyName] < nextFilm[propertyName]) {
+      return 1;
+    }
+    return 0;
+  });
 };
 
-const fillFiltersValues = (filters, fimlsCards) =>{
+const getTopFilmsByProperty = (films, propertyName) => {
+  const [first = null, second = null] = getSortedByDescFilms(films, propertyName);
+  return [first, second];
+};
+
+const getFimlsCardsByPageNumber = (filmsCards, pageNumber, countTasks = ONE_TASKS_PAGE_COUNT) =>{
+  const startIndex = pageNumber * countTasks;
+  const endIndex = startIndex + countTasks;
+  return filmsCards.slice(startIndex, endIndex);
+};
+
+const fillFiltersValues = (filters, filmsCards) =>{
   filters.forEach((filter)=>{
     if (filter.title === Filters.ALL.title) {
-      filter.count += fimlsCards.length;
+      filter.count += filmsCards.length;
     }
 
     if (filter.title === Filters.WATCHLIST.title) {
-      filter.count = fimlsCards.reduce((total, filmCard) =>{
+      filter.count = filmsCards.reduce((total, filmCard) =>{
         if (filmCard.IsWaitingWatched) {
           total++;
         }
@@ -46,7 +63,7 @@ const fillFiltersValues = (filters, fimlsCards) =>{
     }
 
     if (filter.title === Filters.HISTORY.title) {
-      totalWatchedFilms = filter.count = fimlsCards.reduce((total, filmCard) =>{
+      totalWatchedFilms = filter.count = filmsCards.reduce((total, filmCard) =>{
         if (filmCard.IsWatched) {
           total++;
         }
@@ -55,7 +72,7 @@ const fillFiltersValues = (filters, fimlsCards) =>{
     }
 
     if (filter.title === Filters.FAVORITES.title) {
-      filter.count = fimlsCards.reduce((total, filmCard) =>{
+      filter.count = filmsCards.reduce((total, filmCard) =>{
         if (filmCard.isFavorite) {
           total++;
         }
@@ -73,7 +90,7 @@ const refreshFilters = (pageTasks) =>{
 const renderFilmsCardsByPageNumber = (fimlsCards, currentTasksPage) =>{
   const pageFimlsCards = getFimlsCardsByPageNumber(fimlsCards, currentTasksPage);
 
-  renderItem(filmsListContainer, createFimlsCardsTemplates(pageFimlsCards));
+  renderItem(filmsListContainer, createFilmsCardsTemplates(pageFimlsCards));
 };
 
 const getMoreButtonVisibility = () => {
@@ -130,16 +147,18 @@ renderFilmsCardsByPageNumber(displayedFilmsCards, currentPage);
 
 addMoreButton();
 
-// renderItem(filmsContainer, createFilmsTopRatedTemplate());
-// renderItem(filmsContainer, createFilmsMostCommentedTemplate());
+renderItem(filmsContainer, createFilmsTopRatedTemplate());
+renderItem(filmsContainer, createFilmsMostCommentedTemplate());
 
-// const filmsExtraContainers = filmsContainer.querySelectorAll(`.films-list--extra .films-list__container`);
+const filmsExtraContainers = filmsContainer.querySelectorAll(`.films-list--extra .films-list__container`);
 
-// const filmsTopRatedContainer = filmsExtraContainers[0];
-// renderItem(filmsTopRatedContainer, getFilms(COUNT_FILMS_EXTRA));
+const filmsTopRatedContainer = filmsExtraContainers[0];
+const topRatedFilms = getTopFilmsByProperty(filmsCards, `rating`);
+renderItem(filmsTopRatedContainer, createFilmsCardsTemplates(topRatedFilms));
 
-// const filmsMostCommentedContainer = filmsExtraContainers[1];
-// renderItem(filmsMostCommentedContainer, getFilms(COUNT_FILMS_EXTRA));
+const filmsMostCommentedContainer = filmsExtraContainers[1];
+const mostCommentFilms = getTopFilmsByProperty(filmsCards, `comments`);
+renderItem(filmsMostCommentedContainer, createFilmsCardsTemplates(mostCommentFilms));
 
 renderItem(headerContainer, createProfileTemplate(totalWatchedFilms));
 

@@ -22,7 +22,7 @@ const createFilmsMostCommentedTemplate = () =>
     <div class="films-list__container"></div>
   </section/`;
 
-const createFimlCardTemplate = (filmCard) => {
+const createFilmCardTemplate = (filmCard) => {
 
   const {title, rating, year, duration, genre, poster, description, comments, IsWaitingWatched, IsWatched, isFavorite} = filmCard;
 
@@ -51,14 +51,14 @@ const createFimlCardTemplate = (filmCard) => {
 </article>`;
 };
 
-const createFimlsCardsTemplates = (filmsCards) =>{
+const createFilmsCardsTemplates = (filmsCards) =>{
   let fimlCardsTemplates = ``;
 
   filmsCards.forEach((filmsCard) => {
-    fimlCardsTemplates += createFimlCardTemplate(filmsCard);
+    fimlCardsTemplates += createFilmCardTemplate(filmsCard);
   });
 
   return fimlCardsTemplates;
 };
 
-export {createFilmsTemplate, createFilmsListTemplate, createFilmsTopRatedTemplate, createFilmsMostCommentedTemplate, createFimlsCardsTemplates};
+export {createFilmsTemplate, createFilmsListTemplate, createFilmsTopRatedTemplate, createFilmsMostCommentedTemplate, createFilmsCardsTemplates};
