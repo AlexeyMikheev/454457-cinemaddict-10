@@ -76,6 +76,13 @@ const createRandomItems = (items, min, max) => {
 
 const createfilmCard = () => {
 
+  let isWaitingWatched = getRandomBoolean();
+  let isWatched = getRandomBoolean();
+
+  if (isWatched) {
+    isWaitingWatched = false;
+  }
+
   return {
     title: getRandomItem(FimlsNames),
     rating: getRandomDecimal(MIN_RATING_COUNT, MAX_RATING_COUNT),
@@ -86,7 +93,8 @@ const createfilmCard = () => {
     description: createRandomItems(DESCRIPTION.split(`.`), MIN_DESCRIPTION_COUNT, MAX_DESCRIPTION_COUNT).join(` `),
     comments: getRandomNumber(MIN_COMMENTS_COUNT, MAX_COMMENTS_COUNT),
     isFavorite: getRandomBoolean(),
-    IsWatched: getRandomBoolean()
+    IsWaitingWatched: isWaitingWatched,
+    IsWatched: isWatched
   };
 };
 
