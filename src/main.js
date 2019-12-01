@@ -1,9 +1,10 @@
 import {createProfileTemplate} from './components/profile.js';
 import {createMenuTemplate} from './components/menu.js';
 import {createSortTemplate} from './components/sort.js';
-import {createShowMoretempalte} from './components/show-more.js';
+import {createMoreTemplate} from './components/show-more.js';
 import {createFilmsTemplate, createFilmsListTemplate, createFilmsTopRatedTemplate, createFilmsMostCommentedTemplate, createFimlsCardsTemplates} from './components/films';
 import {createFilmDetailtemplate} from './components/film-detail';
+import {createFooterStatisticTemplate} from './components/footer-statistic.js';
 
 import {Filters} from './const.js';
 import {createFilmCards} from './mock/filmCard.js';
@@ -15,6 +16,9 @@ const COUNT_FILMS_EXTRA = 2;
 
 const headerContainer = document.querySelector(`.header`);
 const mainContainer = document.querySelector(`.main`);
+const footer = document.querySelector(`.footer`);
+
+let totalWatchedFilms = 0;
 
 const renderItem = (container, template, place = `beforeend`) => {
   container.insertAdjacentHTML(place, template);
@@ -42,7 +46,7 @@ const fillFiltersValues = (filters, fimlsCards) =>{
     }
 
     if (filter.title === Filters.HISTORY.title) {
-      filter.count = fimlsCards.reduce((total, filmCard) =>{
+      totalWatchedFilms = filter.count = fimlsCards.reduce((total, filmCard) =>{
         if (filmCard.IsWatched) {
           total++;
         }
@@ -69,11 +73,38 @@ const refreshFilters = (pageTasks) =>{
 const renderFilmsCardsByPageNumber = (fimlsCards, currentTasksPage) =>{
   const pageFimlsCards = getFimlsCardsByPageNumber(fimlsCards, currentTasksPage);
 
-  refreshFilters(pageFimlsCards);
   renderItem(filmsListContainer, createFimlsCardsTemplates(pageFimlsCards));
 };
 
-renderItem(headerContainer, createProfileTemplate());
+const getMoreButtonVisibility = () => {
+  return (currentPage + 1) * ONE_TASKS_PAGE_COUNT < filmsCards.length;
+};
+
+const addMoreButton = () => {
+  const filmsList = filmsContainer.querySelector(`.films-list`);
+
+  if (getMoreButtonVisibility()) {
+    renderItem(filmsList, createMoreTemplate());
+
+    const moreButton = filmsList.querySelector(`.films-list__show-more`);
+    moreButton.addEventListener(`click`, () => {
+      currentPage++;
+      renderFilmsCardsByPageNumber(displayedFilmsCards, currentPage);
+
+      if (!getMoreButtonVisibility()) {
+        moreButton.remove();
+      }
+
+    });
+  }
+};
+
+const addStatistic = () =>{
+  const footerStatistic = document.querySelector(`.footer .footer__statistics`);
+  footerStatistic.remove();
+
+  renderItem(footer, createFooterStatisticTemplate(filmsCards.length), `beforeEnd`);
+};
 
 const filters = generateFilters();
 renderItem(mainContainer, createMenuTemplate(filters));
@@ -83,23 +114,21 @@ renderItem(mainContainer, createSortTemplate());
 renderItem(mainContainer, createFilmsTemplate());
 
 const filmsContainer = mainContainer.querySelector(`.films`);
-
 renderItem(filmsContainer, createFilmsListTemplate());
 
-const filmsList = filmsContainer.querySelector(`.films-list`);
-renderItem(filmsList, createShowMoretempalte());
 
 const filmsListContainer = filmsContainer.querySelector(`.films-list .films-list__container`);
 
-const filmsCards = createFilmCards(COUNT_FILMS);
-// renderItem(filmsListContainer, createFimlsCardsTemplates(filmsCards));
-
 let currentPage = 0;
 
+const filmsCards = createFilmCards(COUNT_FILMS);
 const [editableDisplayedFilmCard, ...displayedFilmsCards] = filmsCards;
 // renderItem(tasksContainer, createTaskEditTemplate(editableDisplayedTask));
 
+refreshFilters(displayedFilmsCards);
 renderFilmsCardsByPageNumber(displayedFilmsCards, currentPage);
+
+addMoreButton();
 
 // renderItem(filmsContainer, createFilmsTopRatedTemplate());
 // renderItem(filmsContainer, createFilmsMostCommentedTemplate());
@@ -112,6 +141,10 @@ renderFilmsCardsByPageNumber(displayedFilmsCards, currentPage);
 // const filmsMostCommentedContainer = filmsExtraContainers[1];
 // renderItem(filmsMostCommentedContainer, getFilms(COUNT_FILMS_EXTRA));
 
-// const footer = document.querySelector(`.footer`);
+renderItem(headerContainer, createProfileTemplate(totalWatchedFilms));
 
-// renderItem(footer, createFilmDetailtemplate(), `afterend`);
+addStatistic();
+
+//renderItem(footer, createFilmDetailtemplate(), `afterend`);
+
+

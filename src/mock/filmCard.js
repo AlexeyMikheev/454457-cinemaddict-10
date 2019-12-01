@@ -100,7 +100,7 @@ const createfilmCard = () => {
 
 const createFilmCards = (count) => {
   let filmsCards = [];
-  for (let i = 0; i <= count; i++) {
+  for (let i = 0; i < count; i++) {
     filmsCards.push(createfilmCard());
   }
   return filmsCards;
