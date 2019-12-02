@@ -10,6 +10,7 @@ const createCommentsTemplate = (comments) =>{
   if (comments.length > 0) {
 
     let currentDate = new Date();
+    const commentsCount = comments.length;
 
     const commentsContentTemplate = comments.map((comment)=>{
       const {emotion, text, author, commentDate} = comment;
@@ -30,7 +31,7 @@ const createCommentsTemplate = (comments) =>{
             </li>`;
     }).join(`\n`);
 
-    return `<h3 class="film-details__comments-title">Comments <span class="film-details__comments-count">4</span></h3>
+    return `<h3 class="film-details__comments-title">Comments <span class="film-details__comments-count">${commentsCount}</span></h3>
   <ul class="film-details__comments-list">${commentsContentTemplate}</ul>`;
   }
   return ``;
@@ -46,7 +47,6 @@ const createFilmDetailtemplate = (filmCard) => {
   const formatedDuration = getFormatedDuration(duration);
   const genresTitle = genres.length > 1 ? `genres` : `genre`;
   const genresTemplate = createGenresTemplate(genres);
-  const commentsCount = comments.length;
   const commentsTemplate = createCommentsTemplate(comments);
 
   return `<section class="film-details">
