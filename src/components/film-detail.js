@@ -1,4 +1,4 @@
-import {getFormatedDuration, getFormatedDiffrenceDate} from '../utils.js';
+import {getFormatedDuration, getFormatedDiffrenceDate, getFormatedReleaseDate} from '../utils.js';
 
 const createGenresTemplate = (genres) =>{
   return genres.map((genre)=>{
@@ -50,7 +50,7 @@ const createFilmDetailtemplate = (filmCard) => {
 
   const formatedWriters = writers.join(`, `);
   const formatedActors = actors.join(`, `);
-  const formatedReleaseDate = releaseDate.toString(`DD MMMM YYYY`);
+  const formatedReleaseDate = getFormatedReleaseDate(releaseDate);
   const formatedDuration = getFormatedDuration(duration);
   const genresTitle = genres.length > 1 ? `genres` : `genre`;
   const genresTemplate = createGenresTemplate(genres);
