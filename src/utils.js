@@ -1,4 +1,4 @@
-import {ProfileRating} from './const.js';
+import {ProfileRating, Months} from './const.js';
 
 const MINUTE_IN_HOUR = 60;
 
@@ -36,12 +36,25 @@ const getFormatedValue = (value) => {
   return value < 10 ? `0${value}` : String(value);
 };
 
-export const getFormatCommentDate = (date) => {
+const getDateValues = (date) => {
   const year = date.getFullYear();
   const month = date.getMonth();
   const day = date.getDate();
-  const hours = getFormatedValue(date.getHours() % 12);
+  const hours = getFormatedValue(date.getHours());
   const minutes = getFormatedValue(date.getMinutes());
+
+  return {year, month, day, hours, minutes};
+};
+
+const getFormatedReleaseDate = (date) => {
+
+  const {year, month, day} = getDateValues(date);
+
+  return `${year} ${Months[month]} ${day}`;
+};
+
+export const getFormatedCommentDate = (date) => {
+  const {year, month, day, hours, minutes} = getDateValues(date);
 
   return `${year}/${month}/${day} ${hours}:${minutes}`;
 };
@@ -53,7 +66,7 @@ const getFormatedDiffrenceDate = (date, currentDate) => {
   } else {
     const differenceDays = differenceTimestamp % ONE_DAY;
     if (differenceDays > 3) {
-      return getFormatCommentDate(date);
+      return getFormatedCommentDate(date);
     }
     return (differenceDays > 1) ? `${differenceDays} days ago` : `${differenceDays} day ago`;
   }
@@ -81,4 +94,4 @@ const getFormatedRating = (totalWatchedFilms) =>{
   return formatedProfileRating;
 };
 
-export {getFormatedDuration, getEllipsisDescription, getFormatedComments, getFormatedRating, getFormatedDiffrenceDate};
+export {getFormatedDuration, getEllipsisDescription, getFormatedComments, getFormatedRating, getFormatedDiffrenceDate, getFormatedReleaseDate};
