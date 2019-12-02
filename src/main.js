@@ -12,7 +12,6 @@ import {generateFilters} from './mock/filters.js';
 
 const COUNT_FILMS = 15;
 const ONE_TASKS_PAGE_COUNT = 5;
-// const COUNT_FILMS_EXTRA = 2;
 
 const headerContainer = document.querySelector(`.header`);
 const mainContainer = document.querySelector(`.main`);
@@ -139,8 +138,6 @@ const filmsListContainer = filmsContainer.querySelector(`.films-list .films-list
 let currentPage = 0;
 
 const filmsCards = createFilmCards(COUNT_FILMS);
-// const [editableDisplayedFilmCard, ...displayedFilmsCards] = filmsCards;
-// renderItem(tasksContainer, createTaskEditTemplate(editableDisplayedTask));
 
 refreshFilters(filmsCards);
 renderFilmsCardsByPageNumber(filmsCards, currentPage);

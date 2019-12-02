@@ -3,7 +3,7 @@ import {getFormatedDuration, getFormatedDiffrenceDate} from '../utils.js';
 const createGenresTemplate = (genres) =>{
   return genres.map((genre)=>{
     return `<span class="film-details__genre">${genre}</span>`;
-  }).join(``);
+  }).join(`\n`);
 };
 
 const createCommentsTemplate = (comments) =>{
@@ -28,7 +28,7 @@ const createCommentsTemplate = (comments) =>{
                 </p>
               </div>
             </li>`;
-    }).join(``);
+    }).join(`\n`);
 
     return `<h3 class="film-details__comments-title">Comments <span class="film-details__comments-count">4</span></h3>
   <ul class="film-details__comments-list">${commentsContentTemplate}</ul>`;
@@ -38,21 +38,16 @@ const createCommentsTemplate = (comments) =>{
 
 const createFilmDetailtemplate = (filmCard) => {
 
-  // const {title, rating, releaseDate, duration, genre, poster, description, comments, IsWaitingWatched, IsWatched, isFavorite , age} = filmCard;
-
   const {poster, age, title, origianlTitle, rating, producer, writers, actors, duration, country, releaseDate, description, genres, comments} = filmCard;
 
   const formatedWriters = writers.join(`, `);
   const formatedActors = actors.join(`, `);
   const formatedReleaseDate = releaseDate.toString(`DD MMMM YYYY`);
   const formatedDuration = getFormatedDuration(duration);
-  // const formatedComments = getFormatedComments(comments);
   const genresTitle = genres.length > 1 ? `genres` : `genre`;
   const genresTemplate = createGenresTemplate(genres);
   const commentsCount = comments.length;
   const commentsTemplate = createCommentsTemplate(comments);
-  // const activeClass = isFavorite || IsWatched || IsWaitingWatched ? `film-card__controls-item--active` : ``;
-
 
   return `<section class="film-details">
   <form class="film-details__inner" action="" method="get">
