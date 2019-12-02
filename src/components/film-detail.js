@@ -37,6 +37,13 @@ const createCommentsTemplate = (comments) =>{
   return ``;
 };
 
+const removeFilmDetail = () =>{
+  const filmDetails = document.querySelector(`.film-details`);
+  if (filmDetails !== null) {
+    filmDetails.remove();
+  }
+};
+
 const createFilmDetailtemplate = (filmCard) => {
 
   const {poster, age, title, origianlTitle, rating, producer, writers, actors, duration, country, releaseDate, description, genres, comments} = filmCard;
@@ -165,4 +172,4 @@ const createFilmDetailtemplate = (filmCard) => {
 </section>`;
 };
 
-export {createFilmDetailtemplate};
+export {createFilmDetailtemplate, removeFilmDetail};

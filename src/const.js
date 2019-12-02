@@ -23,4 +23,6 @@ const Months = [`January`, `February`, `March`, `April`, `May`, `June`,
   `July`, `August`, `September`, `October`, `November`, `December`
 ];
 
-export {Filters, ProfileRating, Emotion, Months};
+const ESC_KEY = 27;
+
+export {Filters, ProfileRating, Emotion, Months, ESC_KEY};

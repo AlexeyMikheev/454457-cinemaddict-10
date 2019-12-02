@@ -1,4 +1,4 @@
-import {ProfileRating, Months} from './const.js';
+import {ProfileRating} from './const.js';
 
 const MINUTE_IN_HOUR = 60;
 

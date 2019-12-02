@@ -3,10 +3,10 @@ import {createMenuTemplate} from './components/menu.js';
 import {createSortTemplate} from './components/sort.js';
 import {createMoreTemplate} from './components/show-more.js';
 import {createFilmsTemplate, createFilmsListTemplate, createFilmsTopRatedTemplate, createFilmsMostCommentedTemplate, createFilmsCardsTemplates} from './components/films';
-import {createFilmDetailtemplate} from './components/film-detail';
+import {createFilmDetailtemplate, removeFilmDetail} from './components/film-detail';
 import {createFooterStatisticTemplate} from './components/footer-statistic.js';
 
-import {Filters} from './const.js';
+import {Filters, ESC_KEY} from './const.js';
 import {createFilmCards} from './mock/filmCard.js';
 import {generateFilters} from './mock/filters.js';
 
@@ -161,6 +161,38 @@ renderItem(headerContainer, createProfileTemplate(totalWatchedFilms));
 
 addStatistic();
 
-renderItem(footer, createFilmDetailtemplate(filmsCards[0]), `afterend`);
+let isFilmDetailOpened = false;
 
+const initCloseFilmDetailEvents = () => {
+  let closeBtn = document.querySelector(`.film-details__close-btn`);
+  closeBtn.addEventListener(`click`, () => {
+    hideFilmDeatils();
+  });
+};
 
+const hideFilmDeatils = () =>{
+  if (isFilmDetailOpened) {
+    removeFilmDetail();
+    isFilmDetailOpened = false;
+  }
+};
+
+const showFilmDeatils = (filmsCard) =>{
+  hideFilmDeatils();
+
+  renderItem(footer, createFilmDetailtemplate(filmsCard), `afterend`);
+  initCloseFilmDetailEvents();
+  isFilmDetailOpened = true;
+};
+
+showFilmDeatils(filmsCards[0]);
+
+const initDocumentEvents = function () {
+  document.addEventListener(`keydown`, function (evt) {
+    if (evt.keyCode === ESC_KEY) {
+      hideFilmDeatils();
+    }
+  });
+};
+
+initDocumentEvents();
