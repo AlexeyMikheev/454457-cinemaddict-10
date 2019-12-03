@@ -28,4 +28,9 @@ const ESC_KEY = 27;
 const COUNT_FILMS = 15;
 const ONE_TASKS_PAGE_COUNT = 5;
 
-export {Filters, ProfileRating, Emotion, MONTHS, ESC_KEY, COUNT_FILMS, ONE_TASKS_PAGE_COUNT};
+const RenderPosition = {
+  AFTERBEGIN: `afterbegin`,
+  BEFOREEND: `beforeend`
+};
+
+export {Filters, ProfileRating, Emotion, MONTHS, ESC_KEY, COUNT_FILMS, ONE_TASKS_PAGE_COUNT, RenderPosition};

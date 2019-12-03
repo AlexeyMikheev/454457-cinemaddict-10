@@ -1,4 +1,4 @@
-import {ProfileRating, MONTHS, Filters, ONE_TASKS_PAGE_COUNT} from './const.js';
+import {ProfileRating, MONTHS, Filters, ONE_TASKS_PAGE_COUNT, RenderPosition} from './const.js';
 import {createFilmsCardsTemplates} from './components/film.js';
 
 const MINUTE_IN_HOUR = 60;
@@ -167,4 +167,37 @@ const renderFilmsCardsByPageNumber = (container, fimlsCards, currentTasksPage) =
   renderItem(container, createFilmsCardsTemplates(pageFimlsCards));
 };
 
-export {getFormatedDuration, getEllipsisDescription, getFormatedCommentsTitle, getFormatedRating, getFormatedDiffrenceDate, getFormatedReleaseDate, renderItem, getSortedByDescFilms, getTopFilmsByProperty, getFilterValue, renderFilmsCardsByPageNumber};
+export default class Utils {
+  static createElement(template) {
+    const newElement = document.createElement(`div`);
+    newElement.innerHTML = template;
+    return newElement.firstChild;
+  }
+
+  static getFormatedDiffrenceDate(date, currentDate) {
+    const differenceTimestamp = currentDate.valueOf() - date.valueOf();
+    if (differenceTimestamp < ONE_DAY) {
+      return `Today`;
+    }
+
+    const differenceDays = differenceTimestamp % ONE_DAY;
+    if (differenceDays > 3) {
+      return getFormatedCommentDate(date);
+    }
+    return (differenceDays > 1) ? `${differenceDays} days ago` : `${differenceDays} day ago`;
+
+  }
+
+  static render(container, element, place = RenderPosition.BEFOREEND) {
+    switch (place) {
+      case RenderPosition.AFTERBEGIN:
+        container.prepend(element);
+        break;
+      case RenderPosition.BEFOREEND:
+        container.append(element);
+        break;
+    }
+  }
+}
+
+export {getFormatedDuration, getEllipsisDescription, getFormatedCommentsTitle, getFormatedRating, getFormatedDiffrenceDate, getFormatedReleaseDate, renderItem, getSortedByDescFilms, getTopFilmsByProperty, getFilterValue, renderFilmsCardsByPageNumber, Utils};

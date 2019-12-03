@@ -1,17 +1,16 @@
-import {getFormatedDuration, getFormatedReleaseDate} from '../utils.js';
-import {createCommentsTemplate, createNewCommentTemplate} from './comment';
-import {createGenresTemplate} from './genre';
+import {getFormatedDuration, getFormatedReleaseDate, Utils} from '../utils.js';
+import {RenderPosition, ESC_KEY} from '../const.js';
+import Comments from './comments.js';
 
-const removeFilmDetail = () =>{
-  const filmDetails = document.querySelector(`.film-details`);
-  if (filmDetails !== null) {
-    filmDetails.remove();
-  }
+const createGenresTemplate = (genres) => {
+  return genres.map((genre) => {
+    return `<span class="film-details__genre">${genre}</span>`;
+  }).join(`\n`);
 };
 
 const createFilmDetailtemplate = (filmCard) => {
 
-  const {poster, age, title, origianlTitle, rating, producer, writers, actors, duration, country, releaseDate, description, genres, comments} = filmCard;
+  const {poster, age, title, origianlTitle, rating, producer, writers, actors, duration, country, releaseDate, description, genres} = filmCard;
 
   const formatedWriters = writers.join(`, `);
   const formatedActors = actors.join(`, `);
@@ -19,7 +18,6 @@ const createFilmDetailtemplate = (filmCard) => {
   const formatedDuration = getFormatedDuration(duration);
   const genresTitle = genres.length > 1 ? `genres` : `genre`;
   const genresTemplate = createGenresTemplate(genres);
-  const commentsTemplate = createCommentsTemplate(comments);
 
   return `<section class="film-details">
   <form class="film-details__inner" action="" method="get">
@@ -101,12 +99,74 @@ const createFilmDetailtemplate = (filmCard) => {
 
     <div class="form-details__bottom-container">
       <section class="film-details__comments-wrap">
-        ${commentsTemplate}
-        ${createNewCommentTemplate}
+
       </section>
     </div>
   </form>
 </section>`;
 };
 
-export {createFilmDetailtemplate, removeFilmDetail};
+export default class FilmDeatil {
+  constructor(film) {
+    this._film = film;
+
+    this.init();
+  }
+
+  getTamplate() {
+    return this.createFilmDetailtemplate(this._film);
+  }
+
+  init() {
+    this._element = Utils.createElement(this.getTemplate());
+
+    const {comments} = this._film;
+
+    if (comments !== null && comments.length > 0) {
+      let commentsComponent = new Comments(comments);
+
+      const commentWrapper = this._element.querySelector(`.film-details__comments-wrap`);
+      if (commentWrapper !== null) {
+        commentWrapper.appendChild(commentsComponent.Element);
+      }
+    }
+  }
+
+  get Element() {
+    return this._element;
+  }
+
+  getTemplate() {
+    return createFilmDetailtemplate(this._film);
+  }
+
+  show(container) {
+    Utils.render(container, this._element, RenderPosition.BEFOREEND);
+
+    this.addCloseEvents();
+  }
+
+  addCloseEvents() {
+    let closeBtn = this._element.querySelector(`.film-details__close-btn`);
+    closeBtn.addEventListener(`click`, () => {
+      this.remove();
+    });
+    document.addEventListener(`keydown`, this.getOnCloseFn());
+  }
+
+  getOnCloseFn() {
+    return (evt) => {
+      if (evt.keyCode === ESC_KEY) {
+        this.remove();
+      }
+    };
+  }
+
+  remove() {
+    if (this._element !== null) {
+      document.removeEventListener(`keydown`, this.getOnCloseFn);
+      this._element.remove();
+      this._element = this._titleElement = this._element = null;
+    }
+  }
+}

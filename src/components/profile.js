@@ -1,5 +1,7 @@
 import {getFormatedRating} from '../utils.js';
 
+import Utils from '../utils.js';
+
 const createProfileTemplate = (totalWatchedFilms) => {
   const formatedRating = getFormatedRating(totalWatchedFilms);
 
@@ -9,3 +11,31 @@ const createProfileTemplate = (totalWatchedFilms) => {
 };
 
 export {createProfileTemplate};
+
+
+export default class Profile {
+
+  constructor(totalWatchedFilms) {
+    this.totalWatchedFilms = totalWatchedFilms;
+    this.init();
+  }
+
+  init() {
+    if (!this._element) {
+      this._element = Utils.createElement(this.getTemplate());
+    }
+  }
+
+  getTemplate() {
+    return createProfileTemplate();
+  }
+
+  get Element() {
+    return this._element;
+  }
+
+  remove() {
+    this._element.remove();
+    this._element = null;
+  }
+}

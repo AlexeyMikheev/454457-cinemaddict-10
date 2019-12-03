@@ -1,13 +1,14 @@
-import {createProfileTemplate} from './components/profile.js';
+import Profile from './components/profile.js';
 import {createMenuTemplate} from './components/menu.js';
 import {createSortTemplate} from './components/sort.js';
-import {createMoreTemplate} from './components/show-more.js';
+import MoreButton from './components/more-button.js';
 import {createFilmsTemplate, createFilmsListTemplate, createFilmsTopRatedTemplate, createFilmsMostCommentedTemplate, createFilmsCardsTemplates} from './components/film.js';
-import {createFilmDetailtemplate, removeFilmDetail} from './components/film-detail.js';
-import {createFooterStatisticTemplate} from './components/footer-statistic.js';
+import FilmDeatil from './components/film-detail.js';
+import Statistic from './components/statistic.js';
 
-import {ESC_KEY, COUNT_FILMS, ONE_TASKS_PAGE_COUNT, Filters} from './const.js';
+import {COUNT_FILMS, ONE_TASKS_PAGE_COUNT, Filters} from './const.js';
 import {renderItem, getTopFilmsByProperty, getFilterValue, renderFilmsCardsByPageNumber} from './utils.js';
+import {Utils} from './utils.js';
 import {createFilmCards} from './mock/filmCard.js';
 import {generateFilters} from './mock/filters.js';
 
@@ -33,28 +34,26 @@ const isMoreButtonVisible = () => {
 };
 
 const addMoreButton = () => {
-  const filmsList = filmsContainer.querySelector(`.films-list`);
-
   if (isMoreButtonVisible()) {
-    renderItem(filmsList, createMoreTemplate());
 
-    const moreButton = filmsList.querySelector(`.films-list__show-more`);
-    moreButton.addEventListener(`click`, () => {
+    const onMoreButtonClick = () => {
       currentPage++;
       renderFilmsCardsByPageNumber(filmsListContainer, filmsCards, currentPage);
 
       if (!isMoreButtonVisible()) {
         moreButton.remove();
       }
-    });
+    };
+
+    const moreButton = new MoreButton();
+    moreButton.showIn(filmsContainer.querySelector(`.films-list`));
+    moreButton.initClickEvent(onMoreButtonClick);
   }
 };
 
 const addStatistic = () => {
-  const footerStatistic = document.querySelector(`.footer .footer__statistics`);
-  footerStatistic.remove();
-
-  renderItem(footer, createFooterStatisticTemplate(filmsCards.length), `beforeEnd`);
+  const statistic = new Statistic(filmsCards.length);
+  statistic.showIn(footer);
 };
 
 const filters = generateFilters();
@@ -66,7 +65,6 @@ renderItem(mainContainer, createFilmsTemplate());
 
 const filmsContainer = mainContainer.querySelector(`.films`);
 renderItem(filmsContainer, createFilmsListTemplate());
-
 
 const filmsListContainer = filmsContainer.querySelector(`.films-list .films-list__container`);
 
@@ -92,42 +90,13 @@ const filmsMostCommentedContainer = filmsExtraContainers[1];
 const mostCommentFilms = getTopFilmsByProperty(filmsCards, `comments`);
 renderItem(filmsMostCommentedContainer, createFilmsCardsTemplates(mostCommentFilms));
 
-renderItem(headerContainer, createProfileTemplate(totalWatchedFilms));
+Utils.render(headerContainer, new Profile(totalWatchedFilms).Element);
 
 addStatistic();
 
-let isFilmDetailOpened = false;
-
-const initCloseFilmDetailEvents = () => {
-  let closeBtn = document.querySelector(`.film-details__close-btn`);
-  closeBtn.addEventListener(`click`, () => {
-    hideFilmDeatils();
-  });
-};
-
-const hideFilmDeatils = () => {
-  if (isFilmDetailOpened) {
-    removeFilmDetail();
-    isFilmDetailOpened = false;
-  }
-};
-
 const showFilmDeatils = (filmsCard) => {
-  hideFilmDeatils();
-
-  renderItem(footer, createFilmDetailtemplate(filmsCard), `afterend`);
-  initCloseFilmDetailEvents();
-  isFilmDetailOpened = true;
+  const filmDeatil = new FilmDeatil(filmsCard);
+  filmDeatil.showIn(document.body);
 };
 
 showFilmDeatils(filmsCards[0]);
-
-const initDocumentEvents = () => {
-  document.addEventListener(`keydown`, (evt) => {
-    if (evt.keyCode === ESC_KEY) {
-      hideFilmDeatils();
-    }
-  });
-};
-
-initDocumentEvents();
