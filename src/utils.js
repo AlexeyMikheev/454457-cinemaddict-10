@@ -135,7 +135,7 @@ const getFilterValue = (filter, filmsCards) => {
 
     case Filters.WATCHLIST.title:
       return filmsCards.reduce((total, filmCard) => {
-        if (filmCard.IsWaitingWatched) {
+        if (filmCard.isWaitingWatched) {
           total++;
         }
         return total;
@@ -143,7 +143,7 @@ const getFilterValue = (filter, filmsCards) => {
 
     case Filters.HISTORY.title:
       return filmsCards.reduce((total, filmCard) => {
-        if (filmCard.IsWatched) {
+        if (filmCard.isWatched) {
           total++;
         }
         return total;
