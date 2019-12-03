@@ -28,14 +28,14 @@ const refreshFilters = (pageTasks) => {
   renderItem(mainContainer, createMenuTemplate(filters), `afterBegin`);
 };
 
-const isMoreButtonVisibility = () => {
+const isMoreButtonVisible = () => {
   return (currentPage + 1) * ONE_TASKS_PAGE_COUNT < filmsCards.length;
 };
 
 const addMoreButton = () => {
   const filmsList = filmsContainer.querySelector(`.films-list`);
 
-  if (isMoreButtonVisibility()) {
+  if (isMoreButtonVisible()) {
     renderItem(filmsList, createMoreTemplate());
 
     const moreButton = filmsList.querySelector(`.films-list__show-more`);
@@ -43,7 +43,7 @@ const addMoreButton = () => {
       currentPage++;
       renderFilmsCardsByPageNumber(filmsListContainer, filmsCards, currentPage);
 
-      if (!isMoreButtonVisibility()) {
+      if (!isMoreButtonVisible()) {
         moreButton.remove();
       }
     });

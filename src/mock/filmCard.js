@@ -134,7 +134,7 @@ const createComments = (count) => {
 
 const createfilmCard = () => {
 
-  const isWaitingWatched = getRandomBoolean();
+  let isWaitingWatched = getRandomBoolean();
   const isWatched = getRandomBoolean();
 
   if (isWatched) {
