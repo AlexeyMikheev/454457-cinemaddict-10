@@ -1,5 +1,5 @@
 
-import {getFormatedDuration, getEllipsisDescription, getFormatedComments} from '../utils.js';
+import {getFormatedDuration, getEllipsisDescription, getFormatedCommentsTitle} from '../utils.js';
 
 const createFilmsTemplate = () =>
   `<section class="films"></section>`;
@@ -24,15 +24,15 @@ const createFilmsMostCommentedTemplate = () =>
 
 const createFilmCardTemplate = (filmCard) => {
 
-  const {title, rating, releaseDate, duration, genres, poster, description, comments, IsWaitingWatched, IsWatched, isFavorite} = filmCard;
+  const {title, rating, releaseDate, duration, genres, poster, description, comments, isWaitingWatched, isWatched, isFavorite} = filmCard;
 
   const releaseYear = releaseDate.getFullYear();
   const formatedDuration = getFormatedDuration(duration);
   const formatedDescription = getEllipsisDescription(description);
-  const formatedComments = getFormatedComments(comments);
+  const formatedCommentsTitle = getFormatedCommentsTitle(comments);
   const formatedGenres = genres.length > 0 ? genres[0] : ``;
 
-  const activeClass = isFavorite || IsWatched || IsWaitingWatched ? `film-card__controls-item--active` : ``;
+  const activeClass = isFavorite || isWatched || isWaitingWatched ? `film-card__controls-item--active` : ``;
 
   return `<article class="film-card">
   <h3 class="film-card__title">${title}</h3>
@@ -44,7 +44,7 @@ const createFilmCardTemplate = (filmCard) => {
   </p>
   <img src="./images/posters/${poster}" alt="" class="film-card__poster">
   <p class="film-card__description">${formatedDescription}</p>
-  <a class="film-card__comments">${formatedComments}</a>
+  <a class="film-card__comments">${formatedCommentsTitle}</a>
   <form class="film-card__controls">
     <button class="film-card__controls-item button film-card__controls-item--add-to-watchlist ${activeClass}">Add to watchlist</button>
     <button class="film-card__controls-item button film-card__controls-item--mark-as-watched ${activeClass} film-card__controls-item--active">Mark as watched</button>
@@ -54,13 +54,10 @@ const createFilmCardTemplate = (filmCard) => {
 };
 
 const createFilmsCardsTemplates = (filmsCards) =>{
-  let fimlCardsTemplates = ``;
-
-  filmsCards.forEach((filmsCard) => {
+  return filmsCards.reduce((fimlCardsTemplates, filmsCard) => {
     fimlCardsTemplates += createFilmCardTemplate(filmsCard);
-  });
-
-  return fimlCardsTemplates;
+    return fimlCardsTemplates;
+  }, ``);
 };
 
 export {createFilmsTemplate, createFilmsListTemplate, createFilmsTopRatedTemplate, createFilmsMostCommentedTemplate, createFilmsCardsTemplates};

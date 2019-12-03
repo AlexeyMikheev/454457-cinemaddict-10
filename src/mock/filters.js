@@ -1,7 +1,5 @@
 import {Filters} from '../const.js';
 
-// const FILTERS_COUNT = 10;
-
 const filterNames = [Filters.ALL, Filters.WATCHLIST, Filters.HISTORY, Filters.FAVORITES, Filters.STATS];
 
 const generateFilters = () => {
@@ -10,7 +8,7 @@ const generateFilters = () => {
     return {
       title: filter.title,
       anchor: filter.anchor,
-      count: !isStats ? 0 : null,
+      count: isStats ? null : 0,
       isActive: filter.title === Filters.ALL.title,
       isAddition: isStats,
     };

@@ -94,7 +94,7 @@ const getRandomDate = () => {
 };
 
 const getRandomNumber = (min, max) => {
-  const rand = min - 0.5 + Math.random() * (max - min + 1);
+  const rand = min - RANDOM_LIMIT + Math.random() * (max - min + 1);
   return Math.abs(Math.round(rand));
 };
 
@@ -112,9 +112,7 @@ const getRandomItem = (items) => {
 };
 
 const createRandomItems = (items, min, max) => {
-  return items
-    .filter(() => getRandomBoolean())
-    .slice(min, max);
+  return items.filter(getRandomBoolean).slice(min, max);
 };
 
 const createComment = () => {

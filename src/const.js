@@ -19,10 +19,13 @@ const Emotion = {
   ANGRY: `angry`
 };
 
-const Months = [`January`, `February`, `March`, `April`, `May`, `June`,
+const MONTHS = [`January`, `February`, `March`, `April`, `May`, `June`,
   `July`, `August`, `September`, `October`, `November`, `December`
 ];
 
 const ESC_KEY = 27;
 
-export {Filters, ProfileRating, Emotion, Months, ESC_KEY};
+const COUNT_FILMS = 15;
+const ONE_TASKS_PAGE_COUNT = 5;
+
+export {Filters, ProfileRating, Emotion, MONTHS, ESC_KEY, COUNT_FILMS, ONE_TASKS_PAGE_COUNT};

@@ -1,4 +1,5 @@
-import {ProfileRating, Months} from './const.js';
+import {ProfileRating, MONTHS, Filters, ONE_TASKS_PAGE_COUNT} from './const.js';
+import {createFilmsCardsTemplates} from './components/film.js';
 
 const MINUTE_IN_HOUR = 60;
 
@@ -33,7 +34,7 @@ const getFormatedDuration = (duration) => {
 };
 
 const getFormatedValue = (value) => {
-  return value < 10 ? `0${value}` : String(value);
+  return value < 10 ? `0${value}` : value.toString();
 };
 
 const getDateValues = (date) => {
@@ -50,7 +51,7 @@ const getFormatedReleaseDate = (date) => {
 
   const {year, month, day} = getDateValues(date);
 
-  return `${year} ${Months[month]} ${day}`;
+  return `${year} ${MONTHS[month]} ${day}`;
 };
 
 export const getFormatedCommentDate = (date) => {
@@ -63,21 +64,28 @@ const getFormatedDiffrenceDate = (date, currentDate) => {
   const differenceTimestamp = currentDate.valueOf() - date.valueOf();
   if (differenceTimestamp < ONE_DAY) {
     return `Today`;
-  } else {
-    const differenceDays = differenceTimestamp % ONE_DAY;
-    if (differenceDays > 3) {
-      return getFormatedCommentDate(date);
-    }
-    return (differenceDays > 1) ? `${differenceDays} days ago` : `${differenceDays} day ago`;
   }
+
+  const differenceDays = differenceTimestamp % ONE_DAY;
+  if (differenceDays > 3) {
+    return getFormatedCommentDate(date);
+  }
+  return (differenceDays > 1) ? `${differenceDays} days ago` : `${differenceDays} day ago`;
+
 };
 
 const getEllipsisDescription = (description) =>{
   return (description.length > MAX_DESCRIPTION_LENGTH) ? `${description.substring(MIN_DESCRIPTION_LENGTH, (MAX_DESCRIPTION_LENGTH - DESCRIPTION_SPACE))}...` : description;
 };
 
-const getFormatedComments = (comments) =>{
-  return comments.length > MANY_COMMENTS_COUNT ? `${comments.length} comments` : `${comments.length} comment`;
+const getFormatedCommentsTitle = (comments) =>{
+  let formatedCommentsTitle = `comment`;
+
+  if (comments.length > MANY_COMMENTS_COUNT) {
+    formatedCommentsTitle += `s`;
+  }
+
+  return formatedCommentsTitle;
 };
 
 const getFormatedRating = (totalWatchedFilms) =>{
@@ -94,4 +102,69 @@ const getFormatedRating = (totalWatchedFilms) =>{
   return formatedProfileRating;
 };
 
-export {getFormatedDuration, getEllipsisDescription, getFormatedComments, getFormatedRating, getFormatedDiffrenceDate, getFormatedReleaseDate};
+const renderItem = (container, template, place = `beforeend`) => {
+  container.insertAdjacentHTML(place, template);
+};
+
+const getSortedByDescFilms = (films, propertyName) => {
+  return films.slice().sort((prevFilm, nextFilm) => {
+    if (prevFilm[propertyName] > nextFilm[propertyName]) {
+      return -1;
+    }
+    if (prevFilm[propertyName] < nextFilm[propertyName]) {
+      return 1;
+    }
+    return 0;
+  });
+};
+
+const getTopFilmsByProperty = (films, propertyName) => {
+  const [first = null, second = null] = getSortedByDescFilms(films, propertyName);
+  return [first, second];
+};
+
+const getFimlsCardsByPageNumber = (filmsCards, pageNumber, countTasks = ONE_TASKS_PAGE_COUNT) => {
+  const startIndex = pageNumber * countTasks;
+  const endIndex = startIndex + countTasks;
+  return filmsCards.slice(startIndex, endIndex);
+};
+
+const getFilterValue = (filter, filmsCards) => {
+  switch (filter.title) {
+    case Filters.ALL.title: return filmsCards.length;
+
+    case Filters.WATCHLIST.title:
+      return filmsCards.reduce((total, filmCard) => {
+        if (filmCard.IsWaitingWatched) {
+          total++;
+        }
+        return total;
+      }, filter.count);
+
+    case Filters.HISTORY.title:
+      return filmsCards.reduce((total, filmCard) => {
+        if (filmCard.IsWatched) {
+          total++;
+        }
+        return total;
+      }, filter.count);
+
+    case Filters.FAVORITES.title:
+      return filmsCards.reduce((total, filmCard) => {
+        if (filmCard.isFavorite) {
+          total++;
+        }
+        return total;
+      }, filter.count);
+
+    default: return filter.count;
+  }
+};
+
+const renderFilmsCardsByPageNumber = (container, fimlsCards, currentTasksPage) => {
+  const pageFimlsCards = getFimlsCardsByPageNumber(fimlsCards, currentTasksPage);
+
+  renderItem(container, createFilmsCardsTemplates(pageFimlsCards));
+};
+
+export {getFormatedDuration, getEllipsisDescription, getFormatedCommentsTitle, getFormatedRating, getFormatedDiffrenceDate, getFormatedReleaseDate, renderItem, getSortedByDescFilms, getTopFilmsByProperty, getFilterValue, renderFilmsCardsByPageNumber};

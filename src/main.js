@@ -2,16 +2,14 @@ import {createProfileTemplate} from './components/profile.js';
 import {createMenuTemplate} from './components/menu.js';
 import {createSortTemplate} from './components/sort.js';
 import {createMoreTemplate} from './components/show-more.js';
-import {createFilmsTemplate, createFilmsListTemplate, createFilmsTopRatedTemplate, createFilmsMostCommentedTemplate, createFilmsCardsTemplates} from './components/films';
-import {createFilmDetailtemplate, removeFilmDetail} from './components/film-detail';
+import {createFilmsTemplate, createFilmsListTemplate, createFilmsTopRatedTemplate, createFilmsMostCommentedTemplate, createFilmsCardsTemplates} from './components/film.js';
+import {createFilmDetailtemplate, removeFilmDetail} from './components/film-detail.js';
 import {createFooterStatisticTemplate} from './components/footer-statistic.js';
 
-import {Filters, ESC_KEY} from './const.js';
+import {ESC_KEY, COUNT_FILMS, ONE_TASKS_PAGE_COUNT, Filters} from './const.js';
+import {renderItem, getTopFilmsByProperty, getFilterValue, renderFilmsCardsByPageNumber} from './utils.js';
 import {createFilmCards} from './mock/filmCard.js';
 import {generateFilters} from './mock/filters.js';
-
-const COUNT_FILMS = 15;
-const ONE_TASKS_PAGE_COUNT = 5;
 
 const headerContainer = document.querySelector(`.header`);
 const mainContainer = document.querySelector(`.main`);
@@ -19,77 +17,15 @@ const footer = document.querySelector(`.footer`);
 
 let totalWatchedFilms = 0;
 
-const renderItem = (container, template, place = `beforeend`) => {
-  container.insertAdjacentHTML(place, template);
-};
+const refreshFilters = (pageTasks) => {
+  filters.forEach((filter) => {
+    filter.count = getFilterValue(filter, pageTasks);
 
-const getSortedByDescFilms = (films, propertyName) =>{
-  return films.slice().sort((prevFilm, nextFilm)=>{
-    if (prevFilm[propertyName] > nextFilm[propertyName]) {
-      return -1;
-    }
-    if (prevFilm[propertyName] < nextFilm[propertyName]) {
-      return 1;
-    }
-    return 0;
-  });
-};
-
-const getTopFilmsByProperty = (films, propertyName) => {
-  const [first = null, second = null] = getSortedByDescFilms(films, propertyName);
-  return [first, second];
-};
-
-const getFimlsCardsByPageNumber = (filmsCards, pageNumber, countTasks = ONE_TASKS_PAGE_COUNT) =>{
-  const startIndex = pageNumber * countTasks;
-  const endIndex = startIndex + countTasks;
-  return filmsCards.slice(startIndex, endIndex);
-};
-
-const fillFiltersValues = (filters, filmsCards) =>{
-  filters.forEach((filter)=>{
     if (filter.title === Filters.ALL.title) {
-      filter.count += filmsCards.length;
-    }
-
-    if (filter.title === Filters.WATCHLIST.title) {
-      filter.count = filmsCards.reduce((total, filmCard) =>{
-        if (filmCard.IsWaitingWatched) {
-          total++;
-        }
-        return total;
-      }, filter.count);
-    }
-
-    if (filter.title === Filters.HISTORY.title) {
-      totalWatchedFilms = filter.count = filmsCards.reduce((total, filmCard) =>{
-        if (filmCard.IsWatched) {
-          total++;
-        }
-        return total;
-      }, filter.count);
-    }
-
-    if (filter.title === Filters.FAVORITES.title) {
-      filter.count = filmsCards.reduce((total, filmCard) =>{
-        if (filmCard.isFavorite) {
-          total++;
-        }
-        return total;
-      }, filter.count);
+      totalWatchedFilms = filter.count;
     }
   });
-};
-
-const refreshFilters = (pageTasks) =>{
-  fillFiltersValues(filters, pageTasks);
   renderItem(mainContainer, createMenuTemplate(filters), `afterBegin`);
-};
-
-const renderFilmsCardsByPageNumber = (fimlsCards, currentTasksPage) =>{
-  const pageFimlsCards = getFimlsCardsByPageNumber(fimlsCards, currentTasksPage);
-
-  renderItem(filmsListContainer, createFilmsCardsTemplates(pageFimlsCards));
 };
 
 const getMoreButtonVisibility = () => {
@@ -105,17 +41,16 @@ const addMoreButton = () => {
     const moreButton = filmsList.querySelector(`.films-list__show-more`);
     moreButton.addEventListener(`click`, () => {
       currentPage++;
-      renderFilmsCardsByPageNumber(filmsCards, currentPage);
+      renderFilmsCardsByPageNumber(filmsListContainer, filmsCards, currentPage);
 
       if (!getMoreButtonVisibility()) {
         moreButton.remove();
       }
-
     });
   }
 };
 
-const addStatistic = () =>{
+const addStatistic = () => {
   const footerStatistic = document.querySelector(`.footer .footer__statistics`);
   footerStatistic.remove();
 
@@ -140,7 +75,7 @@ let currentPage = 0;
 const filmsCards = createFilmCards(COUNT_FILMS);
 
 refreshFilters(filmsCards);
-renderFilmsCardsByPageNumber(filmsCards, currentPage);
+renderFilmsCardsByPageNumber(filmsListContainer, filmsCards, currentPage);
 
 addMoreButton();
 
@@ -170,14 +105,14 @@ const initCloseFilmDetailEvents = () => {
   });
 };
 
-const hideFilmDeatils = () =>{
+const hideFilmDeatils = () => {
   if (isFilmDetailOpened) {
     removeFilmDetail();
     isFilmDetailOpened = false;
   }
 };
 
-const showFilmDeatils = (filmsCard) =>{
+const showFilmDeatils = (filmsCard) => {
   hideFilmDeatils();
 
   renderItem(footer, createFilmDetailtemplate(filmsCard), `afterend`);
@@ -187,8 +122,8 @@ const showFilmDeatils = (filmsCard) =>{
 
 showFilmDeatils(filmsCards[0]);
 
-const initDocumentEvents = function () {
-  document.addEventListener(`keydown`, function (evt) {
+const initDocumentEvents = () => {
+  document.addEventListener(`keydown`, (evt) => {
     if (evt.keyCode === ESC_KEY) {
       hideFilmDeatils();
     }
