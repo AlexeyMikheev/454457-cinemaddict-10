@@ -158,8 +158,8 @@ const createfilmCard = () => {
     description: createRandomItems(DESCRIPTION.split(`.`), MIN_MOCK_ITEMS_COUNT, MAX_MOCK_ITEMS_COUNT).join(` `),
     comments: createComments(getRandomNumber(MIN_COMMENTS_COUNT, MAX_COMMENTS_COUNT)),
     isFavorite: getRandomBoolean(),
-    IsWaitingWatched: isWaitingWatched,
-    IsWatched: isWatched,
+    isWaitingWatched: isWaitingWatched,
+    isWatched: isWatched,
     age: getRandomNumber(MIN_RATING_COUNT, MAX_RATING_COUNT)
   };
 };
