@@ -1,4 +1,4 @@
-import {Utils} from '../utils.js';
+import Utils from '../utils.js';
 
 const createFooterStatisticTemplate = (totalMovies) => {
   return `<section class="footer__statistics"><p>${totalMovies} movies inside</p></section>`;

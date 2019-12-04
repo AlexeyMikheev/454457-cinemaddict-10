@@ -1,35 +1,14 @@
 
-import {getFormatedDuration, getEllipsisDescription, getFormatedCommentsTitle} from '../utils.js';
-
-const createFilmsTemplate = () =>
-  `<section class="films"></section>`;
-
-const createFilmsListTemplate = () =>
-  `<section class="films-list">
-  <h2 class="films-list__title visually-hidden">All movies. Upcoming</h2>
-  <div class="films-list__container"></div>
-</section/`;
-
-const createFilmsTopRatedTemplate = () =>
-  `<section class="films-list--extra">
-    <h2 class="films-list__title">Top rated</h2>
-    <div class="films-list__container"></div>
-  </section/`;
-
-const createFilmsMostCommentedTemplate = () =>
-  `<section class="films-list--extra">
-    <h2 class="films-list__title">Most commented</h2>
-    <div class="films-list__container"></div>
-  </section/`;
+import Utils from '../utils.js';
 
 const createFilmCardTemplate = (filmCard) => {
 
   const {title, rating, releaseDate, duration, genres, poster, description, comments, isWaitingWatched, isWatched, isFavorite} = filmCard;
 
   const releaseYear = releaseDate.getFullYear();
-  const formatedDuration = getFormatedDuration(duration);
-  const formatedDescription = getEllipsisDescription(description);
-  const formatedCommentsTitle = getFormatedCommentsTitle(comments);
+  const formatedDuration = Utils.getFormatedDuration(duration);
+  const formatedDescription = Utils.getEllipsisDescription(description);
+  const formatedCommentsTitle = Utils.getFormatedCommentsTitle(comments);
   const formatedGenres = genres.length > 0 ? genres[0] : ``;
 
   const activeClass = isFavorite || isWatched || isWaitingWatched ? `film-card__controls-item--active` : ``;
@@ -53,11 +32,29 @@ const createFilmCardTemplate = (filmCard) => {
 </article>`;
 };
 
-const createFilmsCardsTemplates = (filmsCards) =>{
-  return filmsCards.reduce((fimlCardsTemplates, filmsCard) => {
-    fimlCardsTemplates += createFilmCardTemplate(filmsCard);
-    return fimlCardsTemplates;
-  }, ``);
-};
+export default class Film {
 
-export {createFilmsTemplate, createFilmsListTemplate, createFilmsTopRatedTemplate, createFilmsMostCommentedTemplate, createFilmsCardsTemplates};
+  constructor(film) {
+    this._film = film;
+    this.init();
+  }
+
+  init() {
+    if (!this._element) {
+      this._element = Utils.createElement(this.getTemplate());
+    }
+  }
+
+  getTemplate() {
+    return createFilmCardTemplate(this._film);
+  }
+
+  get Element() {
+    return this._element;
+  }
+
+  remove() {
+    this._element.remove();
+    this._element = null;
+  }
+}

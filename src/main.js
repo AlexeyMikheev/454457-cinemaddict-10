@@ -1,29 +1,31 @@
 import Profile from './components/profile.js';
 import Menu from './components/menu.js';
 import Sotr from './components/sort.js';
-import MoreButton from './components/more-button.js';
-import {createFilmsCardsTemplates} from './components/film.js';
-import FilmDeatil from './components/film-detail.js';
-import Statistic from './components/statistic.js';
-
-import {COUNT_FILMS, ONE_TASKS_PAGE_COUNT, Filters, FIMLS_COMPONENT_TYPES} from './const.js';
-import {renderItem, getTopFilmsByProperty, getFilterValue, renderFilmsCardsByPageNumber} from './utils.js';
-import {createFilmCards} from './mock/filmCard.js';
-import {generateFilters} from './mock/filters.js';
 import Films from './components/films';
+import MoreButton from './components/more-button.js';
+import Statistic from './components/statistic.js';
+import FilmDeatil from './components/film-detail.js';
+
+import { COUNT_FILMS, ONE_TASKS_PAGE_COUNT, Filters, FIMLS_COMPONENT_TYPES } from './const.js';
+import Utils from './utils.js';
+
+import { createFilmCards } from './mock/filmCard.js';
+import { generateFilters } from './mock/filters.js';
+
+
 
 const headerContainer = document.querySelector(`.header`);
 const mainContainer = document.querySelector(`.main`);
 const footer = document.querySelector(`.footer`);
 
 const isMoreButtonVisible = () => {
-  return (currentPage + 1) * ONE_TASKS_PAGE_COUNT < filmsCards.length;
+  return (currentPage + 1) * ONE_TASKS_PAGE_COUNT < films.length;
 };
 
-const initMenu = (pageTasks) => {
+const initHeader = (pageTasks) => {
   let totalWatchedFilms = 0;
   filters.forEach((filter) => {
-    filter.count = getFilterValue(filter, pageTasks);
+    filter.count = Utils.getFilterValue(filter, pageTasks);
 
     if (filter.title === Filters.ALL.title) {
       totalWatchedFilms = filter.count;
@@ -33,6 +35,8 @@ const initMenu = (pageTasks) => {
   new Profile(totalWatchedFilms).render(headerContainer);
 
   new Menu(filters).render(mainContainer);
+
+  new Sotr().render(mainContainer);
 };
 
 const initMoreButton = (parentContainer) => {
@@ -40,7 +44,9 @@ const initMoreButton = (parentContainer) => {
 
     const onMoreButtonClick = () => {
       currentPage++;
-      renderFilmsCardsByPageNumber(Films.FilmsContainer, filmsCards, currentPage);
+
+      const pageFilms = Utils.getFilmsByPageNumber(films, currentPage);
+      filmsComponent.addFilms(pageFilms);
 
       if (!isMoreButtonVisible()) {
         moreButton.remove();
@@ -54,39 +60,27 @@ const initMoreButton = (parentContainer) => {
 };
 
 const filters = generateFilters();
-const filmsCards = createFilmCards(COUNT_FILMS);
+const films = createFilmCards(COUNT_FILMS);
 
-new Sotr().render(mainContainer);
-debugger;
+initHeader(films);
+
 Films.renderContainer(mainContainer);
-
-const films = Films.CreateInstance(filmsCards, FIMLS_COMPONENT_TYPES.FIMLS);
-films.render();
-
-Films.CreateInstance(filmsCards, FIMLS_COMPONENT_TYPES.TOP_RATED).render();
-Films.CreateInstance(filmsCards, FIMLS_COMPONENT_TYPES.MOST_COMMENTS).render();
 
 let currentPage = 0;
 
-initMenu(filmsCards);
-renderFilmsCardsByPageNumber(Films.FilmsContainer, filmsCards, currentPage);
+const currentPageFimls = Utils.getFilmsByPageNumber(films, currentPage);
+const filmsComponent = Films.CreateInstance(currentPageFimls, FIMLS_COMPONENT_TYPES.FIMLS);
+filmsComponent.render();
 
-initMoreButton(films.Element);
+const topRatedFilms = Utils.getTopFilmsByProperty(films, `rating`);
+Films.CreateInstance(topRatedFilms, FIMLS_COMPONENT_TYPES.TOP_RATED).render();
 
-// renderItem(filmsContainer, createFilmsTopRatedTemplate());
-// renderItem(filmsContainer, createFilmsMostCommentedTemplate());
+const mostCommentFilms = Utils.getTopFilmsByProperty(films, `comments`);
+Films.CreateInstance(mostCommentFilms, FIMLS_COMPONENT_TYPES.MOST_COMMENTS).render();
 
-//const filmsExtraContainers = filmsContainer.querySelectorAll(`.films-list--extra .films-list__container`);
+initMoreButton(filmsComponent.Element);
 
-//const filmsTopRatedContainer = filmsExtraContainers[0];
-// const topRatedFilms = getTopFilmsByProperty(filmsCards, `rating`);
-// renderItem(filmsTopRatedContainer, createFilmsCardsTemplates(topRatedFilms));
+new Statistic(films.length).render(footer);
 
-//const filmsMostCommentedContainer = filmsExtraContainers[1];
-// const mostCommentFilms = getTopFilmsByProperty(filmsCards, `comments`);
-// renderItem(filmsMostCommentedContainer, createFilmsCardsTemplates(mostCommentFilms));
-
-new Statistic(filmsCards.length).render(footer);
-
-const filmDeatil = new FilmDeatil(filmsCards[0]);
+const filmDeatil = new FilmDeatil(films[0]);
 filmDeatil.render(document.body);

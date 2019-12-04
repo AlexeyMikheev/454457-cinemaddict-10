@@ -1,5 +1,5 @@
 
-import {Utils} from '../utils.js';
+import Utils from '../utils.js';
 import Comment from './comment.js';
 
 export default class Comments {

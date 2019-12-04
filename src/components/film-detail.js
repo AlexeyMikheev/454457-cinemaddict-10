@@ -1,4 +1,4 @@
-import {getFormatedDuration, getFormatedReleaseDate, Utils} from '../utils.js';
+import Utils from '../utils.js';
 import {RenderPosition, ESC_KEY} from '../const.js';
 import Comments from './comments.js';
 
@@ -10,12 +10,12 @@ const createGenresTemplate = (genres) => {
 
 const createFilmDetailtemplate = (filmCard) => {
 
-  const {poster, age, title, origianlTitle, rating, producer, writers, actors, duration, country, releaseDate, description, genres} = filmCard;
+  const { poster, age, title, origianlTitle, rating, producer, writers, actors, duration, country, releaseDate, description, genres } = filmCard;
 
   const formatedWriters = writers.join(`, `);
   const formatedActors = actors.join(`, `);
-  const formatedReleaseDate = getFormatedReleaseDate(releaseDate);
-  const formatedDuration = getFormatedDuration(duration);
+  const formatedReleaseDate = Utils.getFormatedReleaseDate(releaseDate);
+  const formatedDuration = Utils.getFormatedDuration(duration);
   const genresTitle = genres.length > 1 ? `genres` : `genre`;
   const genresTemplate = createGenresTemplate(genres);
 
@@ -119,7 +119,7 @@ export default class FilmDeatil {
   init() {
     this._element = Utils.createElement(this.getTemplate());
 
-    const {comments} = this._film;
+    const { comments } = this._film;
 
     if (comments !== null && comments.length > 0) {
       let commentsComponent = new Comments(comments);

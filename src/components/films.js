@@ -1,5 +1,6 @@
 import Utils from '../utils.js';
 import { FIMLS_COMPONENT_TYPES } from '../const.js';
+import Film from './film.js';
 
 const createFilmsTemplate = () =>
     `<section class="films"></section>`;
@@ -45,23 +46,14 @@ export default class Films {
     }
 
     init() {
-        // this._filmsComponents = this._films.map((c) => {
-        //     return new Film(c);
-        // });
-
         this.initElement();
+        this.initComponets();
     }
 
     initElement() {
         if (!this._element) {
             this._element = Utils.createElement(this.getTemplate());
-        }
-
-        const filmsListContainer = this._element.querySelector(`.films-list .films-list__container`);
-
-        // this._commentsComponents.forEach((comment) => {
-        //     this.filmsListContainer.appendChild(comment.Element);
-        // });
+        }       
     }
 
     getTemplate() {
@@ -71,18 +63,44 @@ export default class Films {
             case FIMLS_COMPONENT_TYPES.MOST_COMMENTS: return createFilmsMostCommentedTemplate();
             default: return ``;
         }
-        return createSortTemplate();
     }
 
     get Element() {
         return this._element;
     }
 
+    addFilms(films){
+        this._films.push(...films);
+        this.clearComponents();
+        this.initComponets();
+    }
+
     render() {
         Utils.render(this._parentContainer, this._element);
     }
 
+    initComponets(){
+        this._filmsComponents = this._films.map((c) => {
+            return new Film(c);
+        });
+
+        const filmsListContainer = this._element.querySelector(`.films-list__container`);
+
+        this._filmsComponents.forEach((filmComponent) => {
+            filmsListContainer.appendChild(filmComponent.Element);
+        });
+    }
+
+    clearComponents(){
+        this._filmsComponents.forEach((comment) => {
+            comment.remove();
+        });
+
+        this._filmsComponents = null;
+    }
+
     remove() {
-        this._element = null;
+        this._element = this._parentContainer = this._componentType = null;
+        this.clearComponents();
     }
 }

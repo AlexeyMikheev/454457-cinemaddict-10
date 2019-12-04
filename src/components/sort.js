@@ -1,4 +1,4 @@
-import {Utils} from '../utils.js';
+import Utils from '../utils.js';
 
 export const createSortTemplate = () =>
   `<ul class="sort">
