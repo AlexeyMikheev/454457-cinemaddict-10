@@ -2,14 +2,15 @@ import Profile from './components/profile.js';
 import Menu from './components/menu.js';
 import Sotr from './components/sort.js';
 import MoreButton from './components/more-button.js';
-import {createFilmsTemplate, createFilmsListTemplate, createFilmsTopRatedTemplate, createFilmsMostCommentedTemplate, createFilmsCardsTemplates} from './components/film.js';
+import {createFilmsCardsTemplates} from './components/film.js';
 import FilmDeatil from './components/film-detail.js';
 import Statistic from './components/statistic.js';
 
-import {COUNT_FILMS, ONE_TASKS_PAGE_COUNT, Filters} from './const.js';
+import {COUNT_FILMS, ONE_TASKS_PAGE_COUNT, Filters, FIMLS_COMPONENT_TYPES} from './const.js';
 import {renderItem, getTopFilmsByProperty, getFilterValue, renderFilmsCardsByPageNumber} from './utils.js';
 import {createFilmCards} from './mock/filmCard.js';
 import {generateFilters} from './mock/filters.js';
+import Films from './components/films';
 
 const headerContainer = document.querySelector(`.header`);
 const mainContainer = document.querySelector(`.main`);
@@ -56,33 +57,38 @@ const filters = generateFilters();
 const filmsCards = createFilmCards(COUNT_FILMS);
 
 new Sotr().render(mainContainer);
+debugger;
+Films.renderContainer(mainContainer);
+const filmsContainer = Films.FilmsContainer;
 
-renderItem(mainContainer, createFilmsTemplate());
+const films = new Films(filmsCards, FIMLS_COMPONENT_TYPES.FIMLS);
+films.render(filmsContainer);
 
-const filmsContainer = mainContainer.querySelector(`.films`);
-renderItem(filmsContainer, createFilmsListTemplate());
+const topRatedFilms1 = new Films(filmsCards, FIMLS_COMPONENT_TYPES.TOP_RATED);
+topRatedFilms1.render(filmsContainer);
 
-const filmsListContainer = filmsContainer.querySelector(`.films-list .films-list__container`);
+const mostCommentFilms1 = new Films(filmsCards, FIMLS_COMPONENT_TYPES.MOST_COMMENTS);
+mostCommentFilms1.render(filmsContainer);
 
 let currentPage = 0;
 
 initMenu(filmsCards);
-renderFilmsCardsByPageNumber(filmsListContainer, filmsCards, currentPage);
+//renderFilmsCardsByPageNumber(filmsListContainer, filmsCards, currentPage);
 
 initMoreButton();
 
-renderItem(filmsContainer, createFilmsTopRatedTemplate());
-renderItem(filmsContainer, createFilmsMostCommentedTemplate());
+// renderItem(filmsContainer, createFilmsTopRatedTemplate());
+// renderItem(filmsContainer, createFilmsMostCommentedTemplate());
 
-const filmsExtraContainers = filmsContainer.querySelectorAll(`.films-list--extra .films-list__container`);
+//const filmsExtraContainers = filmsContainer.querySelectorAll(`.films-list--extra .films-list__container`);
 
-const filmsTopRatedContainer = filmsExtraContainers[0];
-const topRatedFilms = getTopFilmsByProperty(filmsCards, `rating`);
-renderItem(filmsTopRatedContainer, createFilmsCardsTemplates(topRatedFilms));
+//const filmsTopRatedContainer = filmsExtraContainers[0];
+// const topRatedFilms = getTopFilmsByProperty(filmsCards, `rating`);
+// renderItem(filmsTopRatedContainer, createFilmsCardsTemplates(topRatedFilms));
 
-const filmsMostCommentedContainer = filmsExtraContainers[1];
-const mostCommentFilms = getTopFilmsByProperty(filmsCards, `comments`);
-renderItem(filmsMostCommentedContainer, createFilmsCardsTemplates(mostCommentFilms));
+//const filmsMostCommentedContainer = filmsExtraContainers[1];
+// const mostCommentFilms = getTopFilmsByProperty(filmsCards, `comments`);
+// renderItem(filmsMostCommentedContainer, createFilmsCardsTemplates(mostCommentFilms));
 
 new Statistic(filmsCards.length).render(footer);
 

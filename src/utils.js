@@ -154,7 +154,6 @@ const renderFilmsCardsByPageNumber = (container, fimlsCards, currentTasksPage) =
 };
 
 export default class Utils {
-
   static getFormatedRating (totalWatchedFilms) {
     let formatedProfileRating = null;
   

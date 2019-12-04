@@ -33,4 +33,10 @@ const RenderPosition = {
   BEFOREEND: `beforeend`
 };
 
-export {Filters, ProfileRating, Emotion, MONTHS, ESC_KEY, COUNT_FILMS, ONE_TASKS_PAGE_COUNT, RenderPosition};
+const FIMLS_COMPONENT_TYPES = {
+  FIMLS: 1,
+  TOP_RATED: 2,
+  MOST_COMMENTS: 3
+}
+
+export {Filters, ProfileRating, Emotion, MONTHS, ESC_KEY, COUNT_FILMS, ONE_TASKS_PAGE_COUNT, RenderPosition, FIMLS_COMPONENT_TYPES};
