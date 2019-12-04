@@ -41,13 +41,15 @@ const initContent = () => {
   Films.renderContainer(mainContainer);
 
   const currentPageFimls = Utils.getFilmsByPageNumber(films, currentPage);
-  const filmsComponent = Films.CreateInstance(currentPageFimls, FIMLS_COMPONENT_TYPES.FIMLS);
+  filmsComponent = Films.CreateInstance(currentPageFimls, FIMLS_COMPONENT_TYPES.FIMLS);
   filmsComponent.render();
 
-  const topRatedFilms = Utils.getTopFilmsByProperty(films, `rating`);
+  const hasRatingFilms = films.filter((f) => { return f.rating > 0 });
+  const topRatedFilms = Utils.getTopFilmsByProperty(hasRatingFilms, `rating`);
   Films.CreateInstance(topRatedFilms, FIMLS_COMPONENT_TYPES.TOP_RATED).render();
 
-  const mostCommentFilms = Utils.getTopFilmsByProperty(films, `comments`);
+  const hasCommentsFilms = films.filter((f) => { return f.comments !== null && f.comments.length > 0 });
+  const mostCommentFilms = Utils.getTopFilmsByProperty(hasCommentsFilms, `comments`);
   Films.CreateInstance(mostCommentFilms, FIMLS_COMPONENT_TYPES.MOST_COMMENTS).render();
 
   initMoreButton(filmsComponent.Element);
@@ -76,11 +78,10 @@ const initMoreButton = (parentContainer) => {
 const filters = generateFilters();
 const films = createFilmCards(COUNT_FILMS);
 let currentPage = 0;
+let filmsComponent = null;
 
 initHeader();
 
 initContent();
 
 new Statistic(films.length).render(footer);
-
-
