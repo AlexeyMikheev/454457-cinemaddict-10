@@ -1,6 +1,6 @@
 import Profile from './components/profile.js';
-import {createMenuTemplate} from './components/menu.js';
-import {createSortTemplate} from './components/sort.js';
+import Menu from './components/menu.js';
+import Sotr from './components/sort.js';
 import MoreButton from './components/more-button.js';
 import {createFilmsTemplate, createFilmsListTemplate, createFilmsTopRatedTemplate, createFilmsMostCommentedTemplate, createFilmsCardsTemplates} from './components/film.js';
 import FilmDeatil from './components/film-detail.js';
@@ -8,7 +8,6 @@ import Statistic from './components/statistic.js';
 
 import {COUNT_FILMS, ONE_TASKS_PAGE_COUNT, Filters} from './const.js';
 import {renderItem, getTopFilmsByProperty, getFilterValue, renderFilmsCardsByPageNumber} from './utils.js';
-import {Utils} from './utils.js';
 import {createFilmCards} from './mock/filmCard.js';
 import {generateFilters} from './mock/filters.js';
 
@@ -16,9 +15,12 @@ const headerContainer = document.querySelector(`.header`);
 const mainContainer = document.querySelector(`.main`);
 const footer = document.querySelector(`.footer`);
 
-let totalWatchedFilms = 0;
+const isMoreButtonVisible = () => {
+  return (currentPage + 1) * ONE_TASKS_PAGE_COUNT < filmsCards.length;
+};
 
-const refreshFilters = (pageTasks) => {
+const initMenu = (pageTasks) => {
+  let totalWatchedFilms = 0;
   filters.forEach((filter) => {
     filter.count = getFilterValue(filter, pageTasks);
 
@@ -26,14 +28,13 @@ const refreshFilters = (pageTasks) => {
       totalWatchedFilms = filter.count;
     }
   });
-  renderItem(mainContainer, createMenuTemplate(filters), `afterBegin`);
+
+  new Profile(totalWatchedFilms).render(headerContainer);
+
+  new Menu(filters).render(mainContainer);
 };
 
-const isMoreButtonVisible = () => {
-  return (currentPage + 1) * ONE_TASKS_PAGE_COUNT < filmsCards.length;
-};
-
-const addMoreButton = () => {
+const initMoreButton = () => {
   if (isMoreButtonVisible()) {
 
     const onMoreButtonClick = () => {
@@ -46,20 +47,15 @@ const addMoreButton = () => {
     };
 
     const moreButton = new MoreButton();
-    moreButton.showIn(filmsContainer.querySelector(`.films-list`));
+    moreButton.render(filmsContainer.querySelector(`.films-list`));
     moreButton.initClickEvent(onMoreButtonClick);
   }
 };
 
-const addStatistic = () => {
-  const statistic = new Statistic(filmsCards.length);
-  statistic.showIn(footer);
-};
-
 const filters = generateFilters();
-renderItem(mainContainer, createMenuTemplate(filters));
+const filmsCards = createFilmCards(COUNT_FILMS);
 
-renderItem(mainContainer, createSortTemplate());
+new Sotr().render(mainContainer);
 
 renderItem(mainContainer, createFilmsTemplate());
 
@@ -70,12 +66,10 @@ const filmsListContainer = filmsContainer.querySelector(`.films-list .films-list
 
 let currentPage = 0;
 
-const filmsCards = createFilmCards(COUNT_FILMS);
-
-refreshFilters(filmsCards);
+initMenu(filmsCards);
 renderFilmsCardsByPageNumber(filmsListContainer, filmsCards, currentPage);
 
-addMoreButton();
+initMoreButton();
 
 renderItem(filmsContainer, createFilmsTopRatedTemplate());
 renderItem(filmsContainer, createFilmsMostCommentedTemplate());
@@ -90,13 +84,7 @@ const filmsMostCommentedContainer = filmsExtraContainers[1];
 const mostCommentFilms = getTopFilmsByProperty(filmsCards, `comments`);
 renderItem(filmsMostCommentedContainer, createFilmsCardsTemplates(mostCommentFilms));
 
-Utils.render(headerContainer, new Profile(totalWatchedFilms).Element);
+new Statistic(filmsCards.length).render(footer);
 
-addStatistic();
-
-const showFilmDeatils = (filmsCard) => {
-  const filmDeatil = new FilmDeatil(filmsCard);
-  filmDeatil.showIn(document.body);
-};
-
-showFilmDeatils(filmsCards[0]);
+const filmDeatil = new FilmDeatil(filmsCards[0]);
+filmDeatil.render(document.body);

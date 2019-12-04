@@ -16,7 +16,7 @@ export default class MoreButton {
     return `<button class="films-list__show-more">Show more</button>`;
   }
 
-  show(container) {
+  render(container) {
     Utils.render(container, this._element);
   }
 
@@ -31,7 +31,6 @@ export default class MoreButton {
   }
 
   remove() {
-    this._element.remove();
     this._element = null;
   }
 }

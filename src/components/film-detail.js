@@ -109,7 +109,6 @@ const createFilmDetailtemplate = (filmCard) => {
 export default class FilmDeatil {
   constructor(film) {
     this._film = film;
-
     this.init();
   }
 
@@ -140,9 +139,8 @@ export default class FilmDeatil {
     return createFilmDetailtemplate(this._film);
   }
 
-  show(container) {
+  render(container) {
     Utils.render(container, this._element, RenderPosition.BEFOREEND);
-
     this.addCloseEvents();
   }
 
@@ -164,8 +162,8 @@ export default class FilmDeatil {
 
   remove() {
     if (this._element !== null) {
-      document.removeEventListener(`keydown`, this.getOnCloseFn);
       this._element.remove();
+      document.removeEventListener(`keydown`, this.getOnCloseFn);
       this._element = this._titleElement = this._element = null;
     }
   }

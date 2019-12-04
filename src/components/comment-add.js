@@ -1,4 +1,4 @@
-import {createElement} from '../utils.js';
+import Utils from '../utils.js';
 
 const createCommentAddTemplate = () => {
   return `<div class="film-details__new-comment">
@@ -33,16 +33,21 @@ const createCommentAddTemplate = () => {
 };
 
 export default class CommentAdd {
+  constructor() {
+    this.init();
+  }
+
+  init() {
+    if (!this._element) {
+      this._element = Utils.createElement(this.getTemplate());
+    }
+  }
 
   getTemplate() {
     return createCommentAddTemplate();
   }
 
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
+  get Element() {
     return this._element;
   }
 

@@ -46,18 +46,15 @@ export default class Comments {
     this._commentsComponents.forEach((comment) => {
       this._element.appendChild(comment.Element);
     });
-
-    return this._element;
   }
 
   remove() {
-    this._element.remove();
-    this._titleElement.remove();
-
     this._element = this._titleElement = null;
 
     this._commentsComponent.forEach((comment) => {
       comment.remove();
     });
+
+    this._commentsComponents = null;
   }
 }

@@ -7,31 +7,37 @@ const createFooterStatisticTemplate = (totalMovies) => {
 export default class Statistic {
   constructor(totalMovies) {
     this._totalMovies = totalMovies;
+    this.init();
   }
+
+  init() {
+    if (!this._element) {
+      this._element = Utils.createElement(this.getTemplate());
+    }
+  }
+
   getTemplate() {
     return createFooterStatisticTemplate(this._totalMovies);
   }
 
-  getElement() {
-    if (!this._element) {
-      this._element = Utils.createElement(this.getTemplate());
-    }
-
+  get Element() {
     return this._element;
   }
 
   removeExist() {
     const footerStatistic = document.querySelector(`.footer .footer__statistics`);
-    footerStatistic.remove();
+    if (footerStatistic !== null) {
+      footerStatistic.remove();
+    }
   }
 
-  show(container) {
+  render(container) {
     this.removeExist();
 
     Utils.render(container, this._element);
   }
 
   remove() {
-    this._element = this._titleElement = this._element = null;
+    this._element = this._titleElement = null;
   }
 }

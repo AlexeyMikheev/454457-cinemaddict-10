@@ -88,20 +88,6 @@ const getFormatedCommentsTitle = (comments) =>{
   return formatedCommentsTitle;
 };
 
-const getFormatedRating = (totalWatchedFilms) =>{
-  let formatedProfileRating = null;
-
-  if (ProfileRating.NOVICE.min <= totalWatchedFilms && totalWatchedFilms <= ProfileRating.NOVICE.max) {
-    formatedProfileRating = ProfileRating.NOVICE.name;
-  } else if (ProfileRating.FAN.min <= totalWatchedFilms && totalWatchedFilms <= ProfileRating.FAN.max) {
-    formatedProfileRating = ProfileRating.FAN.name;
-  } else if (ProfileRating.MOVIE_BUFF.min <= totalWatchedFilms) {
-    formatedProfileRating = ProfileRating.MOVIE_BUFF.name;
-  }
-
-  return formatedProfileRating;
-};
-
 const renderItem = (container, template, place = `beforeend`) => {
   container.insertAdjacentHTML(place, template);
 };
@@ -168,6 +154,21 @@ const renderFilmsCardsByPageNumber = (container, fimlsCards, currentTasksPage) =
 };
 
 export default class Utils {
+
+  static getFormatedRating (totalWatchedFilms) {
+    let formatedProfileRating = null;
+  
+    if (ProfileRating.NOVICE.min <= totalWatchedFilms && totalWatchedFilms <= ProfileRating.NOVICE.max) {
+      formatedProfileRating = ProfileRating.NOVICE.name;
+    } else if (ProfileRating.FAN.min <= totalWatchedFilms && totalWatchedFilms <= ProfileRating.FAN.max) {
+      formatedProfileRating = ProfileRating.FAN.name;
+    } else if (ProfileRating.MOVIE_BUFF.min <= totalWatchedFilms) {
+      formatedProfileRating = ProfileRating.MOVIE_BUFF.name;
+    }
+  
+    return formatedProfileRating;
+  };
+  
   static createElement(template) {
     const newElement = document.createElement(`div`);
     newElement.innerHTML = template;
@@ -200,4 +201,4 @@ export default class Utils {
   }
 }
 
-export {getFormatedDuration, getEllipsisDescription, getFormatedCommentsTitle, getFormatedRating, getFormatedDiffrenceDate, getFormatedReleaseDate, renderItem, getSortedByDescFilms, getTopFilmsByProperty, getFilterValue, renderFilmsCardsByPageNumber, Utils};
+export {getFormatedDuration, getEllipsisDescription, getFormatedCommentsTitle, getFormatedDiffrenceDate, getFormatedReleaseDate, renderItem, getSortedByDescFilms, getTopFilmsByProperty, getFilterValue, renderFilmsCardsByPageNumber, Utils};
