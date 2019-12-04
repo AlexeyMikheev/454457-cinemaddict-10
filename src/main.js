@@ -35,12 +35,12 @@ const initMenu = (pageTasks) => {
   new Menu(filters).render(mainContainer);
 };
 
-const initMoreButton = () => {
+const initMoreButton = (parentContainer) => {
   if (isMoreButtonVisible()) {
 
     const onMoreButtonClick = () => {
       currentPage++;
-      renderFilmsCardsByPageNumber(filmsListContainer, filmsCards, currentPage);
+      renderFilmsCardsByPageNumber(Films.FilmsContainer, filmsCards, currentPage);
 
       if (!isMoreButtonVisible()) {
         moreButton.remove();
@@ -48,7 +48,7 @@ const initMoreButton = () => {
     };
 
     const moreButton = new MoreButton();
-    moreButton.render(filmsContainer.querySelector(`.films-list`));
+    moreButton.render(parentContainer);
     moreButton.initClickEvent(onMoreButtonClick);
   }
 };
@@ -59,23 +59,19 @@ const filmsCards = createFilmCards(COUNT_FILMS);
 new Sotr().render(mainContainer);
 debugger;
 Films.renderContainer(mainContainer);
-const filmsContainer = Films.FilmsContainer;
 
-const films = new Films(filmsCards, FIMLS_COMPONENT_TYPES.FIMLS);
-films.render(filmsContainer);
+const films = Films.CreateInstance(filmsCards, FIMLS_COMPONENT_TYPES.FIMLS);
+films.render();
 
-const topRatedFilms1 = new Films(filmsCards, FIMLS_COMPONENT_TYPES.TOP_RATED);
-topRatedFilms1.render(filmsContainer);
-
-const mostCommentFilms1 = new Films(filmsCards, FIMLS_COMPONENT_TYPES.MOST_COMMENTS);
-mostCommentFilms1.render(filmsContainer);
+Films.CreateInstance(filmsCards, FIMLS_COMPONENT_TYPES.TOP_RATED).render();
+Films.CreateInstance(filmsCards, FIMLS_COMPONENT_TYPES.MOST_COMMENTS).render();
 
 let currentPage = 0;
 
 initMenu(filmsCards);
-//renderFilmsCardsByPageNumber(filmsListContainer, filmsCards, currentPage);
+renderFilmsCardsByPageNumber(Films.FilmsContainer, filmsCards, currentPage);
 
-initMoreButton();
+initMoreButton(films.Element);
 
 // renderItem(filmsContainer, createFilmsTopRatedTemplate());
 // renderItem(filmsContainer, createFilmsMostCommentedTemplate());

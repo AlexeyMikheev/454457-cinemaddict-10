@@ -23,9 +23,10 @@ const createFilmsMostCommentedTemplate = () =>
   </section/`;
 
 export default class Films {
-    constructor(films, componentType) {
+    constructor(films, componentType, parentContainer) {
         this._componentType = componentType;
         this._films = films;
+        this._parentContainer = parentContainer;
 
         this.init();
     }
@@ -37,6 +38,10 @@ export default class Films {
 
     static get FilmsContainer() {
         return this._filmsContainer;
+    }
+
+    static CreateInstance(films, componentType) {
+        return new this(films, componentType, this._filmsContainer)
     }
 
     init() {
@@ -73,8 +78,8 @@ export default class Films {
         return this._element;
     }
 
-    render(container) {
-        Utils.render(container, this._element);
+    render() {
+        Utils.render(this._parentContainer, this._element);
     }
 
     remove() {

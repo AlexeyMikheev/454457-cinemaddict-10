@@ -150,7 +150,7 @@ const getFilterValue = (filter, filmsCards) => {
 const renderFilmsCardsByPageNumber = (container, fimlsCards, currentTasksPage) => {
   const pageFimlsCards = getFimlsCardsByPageNumber(fimlsCards, currentTasksPage);
 
-  renderItem(container, createFilmsCardsTemplates(pageFimlsCards));
+  renderItem(container, createFilmsCardsTemplates(pageFimlsCards), `afterbegin`);
 };
 
 export default class Utils {
