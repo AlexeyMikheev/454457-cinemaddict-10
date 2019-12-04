@@ -4,7 +4,7 @@ import FilmDeatil from './film-detail.js';
 
 const createFilmCardTemplate = (filmCard) => {
 
-  const { title, rating, releaseDate, duration, genres, poster, description, comments, isWaitingWatched, isWatched, isFavorite } = filmCard;
+  const {title, rating, releaseDate, duration, genres, poster, description, comments, isWaitingWatched, isWatched, isFavorite} = filmCard;
 
   const releaseYear = releaseDate.getFullYear();
   const formatedDuration = Utils.getFormatedDuration(duration);
@@ -60,8 +60,8 @@ export default class Film {
   }
 
   isClickAvaliable(classList) {
-    return classList.contains(`film-card__poster`) || 
-    classList.contains(`film-card__comments`) || 
+    return classList.contains(`film-card__poster`) ||
+    classList.contains(`film-card__comments`) ||
     classList.contains(`film-card__title`);
   }
 
@@ -70,7 +70,7 @@ export default class Film {
       if (this.isClickAvaliable(evt.target.classList)) {
         new FilmDeatil(this._film).render(document.body);
       }
-    }
+    };
   }
 
   remove() {

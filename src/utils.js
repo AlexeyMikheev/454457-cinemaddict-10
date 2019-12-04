@@ -1,4 +1,4 @@
-import { ProfileRating, MONTHS, Filters, ONE_TASKS_PAGE_COUNT, RenderPosition, MINUTE_IN_HOUR, MIN_DESCRIPTION_LENGTH, MAX_DESCRIPTION_LENGTH, DESCRIPTION_SPACE, MANY_COMMENTS_COUNT, ONE_DAY } from './const.js';
+import {ProfileRating, MONTHS, Filters, ONE_TASKS_PAGE_COUNT, RenderPosition, MINUTE_IN_HOUR, MIN_DESCRIPTION_LENGTH, MAX_DESCRIPTION_LENGTH, DESCRIPTION_SPACE, MANY_COMMENTS_COUNT, ONE_DAY} from './const.js';
 
 const getHours = (duration) => {
   return Math.floor(duration / MINUTE_IN_HOUR);
@@ -19,11 +19,11 @@ const getDateValues = (date) => {
   const hours = getFormatedValue(date.getHours());
   const minutes = getFormatedValue(date.getMinutes());
 
-  return { year, month, day, hours, minutes };
+  return {year, month, day, hours, minutes};
 };
 
 const getFormatedCommentDate = (date) => {
-  const { year, month, day, hours, minutes } = getDateValues(date);
+  const {year, month, day, hours, minutes} = getDateValues(date);
 
   return `${year}/${month}/${day} ${hours}:${minutes}`;
 };
@@ -61,7 +61,7 @@ export default class Utils {
 
   static getFormatedReleaseDate(date) {
 
-    const { year, month, day } = getDateValues(date);
+    const {year, month, day} = getDateValues(date);
 
     return `${year} ${MONTHS[month]} ${day}`;
   }
@@ -126,12 +126,12 @@ export default class Utils {
     const startIndex = pageNumber * countTasks;
     const endIndex = startIndex + countTasks;
     return films.slice(startIndex, endIndex);
-  };
+  }
 
   static getTopFilmsByProperty(films, propertyName) {
     const [first = null, second = null] = getSortedByDescFilms(films, propertyName);
     return [first, second];
-  };
+  }
 
   static getFilterValue(filter, filmsCards) {
     switch (filter.title) {

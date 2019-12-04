@@ -1,5 +1,5 @@
 import Utils from '../utils.js';
-import { RenderPosition, ESC_KEY } from '../const.js';
+import {RenderPosition, ESC_KEY} from '../const.js';
 import Comments from './comments.js';
 
 const createGenresTemplate = (genres) => {
@@ -10,7 +10,7 @@ const createGenresTemplate = (genres) => {
 
 const createFilmDetailtemplate = (filmCard) => {
 
-  const { poster, age, title, originalTitle, rating, producer, writers, actors, duration, country, releaseDate, description, genres } = filmCard;
+  const {poster, age, title, originalTitle, rating, producer, writers, actors, duration, country, releaseDate, description, genres} = filmCard;
 
   const formatedWriters = writers.join(`, `);
   const formatedActors = actors.join(`, `);
@@ -119,7 +119,7 @@ export default class FilmDeatil {
   init() {
     this._element = Utils.createElement(this.getTemplate());
 
-    const { comments } = this._film;
+    const {comments} = this._film;
 
     if (comments !== null && comments.length > 0) {
       let commentsComponent = new Comments(comments);
@@ -150,7 +150,7 @@ export default class FilmDeatil {
       this.remove();
     });
     document.addEventListener(`keydown`, this.getOnDocumentKeyDown());
-    //document.addEventListener(`click`, this.getOnDocumentClick());
+    // document.addEventListener(`click`, this.getOnDocumentClick());
   }
 
   getOnDocumentKeyDown() {
@@ -171,7 +171,7 @@ export default class FilmDeatil {
     if (this._element !== null) {
       this._element.remove();
       document.removeEventListener(`keydown`, this.getOnDocumentKeyDown());
-      //document.removeEventListener(`click`, this.getOnDocumentClick());
+      // document.removeEventListener(`click`, this.getOnDocumentClick());
       this._element = this._titleElement = this._element = null;
     }
   }

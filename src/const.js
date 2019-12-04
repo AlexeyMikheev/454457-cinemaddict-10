@@ -37,7 +37,7 @@ const FIMLS_COMPONENT_TYPES = {
   FIMLS: 1,
   TOP_RATED: 2,
   MOST_COMMENTS: 3
-}
+};
 
 const MINUTE_IN_HOUR = 60;
 

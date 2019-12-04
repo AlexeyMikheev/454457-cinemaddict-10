@@ -4,13 +4,12 @@ import Sotr from './components/sort.js';
 import Films from './components/films';
 import MoreButton from './components/more-button.js';
 import Statistic from './components/statistic.js';
-import FilmDeatil from './components/film-detail.js';
 
-import { COUNT_FILMS, ONE_TASKS_PAGE_COUNT, Filters, FIMLS_COMPONENT_TYPES } from './const.js';
+import {COUNT_FILMS, ONE_TASKS_PAGE_COUNT, Filters, FIMLS_COMPONENT_TYPES} from './const.js';
 import Utils from './utils.js';
 
-import { createFilmCards } from './mock/filmCard.js';
-import { generateFilters } from './mock/filters.js';
+import {createFilmCards} from './mock/filmCard.js';
+import {generateFilters} from './mock/filters.js';
 
 const headerContainer = document.querySelector(`.header`);
 const mainContainer = document.querySelector(`.main`);
@@ -41,16 +40,20 @@ const initContent = () => {
   Films.renderContainer(mainContainer);
 
   const currentPageFimls = Utils.getFilmsByPageNumber(films, currentPage);
-  filmsComponent = Films.CreateInstance(currentPageFimls, FIMLS_COMPONENT_TYPES.FIMLS);
+  filmsComponent = Films.createInstance(currentPageFimls, FIMLS_COMPONENT_TYPES.FIMLS);
   filmsComponent.render();
 
-  const hasRatingFilms = films.filter((f) => { return f.rating > 0 });
+  const hasRatingFilms = films.filter((f) => {
+    return f.rating > 0;
+  });
   const topRatedFilms = Utils.getTopFilmsByProperty(hasRatingFilms, `rating`);
-  Films.CreateInstance(topRatedFilms, FIMLS_COMPONENT_TYPES.TOP_RATED).render();
+  Films.createInstance(topRatedFilms, FIMLS_COMPONENT_TYPES.TOP_RATED).render();
 
-  const hasCommentsFilms = films.filter((f) => { return f.comments !== null && f.comments.length > 0 });
+  const hasCommentsFilms = films.filter((f) => {
+    return f.comments !== null && f.comments.length > 0;
+  });
   const mostCommentFilms = Utils.getTopFilmsByProperty(hasCommentsFilms, `comments`);
-  Films.CreateInstance(mostCommentFilms, FIMLS_COMPONENT_TYPES.MOST_COMMENTS).render();
+  Films.createInstance(mostCommentFilms, FIMLS_COMPONENT_TYPES.MOST_COMMENTS).render();
 
   initMoreButton(filmsComponent.Element);
 };
