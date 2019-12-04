@@ -12,8 +12,6 @@ import Utils from './utils.js';
 import { createFilmCards } from './mock/filmCard.js';
 import { generateFilters } from './mock/filters.js';
 
-
-
 const headerContainer = document.querySelector(`.header`);
 const mainContainer = document.querySelector(`.main`);
 const footer = document.querySelector(`.footer`);
@@ -22,10 +20,10 @@ const isMoreButtonVisible = () => {
   return (currentPage + 1) * ONE_TASKS_PAGE_COUNT < films.length;
 };
 
-const initHeader = (pageTasks) => {
+const initHeader = () => {
   let totalWatchedFilms = 0;
   filters.forEach((filter) => {
-    filter.count = Utils.getFilterValue(filter, pageTasks);
+    filter.count = Utils.getFilterValue(filter, films);
 
     if (filter.title === Filters.ALL.title) {
       totalWatchedFilms = filter.count;
@@ -37,6 +35,22 @@ const initHeader = (pageTasks) => {
   new Menu(filters).render(mainContainer);
 
   new Sotr().render(mainContainer);
+};
+
+const initContent = () => {
+  Films.renderContainer(mainContainer);
+
+  const currentPageFimls = Utils.getFilmsByPageNumber(films, currentPage);
+  const filmsComponent = Films.CreateInstance(currentPageFimls, FIMLS_COMPONENT_TYPES.FIMLS);
+  filmsComponent.render();
+
+  const topRatedFilms = Utils.getTopFilmsByProperty(films, `rating`);
+  Films.CreateInstance(topRatedFilms, FIMLS_COMPONENT_TYPES.TOP_RATED).render();
+
+  const mostCommentFilms = Utils.getTopFilmsByProperty(films, `comments`);
+  Films.CreateInstance(mostCommentFilms, FIMLS_COMPONENT_TYPES.MOST_COMMENTS).render();
+
+  initMoreButton(filmsComponent.Element);
 };
 
 const initMoreButton = (parentContainer) => {
@@ -61,26 +75,12 @@ const initMoreButton = (parentContainer) => {
 
 const filters = generateFilters();
 const films = createFilmCards(COUNT_FILMS);
-
-initHeader(films);
-
-Films.renderContainer(mainContainer);
-
 let currentPage = 0;
 
-const currentPageFimls = Utils.getFilmsByPageNumber(films, currentPage);
-const filmsComponent = Films.CreateInstance(currentPageFimls, FIMLS_COMPONENT_TYPES.FIMLS);
-filmsComponent.render();
+initHeader();
 
-const topRatedFilms = Utils.getTopFilmsByProperty(films, `rating`);
-Films.CreateInstance(topRatedFilms, FIMLS_COMPONENT_TYPES.TOP_RATED).render();
-
-const mostCommentFilms = Utils.getTopFilmsByProperty(films, `comments`);
-Films.CreateInstance(mostCommentFilms, FIMLS_COMPONENT_TYPES.MOST_COMMENTS).render();
-
-initMoreButton(filmsComponent.Element);
+initContent();
 
 new Statistic(films.length).render(footer);
 
-const filmDeatil = new FilmDeatil(films[0]);
-filmDeatil.render(document.body);
+

@@ -1,5 +1,5 @@
 import Utils from '../utils.js';
-import {RenderPosition, ESC_KEY} from '../const.js';
+import { RenderPosition, ESC_KEY } from '../const.js';
 import Comments from './comments.js';
 
 const createGenresTemplate = (genres) => {
@@ -149,10 +149,11 @@ export default class FilmDeatil {
     closeBtn.addEventListener(`click`, () => {
       this.remove();
     });
-    document.addEventListener(`keydown`, this.getOnCloseFn());
+    document.addEventListener(`keydown`, this.getOnDocumentKeyDown());
+    //document.addEventListener(`click`, this.getOnDocumentClick());
   }
 
-  getOnCloseFn() {
+  getOnDocumentKeyDown() {
     return (evt) => {
       if (evt.keyCode === ESC_KEY) {
         this.remove();
@@ -160,10 +161,17 @@ export default class FilmDeatil {
     };
   }
 
+  // getOnDocumentClick() {
+  //   return (evt) => {
+  //     this.remove();
+  //   };
+  // }
+
   remove() {
     if (this._element !== null) {
       this._element.remove();
-      document.removeEventListener(`keydown`, this.getOnCloseFn);
+      document.removeEventListener(`keydown`, this.getOnDocumentKeyDown());
+      //document.removeEventListener(`click`, this.getOnDocumentClick());
       this._element = this._titleElement = this._element = null;
     }
   }

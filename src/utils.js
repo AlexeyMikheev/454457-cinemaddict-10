@@ -119,7 +119,7 @@ export default class Utils {
       formatedCommentsTitle += `s`;
     }
 
-    return formatedCommentsTitle;
+    return `${comments.length} ${formatedCommentsTitle}`;
   }
 
   static getFilmsByPageNumber(films, pageNumber, countTasks = ONE_TASKS_PAGE_COUNT) {
