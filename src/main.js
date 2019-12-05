@@ -36,7 +36,8 @@ const initHeader = () => {
   menuComponent.removeExist();
   Utils.render(mainContainer, menuComponent.getElement(), RenderPosition.AFTERBEGIN);
 
-  new Sotr().render(mainContainer);
+  const sortComponent = new Sotr();
+  Utils.render(mainContainer, sortComponent.getElement());
 };
 
 const initContent = () => {
