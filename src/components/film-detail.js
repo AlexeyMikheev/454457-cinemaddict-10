@@ -162,7 +162,7 @@ export default class FilmDeatil {
       }
     };
 
-    document.addEventListener(`keydown`, this.getOnDocumentKeyDown);
+    document.addEventListener(`keydown`, this._getOnDocumentKeyDown);
   }
 
   getOnDocumentKeyDown() {
