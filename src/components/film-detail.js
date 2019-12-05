@@ -1,6 +1,7 @@
 import Utils from '../utils.js';
 import {RenderPosition, ESC_KEY} from '../const.js';
 import Comments from './comments.js';
+import AddNewCommentForm from './add-comment-form.js';
 
 const getGenresTemplate = (genres) => {
   return genres.map((genre) => {
@@ -117,11 +118,23 @@ export default class FilmDeatil {
     if (comments !== null && comments.length > 0) {
       let commentsComponent = new Comments(comments);
 
-      const commentWrapper = this._element.querySelector(`.film-details__comments-wrap`);
+      const commentWrapper = this.getCommentWrapper();
       if (commentWrapper !== null) {
         commentWrapper.appendChild(commentsComponent.getElement());
         commentsComponent.initComments();
       }
+    }
+  }
+
+  getCommentWrapper() {
+    return this._element.querySelector(`.film-details__comments-wrap`);
+  }
+
+  initAddCommentForm() {
+    const commentWrapper = this.getCommentWrapper();
+    if (commentWrapper !== null) {
+      let addCommentComponent = new AddNewCommentForm();
+      commentWrapper.appendChild(addCommentComponent.getElement());
     }
   }
 

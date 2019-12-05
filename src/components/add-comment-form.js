@@ -1,6 +1,6 @@
 import Utils from '../utils.js';
 
-const createCommentAddTemplate = () => {
+const getTemplate = () => {
   return `<div class="film-details__new-comment">
       <div for="add-emoji" class="film-details__add-emoji-label"></div>
 
@@ -32,26 +32,16 @@ const createCommentAddTemplate = () => {
     </div>`;
 };
 
-export default class CommentAdd {
-  constructor() {
-    this.init();
-  }
+export default class AddNewCommentForm {
 
-  init() {
+  getElement() {
     if (!this._element) {
-      this._element = Utils.createElement(this.getTemplate());
+      this._element = Utils.createElement(getTemplate());
     }
-  }
-
-  getTemplate() {
-    return createCommentAddTemplate();
-  }
-
-  get Element() {
     return this._element;
   }
 
   remove() {
-    this._element = this._titleElement = this._element = null;
+    this._element = null;
   }
 }

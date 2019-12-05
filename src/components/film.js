@@ -62,6 +62,7 @@ export default class Film {
         const filmDetail = new FilmDeatil(this._film);
         Utils.render(document.body, filmDetail.getElement());
         filmDetail.initComments();
+        filmDetail.initAddCommentForm();
         filmDetail.addCloseEvents();
       }
     };
