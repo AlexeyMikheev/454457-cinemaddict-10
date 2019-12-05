@@ -1,7 +1,6 @@
 import Utils from '../utils.js';
-import {RenderPosition} from '../const.js';
 
-const createMenuTemplate = (filters) => {
+const getTemplate = (filters) => {
   const filtersMappedTemplate = filters.reduce((template, filter) => {
     const {title, anchor, count, isActive, isAddition} = filter;
     const activeClass = isActive ? `main-navigation__item--active` : ``;
@@ -22,20 +21,12 @@ const createMenuTemplate = (filters) => {
 export default class Menu {
   constructor(filters) {
     this._filters = filters;
-    this.init();
   }
 
-  init() {
+  getElement() {
     if (!this._element) {
-      this._element = Utils.createElement(this.getTemplate());
+      this._element = Utils.createElement(getTemplate(this._filters));
     }
-  }
-
-  getTemplate() {
-    return createMenuTemplate(this._filters);
-  }
-
-  get Element() {
     return this._element;
   }
 
@@ -44,12 +35,6 @@ export default class Menu {
     if (filtersContainer !== null) {
       filtersContainer.remove();
     }
-  }
-
-  render(container) {
-    this.removeExist();
-
-    Utils.render(container, this._element, RenderPosition.AFTERBEGIN);
   }
 
   remove() {

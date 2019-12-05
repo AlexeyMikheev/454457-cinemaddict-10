@@ -5,7 +5,7 @@ import Films from './components/films';
 import MoreButton from './components/more-button.js';
 import Statistic from './components/statistic.js';
 
-import {COUNT_FILMS, ONE_TASKS_PAGE_COUNT, Filters, FIMLS_COMPONENT_TYPES} from './const.js';
+import {COUNT_FILMS, ONE_TASKS_PAGE_COUNT, Filters, FIMLS_COMPONENT_TYPES, RenderPosition} from './const.js';
 import Utils from './utils.js';
 
 import {createFilmCards} from './mock/filmCard.js';
@@ -32,7 +32,9 @@ const initHeader = () => {
   const profileComponent = new Profile(totalWatchedFilms);
   Utils.render(headerContainer, profileComponent.getElement());
 
-  new Menu(filters).render(mainContainer);
+  const menuComponent = new Menu(filters);
+  menuComponent.removeExist();
+  Utils.render(mainContainer, menuComponent.getElement(), RenderPosition.AFTERBEGIN);
 
   new Sotr().render(mainContainer);
 };
