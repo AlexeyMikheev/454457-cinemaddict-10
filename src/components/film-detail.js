@@ -155,8 +155,14 @@ export default class FilmDeatil {
     closeBtn.addEventListener(`click`, () => {
       this.remove();
     });
-    document.addEventListener(`keydown`, this.getOnDocumentKeyDown());
-    // document.addEventListener(`click`, this.getOnDocumentClick());
+
+    this._getOnDocumentKeyDown = (evt) => {
+      if (evt.keyCode === ESC_KEY) {
+        this.remove();
+      }
+    };
+
+    document.addEventListener(`keydown`, this.getOnDocumentKeyDown);
   }
 
   getOnDocumentKeyDown() {
@@ -167,18 +173,11 @@ export default class FilmDeatil {
     };
   }
 
-  // getOnDocumentClick() {
-  //   return (evt) => {
-  //     this.remove();
-  //   };
-  // }
-
   remove() {
     if (this._element !== null) {
       this._element.remove();
-      document.removeEventListener(`keydown`, this.getOnDocumentKeyDown());
-      // document.removeEventListener(`click`, this.getOnDocumentClick());
-      this._element = this._titleElement = this._element = null;
+      document.removeEventListener(`keydown`, this._getOnDocumentKeyDown);
+      this._element = null;
     }
   }
 }
