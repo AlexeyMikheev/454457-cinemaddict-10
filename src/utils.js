@@ -1,45 +1,5 @@
 import {ProfileRating, MONTHS, Filters, ONE_TASKS_PAGE_COUNT, RenderPosition, MINUTE_IN_HOUR, MIN_DESCRIPTION_LENGTH, MAX_DESCRIPTION_LENGTH, DESCRIPTION_SPACE, MANY_COMMENTS_COUNT, ONE_DAY} from './const.js';
 
-const getHours = (duration) => {
-  return Math.floor(duration / MINUTE_IN_HOUR);
-};
-
-const getMinutes = (duration) => {
-  return Math.floor(duration % MINUTE_IN_HOUR);
-};
-
-const getFormatedValue = (value) => {
-  return value < 10 ? `0${value}` : value.toString();
-};
-
-const getDateValues = (date) => {
-  const year = date.getFullYear();
-  const month = date.getMonth();
-  const day = date.getDate();
-  const hours = getFormatedValue(date.getHours());
-  const minutes = getFormatedValue(date.getMinutes());
-
-  return {year, month, day, hours, minutes};
-};
-
-const getFormatedCommentDate = (date) => {
-  const {year, month, day, hours, minutes} = getDateValues(date);
-
-  return `${year}/${month}/${day} ${hours}:${minutes}`;
-};
-
-const getSortedByDescFilms = (films, propertyName) => {
-  return films.slice().sort((prevFilm, nextFilm) => {
-    if (prevFilm[propertyName] > nextFilm[propertyName]) {
-      return -1;
-    }
-    if (prevFilm[propertyName] < nextFilm[propertyName]) {
-      return 1;
-    }
-    return 0;
-  });
-};
-
 export default class Utils {
 
   static createElement(template) {
@@ -61,7 +21,7 @@ export default class Utils {
 
   static getFormatedReleaseDate(date) {
 
-    const {year, month, day} = getDateValues(date);
+    const {year, month, day} = this.getDateValues(date);
 
     return `${year} ${MONTHS[month]} ${day}`;
   }
@@ -76,9 +36,9 @@ export default class Utils {
     if (duration < MINUTE_IN_HOUR) {
       formatedDuration += `${duration}m`;
     } else if (duration === MINUTE_IN_HOUR) {
-      formatedDuration += `${getHours(duration)}h`;
+      formatedDuration += `${this.getHours(duration)}h`;
     } else {
-      formatedDuration += `${getHours(duration)}h ${getMinutes(duration)}m`;
+      formatedDuration += `${this.getHours(duration)}h ${this.getMinutes(duration)}m`;
     }
 
     return formatedDuration;
@@ -106,7 +66,7 @@ export default class Utils {
 
     const differenceDays = differenceTimestamp % ONE_DAY;
     if (differenceDays > 3) {
-      return getFormatedCommentDate(date);
+      return this.getFormatedCommentDate(date);
     }
     return (differenceDays > 1) ? `${differenceDays} days ago` : `${differenceDays} day ago`;
 
@@ -129,7 +89,7 @@ export default class Utils {
   }
 
   static getTopFilmsByProperty(films, propertyName) {
-    const [first = null, second = null] = getSortedByDescFilms(films, propertyName);
+    const [first = null, second = null] = this.getSortedByDescFilms(films, propertyName);
     return [first, second];
   }
 
@@ -163,5 +123,45 @@ export default class Utils {
 
       default: return filter.count;
     }
+  }
+
+  static getHours(duration) {
+    return Math.floor(duration / MINUTE_IN_HOUR);
+  }
+
+  static getMinutes(duration) {
+    return Math.floor(duration % MINUTE_IN_HOUR);
+  }
+
+  static getFormatedValue(value) {
+    return value < 10 ? `0${value}` : value.toString();
+  }
+
+  static getDateValues(date) {
+    const year = date.getFullYear();
+    const month = date.getMonth();
+    const day = date.getDate();
+    const hours = this.getFormatedValue(date.getHours());
+    const minutes = this.getFormatedValue(date.getMinutes());
+
+    return {year, month, day, hours, minutes};
+  }
+
+  static getFormatedCommentDate(date) {
+    const {year, month, day, hours, minutes} = this.getDateValues(date);
+
+    return `${year}/${month}/${day} ${hours}:${minutes}`;
+  }
+
+  static getSortedByDescFilms(films, propertyName) {
+    return films.slice().sort((prevFilm, nextFilm) => {
+      if (prevFilm[propertyName] > nextFilm[propertyName]) {
+        return -1;
+      }
+      if (prevFilm[propertyName] < nextFilm[propertyName]) {
+        return 1;
+      }
+      return 0;
+    });
   }
 }
