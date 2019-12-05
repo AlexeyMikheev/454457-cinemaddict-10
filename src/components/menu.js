@@ -21,6 +21,7 @@ const getTemplate = (filters) => {
 export default class Menu {
   constructor(filters) {
     this._filters = filters;
+    this._element = null;
   }
 
   getElement() {

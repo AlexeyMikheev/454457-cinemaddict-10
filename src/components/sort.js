@@ -1,6 +1,6 @@
 import Utils from '../utils.js';
 
-export const createSortTemplate = () =>
+export const getTemplate = () =>
   `<ul class="sort">
     <li><a href="#" class="sort__button sort__button--active">Sort by default</a></li>
     <li><a href="#" class="sort__button">Sort by date</a></li>
@@ -9,25 +9,20 @@ export const createSortTemplate = () =>
 
 export default class Sotr {
   constructor() {
-    this.init();
+    this._element = null;
   }
 
   init() {
     if (!this._element) {
-      this._element = Utils.createElement(this.getTemplate());
+      this._element = Utils.createElement(getTemplate());
     }
   }
 
-  getTemplate() {
-    return createSortTemplate();
-  }
-
-  get Element() {
+  getElement() {
+    if (!this._element) {
+      this._element = Utils.createElement(getTemplate());
+    }
     return this._element;
-  }
-
-  render(container) {
-    Utils.render(container, this._element);
   }
 
   remove() {
