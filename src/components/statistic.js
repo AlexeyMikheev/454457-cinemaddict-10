@@ -1,26 +1,19 @@
 import Utils from '../utils.js';
 
-const createFooterStatisticTemplate = (totalMovies) => {
+const getTemplate = (totalMovies) => {
   return `<section class="footer__statistics"><p>${totalMovies} movies inside</p></section>`;
 };
 
 export default class Statistic {
   constructor(totalMovies) {
     this._totalMovies = totalMovies;
-    this.init();
+    this._element = null;
   }
 
-  init() {
+  getElement() {
     if (!this._element) {
-      this._element = Utils.createElement(this.getTemplate());
+      this._element = Utils.createElement(getTemplate(this._totalMovies));
     }
-  }
-
-  getTemplate() {
-    return createFooterStatisticTemplate(this._totalMovies);
-  }
-
-  get Element() {
     return this._element;
   }
 
@@ -31,13 +24,7 @@ export default class Statistic {
     }
   }
 
-  render(container) {
-    this.removeExist();
-
-    Utils.render(container, this._element);
-  }
-
   remove() {
-    this._element = this._titleElement = null;
+    this._element = null;
   }
 }

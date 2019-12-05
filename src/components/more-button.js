@@ -1,23 +1,11 @@
 import Utils from '../utils.js';
 
+const getTemplate = () => `<button class="films-list__show-more">Show more</button>`;
+
 export default class MoreButton {
 
   constructor() {
-    this.init();
-  }
-
-  init() {
-    if (!this._element) {
-      this._element = Utils.createElement(this.getTemplate());
-    }
-  }
-
-  getTemplate() {
-    return `<button class="films-list__show-more">Show more</button>`;
-  }
-
-  render(container) {
-    Utils.render(container, this._element);
+    this._element = null;
   }
 
   initClickEvent(cb) {
@@ -26,7 +14,10 @@ export default class MoreButton {
     });
   }
 
-  get Element() {
+  getElement() {
+    if (!this._element) {
+      this._element = Utils.createElement(getTemplate());
+    }
     return this._element;
   }
 

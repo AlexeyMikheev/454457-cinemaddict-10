@@ -77,7 +77,7 @@ const initMoreButton = (parentContainer) => {
     };
 
     const moreButton = new MoreButton();
-    moreButton.render(parentContainer);
+    Utils.render(parentContainer, moreButton.getElement());
     moreButton.initClickEvent(onMoreButtonClick);
   }
 };
@@ -91,4 +91,6 @@ initHeader();
 
 initContent();
 
-new Statistic(films.length).render(footer);
+const statisticComponent = new Statistic(films.length);
+statisticComponent.removeExist();
+Utils.render(footer, statisticComponent.getElement());
