@@ -29,7 +29,8 @@ const initHeader = () => {
     }
   });
 
-  new Profile(totalWatchedFilms).render(headerContainer);
+  const profileComponent = new Profile(totalWatchedFilms);
+  Utils.render(headerContainer, profileComponent.getElement());
 
   new Menu(filters).render(mainContainer);
 
