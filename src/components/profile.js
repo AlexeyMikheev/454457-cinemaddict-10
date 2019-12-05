@@ -11,6 +11,7 @@ export default class Profile {
 
   constructor(totalWatched) {
     this._totalWatched = totalWatched;
+    this._element = null;
   }
 
   getElement() {
