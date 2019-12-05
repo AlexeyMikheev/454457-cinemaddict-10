@@ -2,7 +2,7 @@
 import Utils from '../utils.js';
 import FilmDeatil from './film-detail.js';
 
-const createFilmCardTemplate = (filmCard) => {
+const getTemplate = (filmCard) => {
 
   const {title, rating, releaseDate, duration, genres, poster, description, comments, isWaitingWatched, isWatched, isFavorite} = filmCard;
 
@@ -37,25 +37,16 @@ export default class Film {
 
   constructor(film) {
     this._film = film;
-    this.init();
-    this.initClickEvent();
-  }
-
-  init() {
-    if (!this._element) {
-      this._element = Utils.createElement(this.getTemplate());
-    }
   }
 
   initClickEvent() {
     this._element.addEventListener(`click`, this.onShowDetail());
   }
 
-  getTemplate() {
-    return createFilmCardTemplate(this._film);
-  }
-
-  get Element() {
+  getElement() {
+    if (!this._element) {
+      this._element = Utils.createElement(getTemplate(this._film));
+    }
     return this._element;
   }
 
@@ -68,7 +59,10 @@ export default class Film {
   onShowDetail() {
     return (evt) => {
       if (this.isClickAvaliable(evt.target.classList)) {
-        new FilmDeatil(this._film).render(document.body);
+        const filmDetail = new FilmDeatil(this._film);
+        Utils.render(document.body, filmDetail.getElement());
+        filmDetail.initComments();
+        filmDetail.addCloseEvents();
       }
     };
   }

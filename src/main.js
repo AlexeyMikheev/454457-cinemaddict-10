@@ -41,25 +41,36 @@ const initHeader = () => {
 };
 
 const initContent = () => {
-  Films.renderContainer(mainContainer);
+  const filmsContainer = Films.getFilmsContainer();
+  Utils.render(mainContainer, filmsContainer);
 
   const currentPageFimls = Utils.getFilmsByPageNumber(films, currentPage);
+
   filmsComponent = Films.createInstance(currentPageFimls, FIMLS_COMPONENT_TYPES.FIMLS);
-  filmsComponent.render();
+  const filmsComponentElement = filmsComponent.getElement();
+  Utils.render(filmsContainer, filmsComponentElement);
+  filmsComponent.initComponets();
 
   const hasRatingFilms = films.filter((f) => {
     return f.rating > 0;
   });
+
   const topRatedFilms = Utils.getTopFilmsByProperty(hasRatingFilms, `rating`);
-  Films.createInstance(topRatedFilms, FIMLS_COMPONENT_TYPES.TOP_RATED).render();
+
+  const topRatedFilmsComponent = Films.createInstance(topRatedFilms, FIMLS_COMPONENT_TYPES.TOP_RATED);
+  Utils.render(filmsContainer, topRatedFilmsComponent.getElement());
+  filmsComponent.initComponets();
 
   const hasCommentsFilms = films.filter((f) => {
     return f.comments !== null && f.comments.length > 0;
   });
-  const mostCommentFilms = Utils.getTopFilmsByProperty(hasCommentsFilms, `comments`);
-  Films.createInstance(mostCommentFilms, FIMLS_COMPONENT_TYPES.MOST_COMMENTS).render();
 
-  initMoreButton(filmsComponent.Element);
+  const mostCommentFilms = Utils.getTopFilmsByProperty(hasCommentsFilms, `comments`);
+  const mostCommentFilmsComponent = Films.createInstance(mostCommentFilms, FIMLS_COMPONENT_TYPES.MOST_COMMENTS);
+  Utils.render(filmsContainer, mostCommentFilmsComponent.getElement());
+  filmsComponent.initComponets();
+
+  initMoreButton(filmsComponentElement);
 };
 
 const initMoreButton = (parentContainer) => {

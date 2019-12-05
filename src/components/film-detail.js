@@ -2,13 +2,13 @@ import Utils from '../utils.js';
 import {RenderPosition, ESC_KEY} from '../const.js';
 import Comments from './comments.js';
 
-const createGenresTemplate = (genres) => {
+const getGenresTemplate = (genres) => {
   return genres.map((genre) => {
     return `<span class="film-details__genre">${genre}</span>`;
   }).join(`\n`);
 };
 
-const createFilmDetailtemplate = (filmCard) => {
+const getTemplate = (filmCard) => {
 
   const {poster, age, title, originalTitle, rating, producer, writers, actors, duration, country, releaseDate, description, genres} = filmCard;
 
@@ -17,7 +17,7 @@ const createFilmDetailtemplate = (filmCard) => {
   const formatedReleaseDate = Utils.getFormatedReleaseDate(releaseDate);
   const formatedDuration = Utils.getFormatedDuration(duration);
   const genresTitle = genres.length > 1 ? `genres` : `genre`;
-  const genresTemplate = createGenresTemplate(genres);
+  const genresTemplate = getGenresTemplate(genres);
 
   return `<section class="film-details">
   <form class="film-details__inner" action="" method="get">
@@ -109,16 +109,9 @@ const createFilmDetailtemplate = (filmCard) => {
 export default class FilmDeatil {
   constructor(film) {
     this._film = film;
-    this.init();
   }
 
-  getTamplate() {
-    return this.createFilmDetailtemplate(this._film);
-  }
-
-  init() {
-    this._element = Utils.createElement(this.getTemplate());
-
+  initComments() {
     const {comments} = this._film;
 
     if (comments !== null && comments.length > 0) {
@@ -131,12 +124,11 @@ export default class FilmDeatil {
     }
   }
 
-  get Element() {
+  getElement() {
+    if (!this._element) {
+      this._element = Utils.createElement(getTemplate(this._film));
+    }
     return this._element;
-  }
-
-  getTemplate() {
-    return createFilmDetailtemplate(this._film);
   }
 
   render(container) {

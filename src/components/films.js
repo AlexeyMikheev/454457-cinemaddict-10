@@ -28,32 +28,17 @@ export default class Films {
     this._componentType = componentType;
     this._films = films;
     this._parentContainer = parentContainer;
-
-    this.init();
   }
 
-  static renderContainer(container) {
-    this._filmsContainer = Utils.createElement(createFilmsTemplate());
-    Utils.render(container, this._filmsContainer);
-  }
-
-  static get FilmsContainer() {
+  static getFilmsContainer() {
+    if (!this._filmsContainer) {
+      this._filmsContainer = Utils.createElement(createFilmsTemplate());
+    }
     return this._filmsContainer;
   }
 
   static createInstance(films, componentType) {
     return new this(films, componentType, this._filmsContainer);
-  }
-
-  init() {
-    this.initElement();
-    this.initComponets();
-  }
-
-  initElement() {
-    if (!this._element) {
-      this._element = Utils.createElement(this.getTemplate());
-    }
   }
 
   getTemplate() {
@@ -65,7 +50,10 @@ export default class Films {
     }
   }
 
-  get Element() {
+  getElement() {
+    if (!this._element) {
+      this._element = Utils.createElement(this.getTemplate());
+    }
     return this._element;
   }
 
@@ -73,10 +61,6 @@ export default class Films {
     this._films.push(...films);
     this.clearComponents();
     this.initComponets();
-  }
-
-  render() {
-    Utils.render(this._parentContainer, this._element);
   }
 
   initComponets() {
@@ -87,7 +71,8 @@ export default class Films {
     const filmsListContainer = this._element.querySelector(`.films-list__container`);
 
     this._filmsComponents.forEach((filmComponent) => {
-      filmsListContainer.appendChild(filmComponent.Element);
+      filmsListContainer.appendChild(filmComponent.getElement());
+      filmComponent.initClickEvent();
     });
   }
 
