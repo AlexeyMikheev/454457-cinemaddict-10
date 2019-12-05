@@ -1,35 +1,15 @@
 
-import {getFormatedDuration, getEllipsisDescription, getFormatedCommentsTitle} from '../utils.js';
+import Utils from '../utils.js';
+import FilmDeatil from './film-detail.js';
 
-const createFilmsTemplate = () =>
-  `<section class="films"></section>`;
-
-const createFilmsListTemplate = () =>
-  `<section class="films-list">
-  <h2 class="films-list__title visually-hidden">All movies. Upcoming</h2>
-  <div class="films-list__container"></div>
-</section/`;
-
-const createFilmsTopRatedTemplate = () =>
-  `<section class="films-list--extra">
-    <h2 class="films-list__title">Top rated</h2>
-    <div class="films-list__container"></div>
-  </section/`;
-
-const createFilmsMostCommentedTemplate = () =>
-  `<section class="films-list--extra">
-    <h2 class="films-list__title">Most commented</h2>
-    <div class="films-list__container"></div>
-  </section/`;
-
-const createFilmCardTemplate = (filmCard) => {
+const getTemplate = (filmCard) => {
 
   const {title, rating, releaseDate, duration, genres, poster, description, comments, isWaitingWatched, isWatched, isFavorite} = filmCard;
 
   const releaseYear = releaseDate.getFullYear();
-  const formatedDuration = getFormatedDuration(duration);
-  const formatedDescription = getEllipsisDescription(description);
-  const formatedCommentsTitle = getFormatedCommentsTitle(comments);
+  const formatedDuration = Utils.getFormatedDuration(duration);
+  const formatedDescription = Utils.getEllipsisDescription(description);
+  const formatedCommentsTitle = Utils.getFormatedCommentsTitle(comments);
   const formatedGenres = genres.length > 0 ? genres[0] : ``;
 
   const activeClass = isFavorite || isWatched || isWaitingWatched ? `film-card__controls-item--active` : ``;
@@ -53,11 +33,44 @@ const createFilmCardTemplate = (filmCard) => {
 </article>`;
 };
 
-const createFilmsCardsTemplates = (filmsCards) =>{
-  return filmsCards.reduce((fimlCardsTemplates, filmsCard) => {
-    fimlCardsTemplates += createFilmCardTemplate(filmsCard);
-    return fimlCardsTemplates;
-  }, ``);
-};
+export default class Film {
 
-export {createFilmsTemplate, createFilmsListTemplate, createFilmsTopRatedTemplate, createFilmsMostCommentedTemplate, createFilmsCardsTemplates};
+  constructor(film) {
+    this._film = film;
+  }
+
+  initClickEvent() {
+    this._element.addEventListener(`click`, this.onShowDetail());
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = Utils.createElement(getTemplate(this._film));
+    }
+    return this._element;
+  }
+
+  isClickAvaliable(classList) {
+    return classList.contains(`film-card__poster`) ||
+    classList.contains(`film-card__comments`) ||
+    classList.contains(`film-card__title`);
+  }
+
+  onShowDetail() {
+    return (evt) => {
+      if (this.isClickAvaliable(evt.target.classList)) {
+        const filmDetail = new FilmDeatil(this._film);
+        Utils.render(document.body, filmDetail.getElement());
+        filmDetail.initComments();
+        filmDetail.initAddCommentForm();
+        filmDetail.addCloseEvents();
+      }
+    };
+  }
+
+  remove() {
+    this._element.removeEventListener(`click`, this.onShowDetail());
+    this._element.remove();
+    this._element = null;
+  }
+}

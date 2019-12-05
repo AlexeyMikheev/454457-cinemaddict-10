@@ -145,7 +145,7 @@ const createfilmCard = () => {
 
   return {
     title: filmCardTitle,
-    origianlTitle: filmCardTitle,
+    originalTitle: filmCardTitle,
     rating: getRandomDecimal(MIN_RATING_COUNT, MAX_RATING_COUNT),
     producer: getRandomItem(Peoples),
     writers: createRandomItems(Peoples, MIN_MOCK_ITEMS_COUNT, MAX_MOCK_ITEMS_COUNT),

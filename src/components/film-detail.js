@@ -1,25 +1,24 @@
-import {getFormatedDuration, getFormatedReleaseDate} from '../utils.js';
-import {createCommentsTemplate, createNewCommentTemplate} from './comment';
-import {createGenresTemplate} from './genre';
+import Utils from '../utils.js';
+import {RenderPosition, ESC_KEY} from '../const.js';
+import Comments from './comments.js';
+import AddNewCommentForm from './add-comment-form.js';
 
-const removeFilmDetail = () =>{
-  const filmDetails = document.querySelector(`.film-details`);
-  if (filmDetails !== null) {
-    filmDetails.remove();
-  }
+const getGenresTemplate = (genres) => {
+  return genres.map((genre) => {
+    return `<span class="film-details__genre">${genre}</span>`;
+  }).join(`\n`);
 };
 
-const createFilmDetailtemplate = (filmCard) => {
+const getTemplate = (filmCard) => {
 
-  const {poster, age, title, origianlTitle, rating, producer, writers, actors, duration, country, releaseDate, description, genres, comments} = filmCard;
+  const {poster, age, title, originalTitle, rating, producer, writers, actors, duration, country, releaseDate, description, genres} = filmCard;
 
   const formatedWriters = writers.join(`, `);
   const formatedActors = actors.join(`, `);
-  const formatedReleaseDate = getFormatedReleaseDate(releaseDate);
-  const formatedDuration = getFormatedDuration(duration);
+  const formatedReleaseDate = Utils.getFormatedReleaseDate(releaseDate);
+  const formatedDuration = Utils.getFormatedDuration(duration);
   const genresTitle = genres.length > 1 ? `genres` : `genre`;
-  const genresTemplate = createGenresTemplate(genres);
-  const commentsTemplate = createCommentsTemplate(comments);
+  const genresTemplate = getGenresTemplate(genres);
 
   return `<section class="film-details">
   <form class="film-details__inner" action="" method="get">
@@ -40,7 +39,7 @@ const createFilmDetailtemplate = (filmCard) => {
           <div class="film-details__info-head">
             <div class="film-details__title-wrap">
               <h3 class="film-details__title">${title}</h3>
-              <p class="film-details__title-original">Original: ${origianlTitle}</p>
+              <p class="film-details__title-original">Original: ${originalTitle}</p>
             </div>
 
             <div class="film-details__rating">
@@ -101,12 +100,84 @@ const createFilmDetailtemplate = (filmCard) => {
 
     <div class="form-details__bottom-container">
       <section class="film-details__comments-wrap">
-        ${commentsTemplate}
-        ${createNewCommentTemplate}
+
       </section>
     </div>
   </form>
 </section>`;
 };
 
-export {createFilmDetailtemplate, removeFilmDetail};
+export default class FilmDeatil {
+  constructor(film) {
+    this._film = film;
+  }
+
+  initComments() {
+    const {comments} = this._film;
+
+    if (comments !== null && comments.length > 0) {
+      let commentsComponent = new Comments(comments);
+
+      const commentWrapper = this.getCommentWrapper();
+      if (commentWrapper !== null) {
+        commentWrapper.appendChild(commentsComponent.getElement());
+        commentsComponent.initComments();
+      }
+    }
+  }
+
+  getCommentWrapper() {
+    return this._element.querySelector(`.film-details__comments-wrap`);
+  }
+
+  initAddCommentForm() {
+    const commentWrapper = this.getCommentWrapper();
+    if (commentWrapper !== null) {
+      let addCommentComponent = new AddNewCommentForm();
+      commentWrapper.appendChild(addCommentComponent.getElement());
+    }
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = Utils.createElement(getTemplate(this._film));
+    }
+    return this._element;
+  }
+
+  render(container) {
+    Utils.render(container, this._element, RenderPosition.BEFOREEND);
+    this.addCloseEvents();
+  }
+
+  addCloseEvents() {
+    let closeBtn = this._element.querySelector(`.film-details__close-btn`);
+    closeBtn.addEventListener(`click`, () => {
+      this.remove();
+    });
+
+    this._getOnDocumentKeyDown = (evt) => {
+      if (evt.keyCode === ESC_KEY) {
+        this.remove();
+      }
+    };
+
+    document.addEventListener(`keydown`, this._getOnDocumentKeyDown);
+  }
+
+  getOnDocumentKeyDown() {
+    return (evt) => {
+      if (evt.keyCode === ESC_KEY) {
+        this.remove();
+      }
+    };
+  }
+
+  remove() {
+    if (this._element !== null) {
+      document.removeEventListener(`keydown`, this._getOnDocumentKeyDown);
+      this._element.remove();
+      this._element = null;
+    }
+  }
+}
