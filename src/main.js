@@ -59,7 +59,7 @@ const initContent = () => {
 
   const topRatedFilmsComponent = Films.createInstance(topRatedFilms, FIMLS_COMPONENT_TYPES.TOP_RATED);
   Utils.render(filmsContainer, topRatedFilmsComponent.getElement());
-  filmsComponent.initComponets();
+  topRatedFilmsComponent.initComponets();
 
   const hasCommentsFilms = films.filter((f) => {
     return f.comments !== null && f.comments.length > 0;
@@ -68,7 +68,7 @@ const initContent = () => {
   const mostCommentFilms = Utils.getTopFilmsByProperty(hasCommentsFilms, `comments`);
   const mostCommentFilmsComponent = Films.createInstance(mostCommentFilms, FIMLS_COMPONENT_TYPES.MOST_COMMENTS);
   Utils.render(filmsContainer, mostCommentFilmsComponent.getElement());
-  filmsComponent.initComponets();
+  mostCommentFilmsComponent.initComponets();
 
   initMoreButton(filmsComponentElement);
 };
