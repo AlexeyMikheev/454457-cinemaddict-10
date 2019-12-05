@@ -81,6 +81,8 @@ const initMoreButton = (parentContainer) => {
 
       const pageFilms = Utils.getFilmsByPageNumber(films, currentPage);
       filmsComponent.addFilms(pageFilms);
+      filmsComponent.clearComponents();
+      filmsComponent.initComponets();
 
       if (!isMoreButtonVisible()) {
         moreButton.remove();

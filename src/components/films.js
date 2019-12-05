@@ -59,8 +59,6 @@ export default class Films {
 
   addFilms(films) {
     this._films.push(...films);
-    this.clearComponents();
-    this.initComponets();
   }
 
   initComponets() {
