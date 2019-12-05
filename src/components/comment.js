@@ -1,7 +1,7 @@
 
 import Utils from '../utils.js';
 
-const createCommentTemplate = (comment) => {
+const getTemplate = (comment) => {
 
   const currentDate = new Date();
   const {emotion, text, author, commentDate} = comment;
@@ -26,20 +26,12 @@ export default class Comment {
 
   constructor(comment) {
     this._comment = comment;
-    this.init();
   }
 
-  init() {
+  getElement() {
     if (!this._element) {
-      this._element = Utils.createElement(this.getTemplate());
+      this._element = Utils.createElement(getTemplate(this._comment));
     }
-  }
-
-  getTemplate() {
-    return createCommentTemplate(this._comment);
-  }
-
-  get Element() {
     return this._element;
   }
 

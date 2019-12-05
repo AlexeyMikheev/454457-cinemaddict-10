@@ -119,7 +119,8 @@ export default class FilmDeatil {
 
       const commentWrapper = this._element.querySelector(`.film-details__comments-wrap`);
       if (commentWrapper !== null) {
-        commentWrapper.appendChild(commentsComponent.Element);
+        commentWrapper.appendChild(commentsComponent.getElement());
+        commentsComponent.initComments();
       }
     }
   }
