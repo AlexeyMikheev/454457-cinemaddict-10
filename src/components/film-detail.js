@@ -175,8 +175,8 @@ export default class FilmDeatil {
 
   remove() {
     if (this._element !== null) {
-      this._element.remove();
       document.removeEventListener(`keydown`, this._getOnDocumentKeyDown);
+      this._element.remove();
       this._element = null;
     }
   }

@@ -43,9 +43,12 @@ export default class Films {
 
   getTemplate() {
     switch (this._componentType) {
-      case FIMLS_COMPONENT_TYPES.FIMLS: return createFilmsListTemplate();
-      case FIMLS_COMPONENT_TYPES.TOP_RATED: return createFilmsTopRatedTemplate();
-      case FIMLS_COMPONENT_TYPES.MOST_COMMENTS: return createFilmsMostCommentedTemplate();
+      case FIMLS_COMPONENT_TYPES.FIMLS:
+        return createFilmsListTemplate();
+      case FIMLS_COMPONENT_TYPES.TOP_RATED:
+        return createFilmsTopRatedTemplate();
+      case FIMLS_COMPONENT_TYPES.MOST_COMMENTS:
+        return createFilmsMostCommentedTemplate();
       default: return ``;
     }
   }
@@ -83,7 +86,9 @@ export default class Films {
   }
 
   remove() {
-    this._element = this._parentContainer = this._componentType = null;
+    this._element = null;
+    this._parentContainer = null;
+    this._componentType = null;
     this.clearComponents();
   }
 }
