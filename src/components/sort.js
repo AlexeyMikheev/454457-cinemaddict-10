@@ -12,12 +12,6 @@ export default class Sotr {
     this._element = null;
   }
 
-  init() {
-    if (!this._element) {
-      this._element = Utils.createElement(getTemplate());
-    }
-  }
-
   getElement() {
     if (!this._element) {
       this._element = Utils.createElement(getTemplate());
