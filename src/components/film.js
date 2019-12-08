@@ -1,7 +1,8 @@
 
 import Utils from '../utils.js';
+import AbstractComponent from './abstract-component.js';
 
-const getTemplate = (filmCard) => {
+const getFilmTemplate = (filmCard) => {
 
   const {title, rating, releaseDate, duration, genres, poster, description, comments, isWaitingWatched, isWatched, isFavorite} = filmCard;
 
@@ -32,11 +33,16 @@ const getTemplate = (filmCard) => {
 </article>`;
 };
 
-export default class Film {
+export default class Film extends AbstractComponent {
 
   constructor(film) {
+    super();
     this._film = film;
     this._onClickCb = null;
+  }
+
+  getTemplate() {
+    return getFilmTemplate(this._film);
   }
 
   initClickEvent(cb) {
@@ -46,19 +52,7 @@ export default class Film {
     this._element.addEventListener(`click`, this._onClickCb);
   }
 
-  getElement() {
-    if (!this._element) {
-      this._element = Utils.createElement(getTemplate(this._film));
-    }
-    return this._element;
-  }
-
   removeCb() {
     this._element.removeEventListener(`click`, this._onClickCb);
-  }
-
-  removeElement() {
-    this._element.remove();
-    this._element = null;
   }
 }

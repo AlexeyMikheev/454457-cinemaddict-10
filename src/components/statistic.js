@@ -1,20 +1,17 @@
-import Utils from '../utils.js';
+import AbstractComponent from './abstract-component.js';
 
-const getTemplate = (totalMovies) => {
+const getStatisticTemplate = (totalMovies) => {
   return `<section class="footer__statistics"><p>${totalMovies} movies inside</p></section>`;
 };
 
-export default class Statistic {
+export default class Statistic extends AbstractComponent {
   constructor(totalMovies) {
+    super();
     this._totalMovies = totalMovies;
-    this._element = null;
   }
 
-  getElement() {
-    if (!this._element) {
-      this._element = Utils.createElement(getTemplate(this._totalMovies));
-    }
-    return this._element;
+  getTemplate() {
+    return getStatisticTemplate(this._totalMovies);
   }
 
   removeExist() {
@@ -22,9 +19,5 @@ export default class Statistic {
     if (footerStatistic !== null) {
       footerStatistic.remove();
     }
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }

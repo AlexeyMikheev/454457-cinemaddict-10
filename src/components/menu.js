@@ -1,6 +1,6 @@
-import Utils from '../utils.js';
+import AbstractComponent from './abstract-component.js';
 
-const getTemplate = (filters) => {
+const getMenuTemplate = (filters) => {
   const filtersMappedTemplate = filters.reduce((template, filter) => {
     const {title, anchor, count, isActive, isAddition} = filter;
     const activeClass = isActive ? `main-navigation__item--active` : ``;
@@ -18,17 +18,14 @@ const getTemplate = (filters) => {
   return `<nav class="main-navigation">${filtersMappedTemplate}</nav>`;
 };
 
-export default class Menu {
+export default class Menu extends AbstractComponent {
   constructor(filters) {
+    super();
     this._filters = filters;
-    this._element = null;
   }
 
-  getElement() {
-    if (!this._element) {
-      this._element = Utils.createElement(getTemplate(this._filters));
-    }
-    return this._element;
+  getTemplate() {
+    return getMenuTemplate(this._filters);
   }
 
   removeExist() {
@@ -36,9 +33,5 @@ export default class Menu {
     if (filtersContainer !== null) {
       filtersContainer.remove();
     }
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }

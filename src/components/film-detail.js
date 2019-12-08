@@ -1,6 +1,7 @@
 import Utils from '../utils.js';
 import Comments from './comments.js';
 import AddNewCommentForm from './add-comment-form.js';
+import AbstractComponent from './abstract-component.js';
 
 const getGenresTemplate = (genres) => {
   return genres.map((genre) => {
@@ -8,7 +9,7 @@ const getGenresTemplate = (genres) => {
   }).join(`\n`);
 };
 
-const getTemplate = (filmCard) => {
+const getFilmDetailTemplate = (filmCard) => {
 
   const {poster, age, title, originalTitle, rating, producer, writers, actors, duration, country, releaseDate, description, genres} = filmCard;
 
@@ -106,8 +107,9 @@ const getTemplate = (filmCard) => {
 </section>`;
 };
 
-export default class FilmDeatil {
+export default class FilmDeatil extends AbstractComponent {
   constructor(film) {
+    super();
     this._film = film;
   }
 
@@ -119,6 +121,7 @@ export default class FilmDeatil {
 
       const commentWrapper = this.getCommentWrapper();
       if (commentWrapper !== null) {
+        commentWrapper.appendChild(commentsComponent.getTitleElement());
         commentWrapper.appendChild(commentsComponent.getElement());
         commentsComponent.initComments();
       }
@@ -137,11 +140,8 @@ export default class FilmDeatil {
     }
   }
 
-  getElement() {
-    if (!this._element) {
-      this._element = Utils.createElement(getTemplate(this._film));
-    }
-    return this._element;
+  getTemplate() {
+    return getFilmDetailTemplate(this._film);
   }
 
   addCloseEvent(cb) {
@@ -155,12 +155,5 @@ export default class FilmDeatil {
 
   removeCb() {
     this._element.removeEventListener(`click`, this._onClickCb);
-  }
-
-  removeElement() {
-    if (this._element !== null) {
-      this._element.remove();
-      this._element = null;
-    }
   }
 }

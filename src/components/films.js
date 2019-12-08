@@ -1,6 +1,6 @@
-import Utils from '../utils.js';
 import {FIMLS_COMPONENT_TYPES} from '../const.js';
 import Film from './film.js';
+import AbstractComponent from './abstract-component.js';
 
 const createFilmsListTemplate = () =>
   `<section class="films-list">
@@ -20,17 +20,11 @@ const createFilmsMostCommentedTemplate = () =>
     <div class="films-list__container"></div>
   </section/`;
 
-export default class Films {
+export default class Films extends AbstractComponent {
   constructor(films, componentType) {
+    super();
     this._componentType = componentType;
     this._films = films;
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = Utils.createElement(this.getTemplate());
-    }
-    return this._element;
   }
 
   getTemplate() {
@@ -69,11 +63,5 @@ export default class Films {
     });
 
     this._filmsComponents = null;
-  }
-
-  removeElement() {
-    this._element.removeElement();
-    this._element = null;
-    this._componentType = null;
   }
 }
