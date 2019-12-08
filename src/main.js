@@ -9,5 +9,5 @@ const filters = generateFilters();
 const films = createFilmCards(COUNT_FILMS);
 
 const pageController = new PageController(films, filters);
-pageController.init();
+pageController.render();
 

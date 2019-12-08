@@ -24,7 +24,7 @@ export default class PageController {
     this._footer = document.querySelector(`.footer`);
   }
 
-  init() {
+  render() {
     this._onCloseFilmDetail = () => {
       if (this._filmDetail !== null) {
         this._filmDetail.removeCb();
