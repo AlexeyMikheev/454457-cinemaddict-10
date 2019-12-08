@@ -8,6 +8,6 @@ import {COUNT_FILMS} from './const.js';
 const filters = generateFilters();
 const films = createFilmCards(COUNT_FILMS);
 
-const pageController = new PageController(films, filters);
-pageController.render();
+const pageController = new PageController();
+pageController.render(films, filters);
 

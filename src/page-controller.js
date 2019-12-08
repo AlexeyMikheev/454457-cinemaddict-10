@@ -12,8 +12,8 @@ import {ONE_TASKS_PAGE_COUNT, Filters, FIMLS_COMPONENT_TYPES, RenderPosition, ES
 import Utils from './utils.js';
 export default class PageController {
   constructor(films, filters) {
-    this._films = films;
-    this._filters = filters;
+    this._films = null;
+    this._filters = null;
     this._currentPage = 0;
     this._filmsComponent = null;
     this._filmDetail = null;
@@ -24,7 +24,9 @@ export default class PageController {
     this._footer = document.querySelector(`.footer`);
   }
 
-  render() {
+  render(films, filters) {
+    this._films = films;
+    this._filters = filters;
     this._onCloseFilmDetail = () => {
       if (this._filmDetail !== null) {
         this._filmDetail.removeCb();
