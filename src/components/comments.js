@@ -41,7 +41,7 @@ export default class Comments {
     });
   }
 
-  remove() {
+  removeElement() {
     this._element = this._titleElement = null;
 
     this._commentsComponent.forEach((comment) => {

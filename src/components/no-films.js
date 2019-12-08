@@ -19,7 +19,7 @@ export default class NoFilms {
     return getNoFilmsTemplate();
   }
 
-  remove() {
+  removeElement() {
     this._element = null;
   }
 }

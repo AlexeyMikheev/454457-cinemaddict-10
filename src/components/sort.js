@@ -19,7 +19,7 @@ export default class Sotr {
     return this._element;
   }
 
-  remove() {
+  removeElement() {
     this._element = null;
   }
 }

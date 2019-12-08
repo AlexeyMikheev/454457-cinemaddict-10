@@ -1,6 +1,5 @@
 
 import Utils from '../utils.js';
-import FilmDeatil from './film-detail.js';
 
 const getTemplate = (filmCard) => {
 
@@ -37,10 +36,14 @@ export default class Film {
 
   constructor(film) {
     this._film = film;
+    this._onClickCb = null;
   }
 
-  initClickEvent() {
-    this._element.addEventListener(`click`, this.onShowDetail());
+  initClickEvent(cb) {
+    this._onClickCb = (evt) => {
+      cb(evt, this._film);
+    };
+    this._element.addEventListener(`click`, this._onClickCb);
   }
 
   getElement() {
@@ -50,26 +53,11 @@ export default class Film {
     return this._element;
   }
 
-  isClickAvaliable(classList) {
-    return classList.contains(`film-card__poster`) ||
-    classList.contains(`film-card__comments`) ||
-    classList.contains(`film-card__title`);
+  removeCb() {
+    this._element.removeEventListener(`click`, this._onClickCb);
   }
 
-  onShowDetail() {
-    return (evt) => {
-      if (this.isClickAvaliable(evt.target.classList)) {
-        const filmDetail = new FilmDeatil(this._film);
-        Utils.render(document.body, filmDetail.getElement());
-        filmDetail.initComments();
-        filmDetail.initAddCommentForm();
-        filmDetail.addCloseEvents();
-      }
-    };
-  }
-
-  remove() {
-    this._element.removeEventListener(`click`, this.onShowDetail());
+  removeElement() {
     this._element.remove();
     this._element = null;
   }

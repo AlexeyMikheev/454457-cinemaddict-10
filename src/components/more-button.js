@@ -21,7 +21,7 @@ export default class MoreButton {
     return this._element;
   }
 
-  remove() {
+  removeElement() {
     this._element.remove();
     this._element = null;
   }

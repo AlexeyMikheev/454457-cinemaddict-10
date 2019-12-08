@@ -24,7 +24,7 @@ export default class Statistic {
     }
   }
 
-  remove() {
+  removeElement() {
     this._element = null;
   }
 }

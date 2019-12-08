@@ -38,7 +38,7 @@ export default class Menu {
     }
   }
 
-  remove() {
+  removeElement() {
     this._element = null;
   }
 }

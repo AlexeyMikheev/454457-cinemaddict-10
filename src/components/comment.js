@@ -35,7 +35,7 @@ export default class Comment {
     return this._element;
   }
 
-  remove() {
+  removeElement() {
     this._element = null;
   }
 }

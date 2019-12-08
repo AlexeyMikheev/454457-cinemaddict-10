@@ -1,5 +1,4 @@
 import Utils from '../utils.js';
-import {RenderPosition, ESC_KEY} from '../const.js';
 import Comments from './comments.js';
 import AddNewCommentForm from './add-comment-form.js';
 
@@ -145,37 +144,21 @@ export default class FilmDeatil {
     return this._element;
   }
 
-  render(container) {
-    Utils.render(container, this._element, RenderPosition.BEFOREEND);
-    this.addCloseEvents();
-  }
+  addCloseEvent(cb) {
+    this._onClickCb = (evt) => {
+      cb(evt);
+    };
 
-  addCloseEvents() {
     let closeBtn = this._element.querySelector(`.film-details__close-btn`);
-    closeBtn.addEventListener(`click`, () => {
-      this.remove();
-    });
-
-    this._getOnDocumentKeyDown = (evt) => {
-      if (evt.keyCode === ESC_KEY) {
-        this.remove();
-      }
-    };
-
-    document.addEventListener(`keydown`, this._getOnDocumentKeyDown);
+    closeBtn.addEventListener(`click`, this._onClickCb);
   }
 
-  getOnDocumentKeyDown() {
-    return (evt) => {
-      if (evt.keyCode === ESC_KEY) {
-        this.remove();
-      }
-    };
+  removeCb() {
+    this._element.removeEventListener(`click`, this._onClickCb);
   }
 
-  remove() {
+  removeElement() {
     if (this._element !== null) {
-      document.removeEventListener(`keydown`, this._getOnDocumentKeyDown);
       this._element.remove();
       this._element = null;
     }

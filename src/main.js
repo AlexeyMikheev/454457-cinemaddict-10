@@ -2,11 +2,13 @@ import Profile from './components/profile.js';
 import Menu from './components/menu.js';
 import Sotr from './components/sort.js';
 import Films from './components/films';
+import FilmsContainer from './components/films-container';
+import FilmDeatil from './components/film-detail.js';
 import MoreButton from './components/more-button.js';
 import Statistic from './components/statistic.js';
 import NoFilms from './components/no-films.js';
 
-import {COUNT_FILMS, ONE_TASKS_PAGE_COUNT, Filters, FIMLS_COMPONENT_TYPES, RenderPosition} from './const.js';
+import {COUNT_FILMS, ONE_TASKS_PAGE_COUNT, Filters, FIMLS_COMPONENT_TYPES, RenderPosition, ESC_KEY} from './const.js';
 import Utils from './utils.js';
 
 import {createFilmCards} from './mock/filmCard.js';
@@ -18,6 +20,39 @@ const footer = document.querySelector(`.footer`);
 
 const isMoreButtonVisible = () => {
   return (currentPage + 1) * ONE_TASKS_PAGE_COUNT < films.length;
+};
+
+const onShowFilmDetail = (evt, film) => {
+  onCloseFilmDetail();
+
+  const classList = evt.target.classList;
+  if (classList.contains(`film-card__poster`) ||
+    classList.contains(`film-card__comments`) ||
+    classList.contains(`film-card__title`)) {
+
+    filmDetail = new FilmDeatil(film);
+    Utils.render(document.body, filmDetail.getElement());
+
+    filmDetail.initComments();
+    filmDetail.initAddCommentForm();
+    filmDetail.addCloseEvent(onCloseFilmDetail);
+  }
+};
+
+const onCloseFilmDetail = () => {
+  if (filmDetail !== null) {
+    filmDetail.removeCb();
+    filmDetail.removeElement();
+    filmDetail = null;
+  }
+};
+
+const initDocumentEvents = () => {
+  document.addEventListener(`keydown`, (evt) => {
+    if (evt.keyCode === ESC_KEY) {
+      onCloseFilmDetail();
+    }
+  });
 };
 
 const initHeader = () => {
@@ -42,17 +77,18 @@ const initHeader = () => {
 };
 
 const initContent = () => {
-  const filmsContainer = Films.getFilmsContainer();
+  const filmsContainer = new FilmsContainer().getElement();
   Utils.render(mainContainer, filmsContainer);
 
   if (films.length > 0) {
 
     const currentPageFimls = Utils.getFilmsByPageNumber(films, currentPage);
 
-    filmsComponent = Films.createInstance(currentPageFimls, FIMLS_COMPONENT_TYPES.FIMLS);
+    filmsComponent = new Films(currentPageFimls, FIMLS_COMPONENT_TYPES.FIMLS);
     const filmsComponentElement = filmsComponent.getElement();
     Utils.render(filmsContainer, filmsComponentElement);
-    filmsComponent.initComponets();
+
+    filmsComponent.initComponets(onShowFilmDetail);
 
     const hasRatingFilms = films.filter((f) => {
       return f.rating > 0;
@@ -60,18 +96,18 @@ const initContent = () => {
 
     const topRatedFilms = Utils.getTopFilmsByProperty(hasRatingFilms, `rating`);
 
-    const topRatedFilmsComponent = Films.createInstance(topRatedFilms, FIMLS_COMPONENT_TYPES.TOP_RATED);
+    const topRatedFilmsComponent = new Films(topRatedFilms, FIMLS_COMPONENT_TYPES.TOP_RATED);
     Utils.render(filmsContainer, topRatedFilmsComponent.getElement());
-    topRatedFilmsComponent.initComponets();
+    topRatedFilmsComponent.initComponets(onShowFilmDetail);
 
     const hasCommentsFilms = films.filter((f) => {
       return f.comments !== null && f.comments.length > 0;
     });
 
     const mostCommentFilms = Utils.getTopFilmsByProperty(hasCommentsFilms, `comments`);
-    const mostCommentFilmsComponent = Films.createInstance(mostCommentFilms, FIMLS_COMPONENT_TYPES.MOST_COMMENTS);
+    const mostCommentFilmsComponent = new Films(mostCommentFilms, FIMLS_COMPONENT_TYPES.MOST_COMMENTS);
     Utils.render(filmsContainer, mostCommentFilmsComponent.getElement());
-    mostCommentFilmsComponent.initComponets();
+    mostCommentFilmsComponent.initComponets(onShowFilmDetail);
 
     initMoreButton(filmsComponentElement);
   } else {
@@ -88,10 +124,10 @@ const initMoreButton = (parentContainer) => {
       const pageFilms = Utils.getFilmsByPageNumber(films, currentPage);
       filmsComponent.addFilms(pageFilms);
       filmsComponent.clearComponents();
-      filmsComponent.initComponets();
+      filmsComponent.initComponets(onShowFilmDetail);
 
       if (!isMoreButtonVisible()) {
-        moreButton.remove();
+        moreButton.removeElement();
       }
     };
 
@@ -105,10 +141,13 @@ const filters = generateFilters();
 const films = createFilmCards(COUNT_FILMS);
 let currentPage = 0;
 let filmsComponent = null;
+let filmDetail = null;
 
 initHeader();
 
 initContent();
+
+initDocumentEvents();
 
 const statisticComponent = new Statistic(films.length);
 statisticComponent.removeExist();
