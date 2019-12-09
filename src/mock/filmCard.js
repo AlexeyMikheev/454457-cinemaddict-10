@@ -120,7 +120,7 @@ const createComment = () => {
     text: createRandomItems(DESCRIPTION.split(`.`), MIN_COMMENTS_COUNT, MAX_COMMENTS_COUNT).join(` `),
     emotion: getRandomItem(Emotions),
     author: getRandomItem(Peoples),
-    commentDate: getRandomDate(),
+    commentDate: getRandomDate().valueOf(),
   };
 };
 
