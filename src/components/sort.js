@@ -7,7 +7,7 @@ export const getSortTemplate = () =>
     <li><a href="#" class="sort__button">Sort by rating</a></li>
   </ul>`;
 
-export default class Sotr extends AbstractComponent {
+export default class Sort extends AbstractComponent {
   constructor() {
     super();
   }

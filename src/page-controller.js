@@ -1,6 +1,6 @@
 import Profile from './components/profile.js';
 import Menu from './components/menu.js';
-import Sotr from './components/sort.js';
+import Sort from './components/sort.js';
 import Films from './components/films';
 import FilmsContainer from './components/films-container';
 import FilmDeatil from './components/film-detail.js';
@@ -92,7 +92,7 @@ export default class PageController {
     menuComponent.removeExist();
     Utils.render(this._mainContainer, menuComponent.getElement(), RenderPosition.AFTERBEGIN);
 
-    const sortComponent = new Sotr();
+    const sortComponent = new Sort();
     Utils.render(this._mainContainer, sortComponent.getElement());
   }
 
