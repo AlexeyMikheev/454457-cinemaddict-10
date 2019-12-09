@@ -8,17 +8,19 @@ import MoreButton from './components/more-button.js';
 import Statistic from './components/statistic.js';
 import NoFilms from './components/no-films.js';
 
-import {ONE_TASKS_PAGE_COUNT, Filters, FIMLS_COMPONENT_TYPES, RenderPosition, ESC_KEY} from './const.js';
+import {ONE_TASKS_PAGE_COUNT, Filters, FIMLS_COMPONENT_TYPES, RenderPosition, ESC_KEY, SORT_TYPES} from './const.js';
 import Utils from './utils.js';
 export default class PageController {
-  constructor(films, filters) {
+  constructor() {
     this._films = null;
     this._filters = null;
     this._currentPage = 0;
+    this._sortType = SORT_TYPES.DEFAULT;
     this._filmsComponent = null;
     this._filmDetail = null;
     this._onCloseFilmDetail = null;
     this._moreButton = null;
+    this._sortComponent = null;
     this._headerContainer = document.querySelector(`.header`);
     this._mainContainer = document.querySelector(`.main`);
     this._footer = document.querySelector(`.footer`);
@@ -69,6 +71,15 @@ export default class PageController {
       }
     };
 
+    this._onSortButtonClick = (sortType) =>{
+      this._sortType = sortType;
+      if (this._sortComponent !== null) {
+        this._sortComponent.SelectedFilter = this._sortType;
+        this._sortComponent.removeSortElements();
+        this._sortComponent.renderSortElements();
+      }
+    };
+
     this.initHeader();
     this.initContent();
     this.initDocumentEvents();
@@ -92,8 +103,10 @@ export default class PageController {
     menuComponent.removeExist();
     Utils.render(this._mainContainer, menuComponent.getElement(), RenderPosition.AFTERBEGIN);
 
-    const sortComponent = new Sort();
-    Utils.render(this._mainContainer, sortComponent.getElement());
+    this._sortComponent = new Sort(this._sortType);
+    Utils.render(this._mainContainer, this._sortComponent.getElement());
+    this._sortComponent.renderSortElements();
+    this._sortComponent.addSortEvent(this._onSortButtonClick);
   }
 
   initContent() {

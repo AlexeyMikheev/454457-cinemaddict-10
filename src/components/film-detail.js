@@ -111,6 +111,7 @@ export default class FilmDeatil extends AbstractComponent {
   constructor(film) {
     super();
     this._film = film;
+    this._onClickCb = null;
   }
 
   initComments() {
@@ -155,5 +156,6 @@ export default class FilmDeatil extends AbstractComponent {
 
   removeCb() {
     this._element.removeEventListener(`click`, this._onClickCb);
+    this._onClickCb = null;
   }
 }

@@ -48,3 +48,9 @@ export const DESCRIPTION_SPACE = 1;
 export const MANY_COMMENTS_COUNT = 1;
 
 export const ONE_DAY = 86400000;
+
+export const SORT_TYPES = {
+  DEFAULT: 0,
+  DATE: 1,
+  RATING: 2
+};
