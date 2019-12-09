@@ -42,6 +42,11 @@ export default class Sort extends AbstractComponent {
     this._element.addEventListener(`click`, this._onClickCb);
   }
 
+  refreshSortElements() {
+    this.removeSortElements();
+    this.renderSortElements();
+  }
+
   renderSortElements() {
     this._sortElements = this._sortFilters.map((sortFilter)=>{
       return Utils.createElement(getSortFilterTemplate(this._selectedFilter, sortFilter));

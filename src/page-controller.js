@@ -75,8 +75,7 @@ export default class PageController {
       this._sortType = sortType;
       if (this._sortComponent !== null) {
         this._sortComponent.SelectedFilter = this._sortType;
-        this._sortComponent.removeSortElements();
-        this._sortComponent.renderSortElements();
+        this._sortComponent.refreshSortElements();
 
         const sortedFilms = this.getFilms();
 
