@@ -39,7 +39,7 @@ export default class Films extends AbstractComponent {
     }
   }
 
-  set Films(value) {
+  set films(value) {
     this._films = value;
   }
 

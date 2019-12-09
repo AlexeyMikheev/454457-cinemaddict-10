@@ -67,7 +67,7 @@ export default class PageController {
 
       const sortedFilms = this.getFilms();
 
-      this._filmsComponent.Films = sortedFilms;
+      this._filmsComponent.films = sortedFilms;
       this._filmsComponent.refreshComponents(this._onShowFilmDetail);
 
       if (!this._isMoreButtonVisible()) {
@@ -83,7 +83,7 @@ export default class PageController {
 
         const sortedFilms = this.getFilms();
 
-        this._filmsComponent.Films = sortedFilms;
+        this._filmsComponent.films = sortedFilms;
         this._filmsComponent.refreshComponents(this._onShowFilmDetail);
       }
     };
