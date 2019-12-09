@@ -150,7 +150,7 @@ export default class FilmDeatil extends AbstractComponent {
       cb(evt);
     };
 
-    let closeBtn = this._element.querySelector(`.film-details__close-btn`);
+    const closeBtn = this._element.querySelector(`.film-details__close-btn`);
     closeBtn.addEventListener(`click`, this._onClickCb);
   }
 

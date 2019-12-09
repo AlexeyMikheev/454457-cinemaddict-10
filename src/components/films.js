@@ -57,13 +57,13 @@ export default class Films extends AbstractComponent {
 
     this._filmsComponents.forEach((filmComponent) => {
       filmsListContainer.appendChild(filmComponent.getElement());
-      filmComponent.initClickEvent(cb);
+      filmComponent.addClickEvent(cb);
     });
   }
 
   clearComponents() {
     this._filmsComponents.forEach((filmComponent) => {
-      filmComponent.removeCb();
+      filmComponent.removeClickEvent();
       filmComponent.removeElement();
     });
 

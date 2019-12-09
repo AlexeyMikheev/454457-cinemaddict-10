@@ -1,5 +1,5 @@
 import AbstractComponent from './abstract-component.js';
-import {SORT_TYPES} from '../const.js';
+import {SortTypes} from '../const.js';
 import Utils from '../utils.js';
 
 export const getSortFilterTemplate = (selectedFilter, sortFilter) => {
@@ -16,16 +16,16 @@ export default class Sort extends AbstractComponent {
     this._selectedFilter = selectedFilter;
     this._sortElements = [];
     this._sortFilters = [
-      {value: SORT_TYPES.DEFAULT, text: `Sort by default`},
-      {value: SORT_TYPES.DATE, text: `Sort by date`},
-      {value: SORT_TYPES.RATING, text: `Sort by rating`}];
+      {value: SortTypes.DEFAULT, text: `Sort by default`},
+      {value: SortTypes.DATE, text: `Sort by date`},
+      {value: SortTypes.RATING, text: `Sort by rating`}];
   }
 
   getTemplate() {
     return getSortFiltersTemplate(this._selectedFilter, this._sortFilters);
   }
 
-  set SelectedFilter(value) {
+  set selectedFilter(value) {
     this._selectedFilter = value;
   }
 

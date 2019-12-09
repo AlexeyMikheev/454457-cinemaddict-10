@@ -11,12 +11,14 @@ export default class AbstractComponent {
   getTemplate() {
     throw new Error(`Abstract method not implemented: getTemplate`);
   }
+
   getElement() {
     if (!this._element) {
       this._element = Utils.createElement(this.getTemplate());
     }
     return this._element;
   }
+
   removeElement() {
     this._element.remove();
     this._element = null;

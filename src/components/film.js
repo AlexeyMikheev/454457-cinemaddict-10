@@ -45,14 +45,14 @@ export default class Film extends AbstractComponent {
     return getFilmTemplate(this._film);
   }
 
-  initClickEvent(cb) {
+  addClickEvent(cb) {
     this._onClickCb = (evt) => {
       cb(evt, this._film);
     };
     this._element.addEventListener(`click`, this._onClickCb);
   }
 
-  removeCb() {
+  removeClickEvent() {
     this._element.removeEventListener(`click`, this._onClickCb);
   }
 }
