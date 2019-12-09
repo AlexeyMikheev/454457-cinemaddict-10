@@ -39,8 +39,13 @@ export default class Films extends AbstractComponent {
     }
   }
 
-  addFilms(films) {
-    this._films.push(...films);
+  set Films(value) {
+    this._films = value;
+  }
+
+  refreshComponents(cb) {
+    this.clearComponents();
+    this.initComponets(cb);
   }
 
   initComponets(cb) {

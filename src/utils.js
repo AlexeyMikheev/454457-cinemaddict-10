@@ -21,7 +21,7 @@ export default class Utils {
 
   static getFormatedReleaseDate(date) {
 
-    const {year, month, day} = this.getDateValues(date);
+    const {year, month, day} = this.getDateValues(new Date(date));
 
     return `${year} ${MONTHS[month]} ${day}`;
   }
@@ -85,11 +85,11 @@ export default class Utils {
   static getFilmsByPageNumber(films, pageNumber, countTasks = ONE_TASKS_PAGE_COUNT) {
     const startIndex = pageNumber * countTasks;
     const endIndex = startIndex + countTasks;
-    return films.slice(startIndex, endIndex);
+    return films.slice(0, endIndex);
   }
 
   static getTopFilmsByProperty(films, propertyName) {
-    const [first = null, second = null] = this.getSortedByDescFilms(films, propertyName);
+    const [first = null, second = null] = this.getSortedFilms(films, propertyName);
     return [first, second];
   }
 
@@ -153,13 +153,13 @@ export default class Utils {
     return `${year}/${month}/${day} ${hours}:${minutes}`;
   }
 
-  static getSortedByDescFilms(films, propertyName) {
+  static getSortedFilms(films, propertyName, byDesc = true) {
     return films.slice().sort((prevFilm, nextFilm) => {
       if (prevFilm[propertyName] > nextFilm[propertyName]) {
-        return -1;
+        return byDesc ? -1 : 1;
       }
       if (prevFilm[propertyName] < nextFilm[propertyName]) {
-        return 1;
+        return byDesc ? 1 : -1;
       }
       return 0;
     });

@@ -61,22 +61,27 @@ export default class PageController {
     this._onMoreButtonClick = () => {
       this._currentPage++;
 
-      const pageFilms = Utils.getFilmsByPageNumber(this._films, this._currentPage);
-      this._filmsComponent.addFilms(pageFilms);
-      this._filmsComponent.clearComponents();
-      this._filmsComponent.initComponets(this._onShowFilmDetail);
+      const sortedFilms = this.getFilms();
+
+      this._filmsComponent.Films = sortedFilms;
+      this._filmsComponent.refreshComponents(this._onShowFilmDetail);
 
       if (!this._isMoreButtonVisible()) {
         this._moreButton.removeElement();
       }
     };
 
-    this._onSortButtonClick = (sortType) =>{
+    this._onSortButtonClick = (sortType) => {
       this._sortType = sortType;
       if (this._sortComponent !== null) {
         this._sortComponent.SelectedFilter = this._sortType;
         this._sortComponent.removeSortElements();
         this._sortComponent.renderSortElements();
+
+        const sortedFilms = this.getFilms();
+
+        this._filmsComponent.Films = sortedFilms;
+        this._filmsComponent.refreshComponents(this._onShowFilmDetail);
       }
     };
 
@@ -168,5 +173,22 @@ export default class PageController {
         this._onCloseFilmDetail();
       }
     });
+  }
+
+  getSortedFilms(sortType, films) {
+    switch (sortType) {
+      case SORT_TYPES.DEFAULT:
+        return films;
+      case SORT_TYPES.DATE:
+        return Utils.getSortedFilms(films, `releaseDate`);
+      case SORT_TYPES.RATING:
+        return Utils.getSortedFilms(films, `rating`);
+      default: return films;
+    }
+  }
+
+  getFilms() {
+    const pageFilms = Utils.getFilmsByPageNumber(this._films, this._currentPage);
+    return this.getSortedFilms(this._sortType, pageFilms);
   }
 }

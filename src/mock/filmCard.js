@@ -90,7 +90,7 @@ const getRandomDate = () => {
   const year = getRandomNumber(MIN_YEAR_LIMIT, MAX_YEAR_LIMIT);
   currentDate.setFullYear(year);
 
-  return currentDate;
+  return currentDate.valueOf();
 };
 
 const getRandomNumber = (min, max) => {
