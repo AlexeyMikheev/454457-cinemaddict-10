@@ -1,12 +1,12 @@
 
 import Utils from '../utils.js';
-import FilmDeatil from './film-detail.js';
+import AbstractComponent from './abstract-component.js';
 
-const getTemplate = (filmCard) => {
+const getFilmTemplate = (filmCard) => {
 
   const {title, rating, releaseDate, duration, genres, poster, description, comments, isWaitingWatched, isWatched, isFavorite} = filmCard;
 
-  const releaseYear = releaseDate.getFullYear();
+  const releaseYear = new Date(releaseDate).getFullYear();
   const formatedDuration = Utils.getFormatedDuration(duration);
   const formatedDescription = Utils.getEllipsisDescription(description);
   const formatedCommentsTitle = Utils.getFormatedCommentsTitle(comments);
@@ -33,44 +33,26 @@ const getTemplate = (filmCard) => {
 </article>`;
 };
 
-export default class Film {
+export default class Film extends AbstractComponent {
 
   constructor(film) {
+    super();
     this._film = film;
+    this._onClickCb = null;
   }
 
-  initClickEvent() {
-    this._element.addEventListener(`click`, this.onShowDetail());
+  getTemplate() {
+    return getFilmTemplate(this._film);
   }
 
-  getElement() {
-    if (!this._element) {
-      this._element = Utils.createElement(getTemplate(this._film));
-    }
-    return this._element;
-  }
-
-  isClickAvaliable(classList) {
-    return classList.contains(`film-card__poster`) ||
-    classList.contains(`film-card__comments`) ||
-    classList.contains(`film-card__title`);
-  }
-
-  onShowDetail() {
-    return (evt) => {
-      if (this.isClickAvaliable(evt.target.classList)) {
-        const filmDetail = new FilmDeatil(this._film);
-        Utils.render(document.body, filmDetail.getElement());
-        filmDetail.initComments();
-        filmDetail.initAddCommentForm();
-        filmDetail.addCloseEvents();
-      }
+  addClickEvent(cb) {
+    this._onClickCb = (evt) => {
+      cb(evt, this._film);
     };
+    this._element.addEventListener(`click`, this._onClickCb);
   }
 
-  remove() {
-    this._element.removeEventListener(`click`, this.onShowDetail());
-    this._element.remove();
-    this._element = null;
+  removeClickEvent() {
+    this._element.removeEventListener(`click`, this._onClickCb);
   }
 }

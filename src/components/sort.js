@@ -1,25 +1,71 @@
+import AbstractComponent from './abstract-component.js';
+import {SortTypes} from '../const.js';
 import Utils from '../utils.js';
 
-export const getTemplate = () =>
-  `<ul class="sort">
-    <li><a href="#" class="sort__button sort__button--active">Sort by default</a></li>
-    <li><a href="#" class="sort__button">Sort by date</a></li>
-    <li><a href="#" class="sort__button">Sort by rating</a></li>
-  </ul>`;
+export const getSortFilterTemplate = (selectedFilter, sortFilter) => {
+  const {value, text} = sortFilter;
+  const activeClass = selectedFilter === value ? `sort__button--active` : ``;
+  return `<li><a href="#" data-sort="${value}" class="sort__button ${activeClass}">${text}</a></li>`;
+};
 
-export default class Sotr {
-  constructor() {
-    this._element = null;
+export const getSortFiltersTemplate = () => `<ul class="sort"></ul>`;
+
+export default class Sort extends AbstractComponent {
+  constructor(selectedFilter) {
+    super();
+    this._selectedFilter = selectedFilter;
+    this._sortElements = [];
+    this._sortFilters = [
+      {value: SortTypes.DEFAULT, text: `Sort by default`},
+      {value: SortTypes.DATE, text: `Sort by date`},
+      {value: SortTypes.RATING, text: `Sort by rating`}];
   }
 
-  getElement() {
-    if (!this._element) {
-      this._element = Utils.createElement(getTemplate());
-    }
-    return this._element;
+  getTemplate() {
+    return getSortFiltersTemplate(this._selectedFilter, this._sortFilters);
   }
 
-  remove() {
-    this._element = null;
+  set selectedFilter(value) {
+    this._selectedFilter = value;
+  }
+
+  addSortEvent(cb) {
+    this._onClickCb = (evt) => {
+      evt.preventDefault();
+      if (evt.target.classList.contains(`sort__button`)) {
+        const selectedFilter = parseInt(evt.target.dataset[`sort`], 10);
+        if (this._selectedFilter !== selectedFilter) {
+          cb(selectedFilter);
+        }
+      }
+    };
+
+    this._element.addEventListener(`click`, this._onClickCb);
+  }
+
+  refreshSortElements() {
+    this.removeSortElements();
+    this.renderSortElements();
+  }
+
+  renderSortElements() {
+    this._sortElements = this._sortFilters.map((sortFilter)=>{
+      return Utils.createElement(getSortFilterTemplate(this._selectedFilter, sortFilter));
+    });
+
+    this._sortElements.forEach((sortElement) => {
+      this._element.appendChild(sortElement);
+    });
+  }
+
+  removeSortElements() {
+    this._sortElements.forEach((sortElement)=>{
+      sortElement.remove();
+    });
+  }
+
+  removeCb() {
+    this._element.removeEventListener(`click`, this._onClickCb);
+    this._onClickCb = null;
   }
 }

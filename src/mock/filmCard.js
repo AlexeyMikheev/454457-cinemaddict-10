@@ -90,7 +90,7 @@ const getRandomDate = () => {
   const year = getRandomNumber(MIN_YEAR_LIMIT, MAX_YEAR_LIMIT);
   currentDate.setFullYear(year);
 
-  return currentDate;
+  return currentDate.valueOf();
 };
 
 const getRandomNumber = (min, max) => {
@@ -120,7 +120,7 @@ const createComment = () => {
     text: createRandomItems(DESCRIPTION.split(`.`), MIN_COMMENTS_COUNT, MAX_COMMENTS_COUNT).join(` `),
     emotion: getRandomItem(Emotions),
     author: getRandomItem(Peoples),
-    commentDate: getRandomDate(),
+    commentDate: getRandomDate().valueOf(),
   };
 };
 

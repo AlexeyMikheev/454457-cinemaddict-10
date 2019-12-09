@@ -1,11 +1,11 @@
 
 import Utils from '../utils.js';
+import AbstractComponent from './abstract-component.js';
 
-const getTemplate = (comment) => {
+const getCommentTemplate = (comment) => {
 
-  const currentDate = new Date();
   const {emotion, text, author, commentDate} = comment;
-  const formatedDifferenceDate = Utils.getFormatedDiffrenceDate(commentDate, currentDate);
+  const formatedDifferenceDate = Utils.getFormatedDiffrenceDate(new Date(commentDate), new Date());
 
   return `<li class="film-details__comment">
                 <span class="film-details__comment-emoji">
@@ -22,20 +22,15 @@ const getTemplate = (comment) => {
             </li>`;
 };
 
-export default class Comment {
+export default class Comment extends AbstractComponent {
 
   constructor(comment) {
+    super();
     this._comment = comment;
   }
 
-  getElement() {
-    if (!this._element) {
-      this._element = Utils.createElement(getTemplate(this._comment));
-    }
-    return this._element;
+  getTemplate() {
+    return getCommentTemplate(this._comment);
   }
 
-  remove() {
-    this._element = null;
-  }
 }

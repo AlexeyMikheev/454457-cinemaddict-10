@@ -1,34 +1,32 @@
 
 import Utils from '../utils.js';
 import Comment from './comment.js';
+import AbstractComponent from './abstract-component.js';
 
 const getTitleTemplate = (commentsLength) => {
   return `<h3 class="film-details__comments-title">Comments <span class="film-details__comments-count">${commentsLength}</span></h3>`;
 };
 
-const getTemplate = () => {
+const getCommentsTemplate = () => {
   return `<ul class="film-details__comments-list"></ul>`;
 };
 
-export default class Comments {
+export default class Comments extends AbstractComponent {
 
   constructor(comments) {
+    super();
     this._comments = comments;
   }
 
-  getElement() {
-    if (!this._element) {
-      this._element = Utils.createElement(getTemplate());
-    }
-    return this._element;
+  getTemplate() {
+    return getCommentsTemplate(this._comment);
   }
 
   getTitleElement() {
     if (!this._titleElement) {
       this._titleElement = Utils.createElement(getTitleTemplate(this._comments.length));
     }
-
-    return this._element;
+    return this._titleElement;
   }
 
   initComments() {
@@ -41,13 +39,15 @@ export default class Comments {
     });
   }
 
-  remove() {
-    this._element = this._titleElement = null;
+  removeTitleElement() {
+    this._titleElement.remove();
+    this._titleElement = null;
+  }
 
+  removeComments() {
     this._commentsComponent.forEach((comment) => {
       comment.remove();
     });
-
     this._commentsComponents = null;
   }
 }

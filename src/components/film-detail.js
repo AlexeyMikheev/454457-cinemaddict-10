@@ -1,7 +1,7 @@
 import Utils from '../utils.js';
-import {RenderPosition, ESC_KEY} from '../const.js';
 import Comments from './comments.js';
 import AddNewCommentForm from './add-comment-form.js';
+import AbstractComponent from './abstract-component.js';
 
 const getGenresTemplate = (genres) => {
   return genres.map((genre) => {
@@ -9,7 +9,7 @@ const getGenresTemplate = (genres) => {
   }).join(`\n`);
 };
 
-const getTemplate = (filmCard) => {
+const getFilmDetailTemplate = (filmCard) => {
 
   const {poster, age, title, originalTitle, rating, producer, writers, actors, duration, country, releaseDate, description, genres} = filmCard;
 
@@ -107,9 +107,11 @@ const getTemplate = (filmCard) => {
 </section>`;
 };
 
-export default class FilmDeatil {
+export default class FilmDeatil extends AbstractComponent {
   constructor(film) {
+    super();
     this._film = film;
+    this._onClickCb = null;
   }
 
   initComments() {
@@ -120,6 +122,7 @@ export default class FilmDeatil {
 
       const commentWrapper = this.getCommentWrapper();
       if (commentWrapper !== null) {
+        commentWrapper.appendChild(commentsComponent.getTitleElement());
         commentWrapper.appendChild(commentsComponent.getElement());
         commentsComponent.initComments();
       }
@@ -138,46 +141,21 @@ export default class FilmDeatil {
     }
   }
 
-  getElement() {
-    if (!this._element) {
-      this._element = Utils.createElement(getTemplate(this._film));
-    }
-    return this._element;
+  getTemplate() {
+    return getFilmDetailTemplate(this._film);
   }
 
-  render(container) {
-    Utils.render(container, this._element, RenderPosition.BEFOREEND);
-    this.addCloseEvents();
-  }
-
-  addCloseEvents() {
-    let closeBtn = this._element.querySelector(`.film-details__close-btn`);
-    closeBtn.addEventListener(`click`, () => {
-      this.remove();
-    });
-
-    this._getOnDocumentKeyDown = (evt) => {
-      if (evt.keyCode === ESC_KEY) {
-        this.remove();
-      }
+  addCloseEvent(cb) {
+    this._onClickCb = (evt) => {
+      cb(evt);
     };
 
-    document.addEventListener(`keydown`, this._getOnDocumentKeyDown);
+    const closeBtn = this._element.querySelector(`.film-details__close-btn`);
+    closeBtn.addEventListener(`click`, this._onClickCb);
   }
 
-  getOnDocumentKeyDown() {
-    return (evt) => {
-      if (evt.keyCode === ESC_KEY) {
-        this.remove();
-      }
-    };
-  }
-
-  remove() {
-    if (this._element !== null) {
-      document.removeEventListener(`keydown`, this._getOnDocumentKeyDown);
-      this._element.remove();
-      this._element = null;
-    }
+  removeCb() {
+    this._element.removeEventListener(`click`, this._onClickCb);
+    this._onClickCb = null;
   }
 }

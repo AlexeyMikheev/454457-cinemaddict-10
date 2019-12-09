@@ -1,6 +1,6 @@
-import Utils from '../utils.js';
+import AbstractComponent from './abstract-component.js';
 
-const getTemplate = () => {
+const getAddNewCommentTemplate = () => {
   return `<div class="film-details__new-comment">
       <div for="add-emoji" class="film-details__add-emoji-label"></div>
 
@@ -32,16 +32,11 @@ const getTemplate = () => {
     </div>`;
 };
 
-export default class AddNewCommentForm {
-
-  getElement() {
-    if (!this._element) {
-      this._element = Utils.createElement(getTemplate());
-    }
-    return this._element;
+export default class AddNewCommentForm extends AbstractComponent {
+  constructor() {
+    super();
   }
-
-  remove() {
-    this._element = null;
+  getTemplate() {
+    return getAddNewCommentTemplate();
   }
 }
