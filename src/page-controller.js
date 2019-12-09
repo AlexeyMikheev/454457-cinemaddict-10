@@ -20,7 +20,7 @@ export default class PageController {
     this._filmDetail = null;
     this._onCloseFilmDetail = null;
     this._moreButton = null;
-    this._sortComponent = null;
+    this._sortComponent = new Sort(this._sortType);
     this._headerContainer = document.querySelector(`.header`);
     this._mainContainer = document.querySelector(`.main`);
     this._footer = document.querySelector(`.footer`);
@@ -107,7 +107,6 @@ export default class PageController {
     menuComponent.removeExist();
     Utils.render(this._mainContainer, menuComponent.getElement(), RenderPosition.AFTERBEGIN);
 
-    this._sortComponent = new Sort(this._sortType);
     Utils.render(this._mainContainer, this._sortComponent.getElement());
     this._sortComponent.renderSortElements();
     this._sortComponent.addSortEvent(this._onSortButtonClick);

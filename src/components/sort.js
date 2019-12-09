@@ -34,8 +34,9 @@ export default class Sort extends AbstractComponent {
       evt.preventDefault();
       if (evt.target.classList.contains(`sort__button`)) {
         const selectedFilter = parseInt(evt.target.dataset[`sort`], 10);
-
-        cb(selectedFilter);
+        if (this._selectedFilter !== selectedFilter) {
+          cb(selectedFilter);
+        }
       }
     };
 
