@@ -30,6 +30,7 @@ export default class PageController {
   render(films, filters) {
     this._films = films;
     this._filters = filters;
+
     this._onCloseFilmDetail = () => {
       if (this._filmDetail !== null) {
         this._filmDetail.removeCb();
@@ -77,6 +78,7 @@ export default class PageController {
 
     this._onSortButtonClick = (sortType) => {
       this._sortType = sortType;
+      
       if (this._sortComponent !== null) {
         this._sortComponent.selectedFilter = this._sortType;
         this._sortComponent.refreshSortElements();
