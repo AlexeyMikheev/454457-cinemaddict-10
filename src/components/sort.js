@@ -64,7 +64,7 @@ export default class Sort extends AbstractComponent {
     });
   }
 
-  removeCb() {
+  removeSortEvent() {
     this._element.removeEventListener(`click`, this._onClickCb);
     this._onClickCb = null;
   }
