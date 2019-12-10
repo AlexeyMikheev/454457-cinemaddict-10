@@ -195,7 +195,7 @@ export default class PageController {
   initDocumentEvents() {
     document.addEventListener(`keydown`, (evt) => {
       if (evt.keyCode === ESC_KEY) {
-        this.getFilmsControlles.forEach((filmController) => {
+        this.getFilmsControlles().forEach((filmController) => {
           if (filmController.HasFilmDeatail) {
             filmController.removeDetailComponent();
           }
