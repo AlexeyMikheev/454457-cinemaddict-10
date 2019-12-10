@@ -46,6 +46,8 @@ export default class MovieController {
   }
 
   render(film) {
+    this.removeComponents();
+
     this._film = film;
     this._filmComponent = new Film(this._film);
 
@@ -62,9 +64,14 @@ export default class MovieController {
   removeComponents() {
     this.removeDetailComponent();
 
+    this.removeFilmComponent();
+  }
+
+  removeFilmComponent() {
     if (this._filmComponent !== null) {
       this._filmComponent.removeClickEvent();
       this._filmComponent.removeElement();
+      this._filmComponent = null;
     }
   }
 
