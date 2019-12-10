@@ -78,7 +78,7 @@ export default class PageController {
 
     this._onSortButtonClick = (sortType) => {
       this._sortType = sortType;
-      
+
       if (this._sortComponent !== null) {
         this._sortComponent.selectedFilter = this._sortType;
         this._sortComponent.refreshSortElements();
