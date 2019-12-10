@@ -19,7 +19,6 @@ export default class PageController {
     this._sortType = SortTypes.DEFAULT;
     this._filmsComponent = null;
     this._filmDetail = null;
-    this._onCloseFilmDetail = null;
     this._moreButton = null;
     this._sortComponent = new Sort(this._sortType);
     this._headerContainer = headerContainer;
