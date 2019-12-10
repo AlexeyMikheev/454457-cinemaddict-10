@@ -112,6 +112,7 @@ export default class FilmDeatil extends AbstractComponent {
     super();
     this._film = film;
     this._onClickCb = null;
+    this._closeBtn = null;
   }
 
   initComments() {
@@ -150,12 +151,12 @@ export default class FilmDeatil extends AbstractComponent {
       cb(evt);
     };
 
-    const closeBtn = this._element.querySelector(`.film-details__close-btn`);
-    closeBtn.addEventListener(`click`, this._onClickCb);
+    this._closeBtn = this._element.querySelector(`.film-details__close-btn`);
+    this._closeBtn.addEventListener(`click`, this._onClickCb);
   }
 
-  removeCb() {
-    this._element.removeEventListener(`click`, this._onClickCb);
+  removeCloseEvent() {
+    this._closeBtn.removeEventListener(`click`, this._onClickCb);
     this._onClickCb = null;
   }
 }
