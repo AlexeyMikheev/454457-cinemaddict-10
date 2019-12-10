@@ -3,11 +3,12 @@ import Film from './components/film.js';
 import FilmDeatil from './components/film-detail.js';
 
 export default class MovieController {
-  constructor(container) {
+  constructor(container, onDataChange) {
     this._container = container;
     this._film = null;
     this._filmDetailComponent = null;
     this._filmComponent = null;
+    this._onDataChange = onDataChange;
 
     this._onCloseFilmDetail = () => {
       if (this._filmDetailComponent !== null) {
@@ -19,6 +20,8 @@ export default class MovieController {
 
     this._onShowFilmDetail = (evt) => {
       this._onCloseFilmDetail();
+
+      // this._onDataChange(this._film, null);
 
       const classList = evt.target.classList;
 
@@ -36,6 +39,10 @@ export default class MovieController {
         this._filmDetailComponent.addCloseEvent(this._onCloseFilmDetail);
       }
     };
+  }
+
+  get film() {
+    return this._film;
   }
 
   render(film) {

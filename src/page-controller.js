@@ -30,21 +30,21 @@ export default class PageController {
     this._mostCommentFilmsControllers = [];
   }
 
-  getFilmsControlles(type) {
-    switch (type) {
-      case FIMLS_COMPONENT_TYPES.FIMLS:
-        return this._filmsControllers;
-      case FIMLS_COMPONENT_TYPES.TOP_RATED:
-        return this._topRatedFilmsControllers;
-      case FIMLS_COMPONENT_TYPES.MOST_COMMENTS:
-        return this._mostCommentFilmsControllers;
-      default: return null;
-    }
+  getFilmsControlles() {
+    return [...this._filmsControllers, ...this._topRatedFilmsControllers, ...this._mostCommentFilmsControllers];
   }
 
   render(films, filters) {
     this._films = films;
     this._filters = filters;
+
+    this._onDataChange = (oldValue, newValue) => {
+      this.getFilmsControlles().forEach((filmController) => {
+        if (filmController.film === oldValue) {
+          debugger;
+        }
+      });
+    };
 
     this._isMoreButtonVisible = () => {
       return (this._currentPage + 1) * ONE_TASKS_PAGE_COUNT < this._films.length;
@@ -101,7 +101,7 @@ export default class PageController {
 
   renderFilms(container, films, filmsControllers) {
     films.forEach((film) => {
-      const filmControler = new MovieController(container);
+      const filmControler = new MovieController(container, this._onDataChange);
       filmControler.render(film);
 
       filmsControllers.push(filmControler);
@@ -195,8 +195,7 @@ export default class PageController {
   initDocumentEvents() {
     document.addEventListener(`keydown`, (evt) => {
       if (evt.keyCode === ESC_KEY) {
-        const allControllers = [...this._filmsControllers, ...this._topRatedFilmsControllers, ...this._mostCommentFilmsControllers];
-        allControllers.forEach((filmController) => {
+        this.getFilmsControlles.forEach((filmController) => {
           if (filmController.HasFilmDeatail) {
             filmController.removeDetailComponent();
           }
