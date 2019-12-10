@@ -40,8 +40,15 @@ export default class PageController {
 
     this._onDataChange = (oldValue, newValue) => {
       this.getFilmsControlles().forEach((filmController) => {
-        if (filmController.film === oldValue) {
-          debugger;
+        const filmId = filmController.film.id;
+
+        if (filmId === oldValue.id) {
+          let filmToUpdate = Utils.getFilmByid(this._films, filmId);
+
+          if (filmToUpdate !== null) {
+            Object.assign(filmToUpdate, newValue);
+            filmController.render(filmToUpdate);
+          }
         }
       });
     };

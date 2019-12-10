@@ -2,6 +2,7 @@ import Utils from '../utils.js';
 import Comments from './comments.js';
 import AddNewCommentForm from './add-comment-form.js';
 import AbstractComponent from './abstract-component.js';
+import {FilmDetailType} from '../const.js';
 
 const getGenresTemplate = (genres) => {
   return genres.map((genre) => {
@@ -11,7 +12,7 @@ const getGenresTemplate = (genres) => {
 
 const getFilmDetailTemplate = (filmCard) => {
 
-  const { poster, age, title, originalTitle, rating, producer, writers, actors, duration, country, releaseDate, description, genres, isFavorite, isWaitingWatched, isWatched } = filmCard;
+  const {poster, age, title, originalTitle, rating, producer, writers, actors, duration, country, releaseDate, description, genres, isFavorite, isWaitingWatched, isWatched} = filmCard;
 
   const formatedWriters = writers.join(`, `);
   const formatedActors = actors.join(`, `);
@@ -91,13 +92,13 @@ const getFilmDetailTemplate = (filmCard) => {
       </div>
 
       <section class="film-details__controls">
-        <input type="checkbox" class="film-details__control-input visually-hidden" id="watchlist" name="watchlist" ${isWaitingWatchedChecked}>
+        <input type="checkbox" class="film-details__control-input visually-hidden" id="watchlist" name="watchlist" ${isWaitingWatchedChecked} data-detail-type="${FilmDetailType.WATCHLIST}">
         <label for="watchlist" class="film-details__control-label film-details__control-label--watchlist">Add to watchlist</label>
 
-        <input type="checkbox" class="film-details__control-input visually-hidden" id="watched" name="watched" ${isWatchedChecked}>
+        <input type="checkbox" class="film-details__control-input visually-hidden" id="watched" name="watched" ${isWatchedChecked} data-detail-type="${FilmDetailType.WATCHED}">
         <label for="watched" class="film-details__control-label film-details__control-label--watched">Already watched</label>
 
-        <input type="checkbox" class="film-details__control-input visually-hidden" id="favorite" name="favorite" ${isFavoriteChecked}>
+        <input type="checkbox" class="film-details__control-input visually-hidden" id="favorite" name="favorite" ${isFavoriteChecked} data-detail-type="${FilmDetailType.FAVORITE}">
         <label for="favorite" class="film-details__control-label film-details__control-label--favorite">Add to favorites</label>
       </section>
     </div>
@@ -117,6 +118,7 @@ export default class FilmDeatil extends AbstractComponent {
     this._film = film;
     this._onClickCb = null;
     this._closeBtn = null;
+    this._detailsContainer = null;
   }
 
   initComments() {
@@ -150,6 +152,34 @@ export default class FilmDeatil extends AbstractComponent {
     return getFilmDetailTemplate(this._film);
   }
 
+  addCheckedChangeEvent(cb) {
+    this._onCheckedChange = (evt) => {
+      const target = evt.target;
+
+      switch (target.dataset[`detailType`]) {
+        case FilmDetailType.WATCHLIST:
+          const isWaitingWatched = !target.checked;
+          cb(this._film, {isWaitingWatched});
+          break;
+        case FilmDetailType.WATCHED:
+          const isWatched = !target.checked;
+          cb(this._film, {isWatched});
+          break;
+        case FilmDetailType.FAVORITE:
+          const isFavorite = !target.checked;
+          cb(this._film, {isFavorite});
+          break;
+      }
+    };
+    this._detailsContainer = this._element.querySelector(`.film-details__controls`);
+    this._detailsContainer.addEventListener(`change`, this._onCheckedChange);
+  }
+
+  removeCheckedChangeEvent() {
+    this._detailsContainer.removeEventListener(`change`, this._onCheckedChange);
+    this._onCheckedChange = null;
+  }
+
   addCloseEvent(cb) {
     this._onClickCb = (evt) => {
       cb(evt);
@@ -162,5 +192,9 @@ export default class FilmDeatil extends AbstractComponent {
   removeCloseEvent() {
     this._closeBtn.removeEventListener(`click`, this._onClickCb);
     this._onClickCb = null;
+  }
+
+  recoveryListeners() {
+
   }
 }

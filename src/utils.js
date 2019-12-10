@@ -164,4 +164,10 @@ export default class Utils {
       return 0;
     });
   }
+
+  static getFilmByid(films, id) {
+    return films.find((film) => {
+      return film.id === id;
+    });
+  }
 }

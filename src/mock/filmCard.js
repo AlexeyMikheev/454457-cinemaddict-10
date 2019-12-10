@@ -85,6 +85,8 @@ const MAX_COMMENTS_COUNT = 20;
 const MIN_YEAR_LIMIT = 1990;
 const MAX_YEAR_LIMIT = 2020;
 
+let fimlCardIdCounter = 0;
+
 const getRandomDate = () => {
   const currentDate = new Date();
   const year = getRandomNumber(MIN_YEAR_LIMIT, MAX_YEAR_LIMIT);
@@ -143,7 +145,10 @@ const createfilmCard = () => {
 
   const filmCardTitle = getRandomItem(FilmsNames);
 
+  const id = fimlCardIdCounter++;
+
   return {
+    id,
     title: filmCardTitle,
     originalTitle: filmCardTitle,
     rating: getRandomDecimal(MIN_RATING_COUNT, MAX_RATING_COUNT),

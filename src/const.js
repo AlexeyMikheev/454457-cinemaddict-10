@@ -54,3 +54,9 @@ export const SortTypes = {
   DATE: 1,
   RATING: 2
 };
+
+export const FilmDetailType = {
+  WATCHLIST: `watchlist`,
+  WATCHED: `watched`,
+  FAVORITE: `favorite`,
+};

@@ -21,8 +21,6 @@ export default class MovieController {
     this._onShowFilmDetail = (evt) => {
       this._onCloseFilmDetail();
 
-      // this._onDataChange(this._film, null);
-
       const classList = evt.target.classList;
 
       const isClickAvaliable = classList.contains(`film-card__poster`) ||
@@ -37,6 +35,7 @@ export default class MovieController {
         this._filmDetailComponent.initComments();
         this._filmDetailComponent.initAddCommentForm();
         this._filmDetailComponent.addCloseEvent(this._onCloseFilmDetail);
+        this._filmDetailComponent.addCheckedChangeEvent(this._onDataChange);
       }
     };
   }
@@ -46,15 +45,37 @@ export default class MovieController {
   }
 
   render(film) {
-    this.removeComponents();
-
     this._film = film;
-    this._filmComponent = new Film(this._film);
-
     const filmsListContainer = this._container.querySelector(`.films-list__container`);
 
-    filmsListContainer.appendChild(this._filmComponent.getElement());
+    if (this._filmComponent === null) {
+      this._filmComponent = new Film(this._film);
+
+      filmsListContainer.appendChild(this._filmComponent.getElement());
+    } else {
+      const newFilmComponent = new Film(this._film);
+
+      this.removeFilmComponentEvents();
+      filmsListContainer.replaceChild(newFilmComponent.getElement(), this._filmComponent.getElement());
+
+      this._filmComponent = newFilmComponent;
+    }
+
     this._filmComponent.addClickEvent(this._onShowFilmDetail);
+    this._filmComponent.addButtonChangeEvent(this._onDataChange);
+
+    if (this._filmDetailComponent !== null) {
+      const newFilmDetailComponent = new FilmDeatil(this._film);
+
+      this.removeDetailComponentEvets();
+      document.body.replaceChild(newFilmDetailComponent.getElement(), this._filmDetailComponent.getElement());
+      this._filmDetailComponent = newFilmDetailComponent;
+
+      this._filmDetailComponent.initComments();
+      this._filmDetailComponent.initAddCommentForm();
+      this._filmDetailComponent.addCloseEvent(this._onCloseFilmDetail);
+      this._filmDetailComponent.addCheckedChangeEvent(this._onDataChange);
+    }
   }
 
   get HasFilmDeatail() {
@@ -63,23 +84,36 @@ export default class MovieController {
 
   removeComponents() {
     this.removeDetailComponent();
+    this.removeDetailComponentEvets();
 
     this.removeFilmComponent();
+    this.removeFilmComponentEvents();
   }
 
   removeFilmComponent() {
     if (this._filmComponent !== null) {
-      this._filmComponent.removeClickEvent();
       this._filmComponent.removeElement();
       this._filmComponent = null;
     }
   }
 
+  removeFilmComponentEvents() {
+    if (this._filmComponent !== null) {
+      this._filmComponent.removeClickEvent();
+    }
+  }
+
   removeDetailComponent() {
     if (this._filmDetailComponent !== null) {
-      this._filmDetailComponent.removeCloseEvent();
       this._filmDetailComponent.removeElement();
       this._filmDetailComponent = null;
+    }
+  }
+
+  removeDetailComponentEvets() {
+    if (this._filmDetailComponent !== null) {
+      this._filmDetailComponent.removeCloseEvent();
+      this._filmDetailComponent.removeCheckedChangeEvent();
     }
   }
 }

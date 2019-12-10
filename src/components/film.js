@@ -1,10 +1,11 @@
 
 import Utils from '../utils.js';
+import {FilmDetailType} from '../const.js';
 import AbstractComponent from './abstract-component.js';
 
 const getFilmTemplate = (filmCard) => {
 
-  const { title, rating, releaseDate, duration, genres, poster, description, comments, isWaitingWatched, isWatched, isFavorite } = filmCard;
+  const {title, rating, releaseDate, duration, genres, poster, description, comments, isWaitingWatched, isWatched, isFavorite} = filmCard;
 
   const releaseYear = new Date(releaseDate).getFullYear();
   const formatedDuration = Utils.getFormatedDuration(duration);
@@ -28,9 +29,9 @@ const getFilmTemplate = (filmCard) => {
   <p class="film-card__description">${formatedDescription}</p>
   <a class="film-card__comments">${formatedCommentsTitle}</a>
   <form class="film-card__controls">
-    <button class="film-card__controls-item button film-card__controls-item--add-to-watchlist ${isWaitingWatchedClass}">Add to watchlist</button>
-    <button class="film-card__controls-item button film-card__controls-item--mark-as-watched ${isWatchedClass}">Mark as watched</button>
-    <button class="film-card__controls-item button film-card__controls-item--favorite ${isFavoriteClass}">Mark as favorite</button>
+    <button class="film-card__controls-item button film-card__controls-item--add-to-watchlist ${isWaitingWatchedClass}" data-detail-type="${FilmDetailType.WATCHLIST}">Add to watchlist</button>
+    <button class="film-card__controls-item button film-card__controls-item--mark-as-watched ${isWatchedClass}" data-detail-type="${FilmDetailType.WATCHED}">Mark as watched</button>
+    <button class="film-card__controls-item button film-card__controls-item--favorite ${isFavoriteClass}" data-detail-type="${FilmDetailType.FAVORITE}">Mark as favorite</button>
   </form>
 </article>`;
 };
@@ -41,6 +42,8 @@ export default class Film extends AbstractComponent {
     super();
     this._film = film;
     this._onClickCb = null;
+    this._onButtonChange = null;
+    this._detailsContainer = null;
   }
 
   getTemplate() {
@@ -54,7 +57,35 @@ export default class Film extends AbstractComponent {
     this._element.addEventListener(`click`, this._onClickCb);
   }
 
+  addButtonChangeEvent(cb) {
+    this._onButtonChange = (evt) => {
+      const target = evt.target;
+
+      switch (target.dataset[`detailType`]) {
+        case FilmDetailType.WATCHLIST:
+          const isWaitingWatched = !target.classList.contains(`film-card__controls-item--active`);
+          cb(this._film, {isWaitingWatched});
+          break;
+        case FilmDetailType.WATCHED:
+          const isWatched = !target.classList.contains(`film-card__controls-item--active`);
+          cb(this._film, {isWatched});
+          break;
+        case FilmDetailType.FAVORITE:
+          const isFavorite = !target.classList.contains(`film-card__controls-item--active`);
+          cb(this._film, {isFavorite});
+          break;
+      }
+    };
+    this._detailsContainer = this._element.querySelector(`.film-card__controls`);
+    this._detailsContainer.addEventListener(`click`, this._onButtonChange);
+  }
+
   removeClickEvent() {
     this._element.removeEventListener(`click`, this._onClickCb);
+  }
+
+  removeBttonChangeEvent() {
+    this._detailsContainer.removeEventListener(`click`, this._onButtonChange);
+    this._onButtonChange = null;
   }
 }
