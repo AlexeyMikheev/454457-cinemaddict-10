@@ -153,13 +153,13 @@ export default class Utils {
     return `${year}/${month}/${day} ${hours}:${minutes}`;
   }
 
-  static getSortedFilms(films, propertyName, byDesc = true) {
+  static getSortedFilms(films, propertyName) {
     return films.slice().sort((prevFilm, nextFilm) => {
       if (prevFilm[propertyName] > nextFilm[propertyName]) {
-        return byDesc ? -1 : 1;
+        return -1;
       }
       if (prevFilm[propertyName] < nextFilm[propertyName]) {
-        return byDesc ? 1 : -1;
+        return 1;
       }
       return 0;
     });

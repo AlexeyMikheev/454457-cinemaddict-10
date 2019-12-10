@@ -12,24 +12,24 @@ import {ONE_TASKS_PAGE_COUNT, Filters, FIMLS_COMPONENT_TYPES, RenderPosition, ES
 import Utils from './utils.js';
 
 export default class PageController {
-  constructor() {
+  constructor(headerContainer, mainContainer, footer) {
     this._films = null;
     this._filters = null;
     this._currentPage = 0;
     this._sortType = SortTypes.DEFAULT;
     this._filmsComponent = null;
     this._filmDetail = null;
-    this._onCloseFilmDetail = null;
     this._moreButton = null;
     this._sortComponent = new Sort(this._sortType);
-    this._headerContainer = document.querySelector(`.header`);
-    this._mainContainer = document.querySelector(`.main`);
-    this._footer = document.querySelector(`.footer`);
+    this._headerContainer = headerContainer;
+    this._mainContainer = mainContainer;
+    this._footer = footer;
   }
 
   render(films, filters) {
     this._films = films;
     this._filters = filters;
+
     this._onCloseFilmDetail = () => {
       if (this._filmDetail !== null) {
         this._filmDetail.removeCb();
@@ -77,6 +77,7 @@ export default class PageController {
 
     this._onSortButtonClick = (sortType) => {
       this._sortType = sortType;
+
       if (this._sortComponent !== null) {
         this._sortComponent.selectedFilter = this._sortType;
         this._sortComponent.refreshSortElements();
