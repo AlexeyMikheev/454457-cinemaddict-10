@@ -29,11 +29,12 @@ export default class MovieController {
 
       if (isClickAvaliable) {
 
-        this._filmDetailComponent = new FilmDeatil(this._film);
-        Utils.render(document.body, this._filmDetailComponent.getElement());
+        this._filmDetailComponent = new FilmDeatil(this._film, document.body);
+        Utils.render(this._filmDetailComponent.container, this._filmDetailComponent.getElement());
 
         this._filmDetailComponent.initComments();
         this._filmDetailComponent.initAddCommentForm();
+        this._filmDetailComponent.initRating();
         this._filmDetailComponent.addCloseEvent(this._onCloseFilmDetail);
         this._filmDetailComponent.addCheckedChangeEvent(this._onDataChange);
       }
@@ -65,16 +66,10 @@ export default class MovieController {
     this._filmComponent.addButtonChangeEvent(this._onDataChange);
 
     if (this._filmDetailComponent !== null) {
-      const newFilmDetailComponent = new FilmDeatil(this._film);
-
-      this.removeDetailComponentEvets();
-      document.body.replaceChild(newFilmDetailComponent.getElement(), this._filmDetailComponent.getElement());
-      this._filmDetailComponent = newFilmDetailComponent;
-
-      this._filmDetailComponent.initComments();
-      this._filmDetailComponent.initAddCommentForm();
-      this._filmDetailComponent.addCloseEvent(this._onCloseFilmDetail);
-      this._filmDetailComponent.addCheckedChangeEvent(this._onDataChange);
+      this._filmDetailComponent.film = this._film;
+      this._filmDetailComponent.removeComponents();
+      this._filmDetailComponent.rerender();
+      this._filmDetailComponent.initComponents();
     }
   }
 

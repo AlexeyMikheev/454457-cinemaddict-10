@@ -1,8 +1,9 @@
 import Utils from '../utils.js';
+import Rating from './rating.js';
 import Comments from './comments.js';
 import AddNewCommentForm from './add-comment-form.js';
-import AbstractComponent from './abstract-component.js';
 import {FilmDetailType} from '../const.js';
+import AbstractSmartComponent from './abstract-smart-component.js';
 
 const getGenresTemplate = (genres) => {
   return genres.map((genre) => {
@@ -103,6 +104,10 @@ const getFilmDetailTemplate = (filmCard) => {
       </section>
     </div>
 
+    <div class="form-details__middle-container">
+
+    </div>
+
     <div class="form-details__bottom-container">
       <section class="film-details__comments-wrap">
 
@@ -112,26 +117,51 @@ const getFilmDetailTemplate = (filmCard) => {
 </section>`;
 };
 
-export default class FilmDeatil extends AbstractComponent {
-  constructor(film) {
+export default class FilmDeatil extends AbstractSmartComponent {
+  constructor(film, container) {
     super();
+    this._container = container;
     this._film = film;
     this._onClickCb = null;
     this._closeBtn = null;
     this._detailsContainer = null;
+    this._ratingContainer = null;
+    this._ratingComponent = null;
+    this._commentsComponent = null;
+    this._addCommentComponent = null;
+  }
+
+  get container() {
+    return this._container;
+  }
+
+  set film(value) {
+    this._film = value;
+  }
+
+  initRating() {
+    if (this._film.isWatched) {
+      this._ratingContainer = this._element.querySelector(`.form-details__middle-container`);
+      this._ratingComponent = new Rating(this._film);
+      this._ratingContainer.appendChild(this._ratingComponent.getElement());
+
+    } else if (this._ratingComponent !== null) {
+      this._ratingComponent.removeElement();
+      this._ratingContainer = null;
+    }
   }
 
   initComments() {
     const {comments} = this._film;
 
     if (comments !== null && comments.length > 0) {
-      let commentsComponent = new Comments(comments);
+      this._commentsComponent = new Comments(comments);
 
       const commentWrapper = this.getCommentWrapper();
       if (commentWrapper !== null) {
-        commentWrapper.appendChild(commentsComponent.getTitleElement());
-        commentWrapper.appendChild(commentsComponent.getElement());
-        commentsComponent.initComments();
+        commentWrapper.appendChild(this._commentsComponent.getTitleElement());
+        commentWrapper.appendChild(this._commentsComponent.getElement());
+        this._commentsComponent.initComments();
       }
     }
   }
@@ -143,8 +173,8 @@ export default class FilmDeatil extends AbstractComponent {
   initAddCommentForm() {
     const commentWrapper = this.getCommentWrapper();
     if (commentWrapper !== null) {
-      let addCommentComponent = new AddNewCommentForm();
-      commentWrapper.appendChild(addCommentComponent.getElement());
+      this._addCommentComponent = new AddNewCommentForm();
+      commentWrapper.appendChild(this._addCommentComponent.getElement());
     }
   }
 
@@ -175,6 +205,26 @@ export default class FilmDeatil extends AbstractComponent {
     this._detailsContainer.addEventListener(`change`, this._onCheckedChange);
   }
 
+  initComponents() {
+    this.initComments();
+    this.initAddCommentForm();
+    this.initRating();
+  }
+
+  removeComponents() {
+    if (this._commentsComponent !== null) {
+      this._commentsComponent.removeElement();
+    }
+
+    if (this._addCommentComponent !== null) {
+      this._addCommentComponent.removeElement();
+    }
+
+    if (this._ratingComponent !== null) {
+      this._ratingComponent.removeElement();
+    }
+  }
+
   removeCheckedChangeEvent() {
     this._detailsContainer.removeEventListener(`change`, this._onCheckedChange);
     this._onCheckedChange = null;
@@ -195,6 +245,10 @@ export default class FilmDeatil extends AbstractComponent {
   }
 
   recoveryListeners() {
+    this._detailsContainer = this._element.querySelector(`.film-details__controls`);
+    this._detailsContainer.addEventListener(`change`, this._onCheckedChange);
 
+    this._closeBtn = this._element.querySelector(`.film-details__close-btn`);
+    this._closeBtn.addEventListener(`click`, this._onClickCb);
   }
 }

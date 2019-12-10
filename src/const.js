@@ -60,3 +60,7 @@ export const FilmDetailType = {
   WATCHED: `watched`,
   FAVORITE: `favorite`,
 };
+
+export const MIN_RATING_VALUE = 1;
+export const MAX_RATING_VALUE = 9;
+export const RATING_RANGE = 1;
