@@ -59,7 +59,6 @@ export default class Rating extends AbstractComponent {
       const rating = parseInt(evt.target.value, 10);
 
       cb(this._film, Object.assign({}, this._film, {rating}));
-
     };
 
     this._detailsContainer = this._element.querySelector(`.film-details__user-rating-score`);
