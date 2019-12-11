@@ -193,7 +193,8 @@ export default class FilmDeatil extends AbstractSmartComponent {
           break;
         case FilmDetailType.WATCHED:
           const isWatched = target.checked;
-          cb(this._film, {isWatched});
+          const rating = isWatched ? this._film.rating : 0;
+          cb(this._film, {rating, isWatched});
           break;
         case FilmDetailType.FAVORITE:
           const isFavorite = target.checked;
