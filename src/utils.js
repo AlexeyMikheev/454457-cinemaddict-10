@@ -1,4 +1,4 @@
-import {ProfileRating, MONTHS, Filters, ONE_TASKS_PAGE_COUNT, RenderPosition, MINUTE_IN_HOUR, MIN_DESCRIPTION_LENGTH, MAX_DESCRIPTION_LENGTH, DESCRIPTION_SPACE, MANY_COMMENTS_COUNT, ONE_DAY} from './const.js';
+import {ProfileRating, MONTHS, Filters, ONE_TASKS_PAGE_COUNT, RenderPosition, MINUTE_IN_HOUR, MIN_DESCRIPTION_LENGTH, MAX_DESCRIPTION_LENGTH, DESCRIPTION_SPACE, MANY_COMMENTS_COUNT, ONE_DAY, SortTypes} from './const.js';
 
 export default class Utils {
 
@@ -89,7 +89,7 @@ export default class Utils {
   }
 
   static getTopFilmsByProperty(films, propertyName) {
-    const [first = null, second = null] = this.getSortedFilms(films, propertyName);
+    const [first = null, second = null] = this.getSortedFilmsByProperty(films, propertyName);
     return [first, second];
   }
 
@@ -125,6 +125,18 @@ export default class Utils {
     }
   }
 
+  static getSortedFilms(sortType, films) {
+    switch (sortType) {
+      case SortTypes.DEFAULT:
+        return films;
+      case SortTypes.DATE:
+        return Utils.getSortedFilmsByProperty(films, `releaseDate`);
+      case SortTypes.RATING:
+        return Utils.getSortedFilmsByProperty(films, `rating`);
+      default: return films;
+    }
+  }
+
   static getHours(duration) {
     return Math.floor(duration / MINUTE_IN_HOUR);
   }
@@ -153,7 +165,7 @@ export default class Utils {
     return `${year}/${month}/${day} ${hours}:${minutes}`;
   }
 
-  static getSortedFilms(films, propertyName) {
+  static getSortedFilmsByProperty(films, propertyName) {
     return films.slice().sort((prevFilm, nextFilm) => {
       if (prevFilm[propertyName] > nextFilm[propertyName]) {
         return -1;
@@ -162,6 +174,12 @@ export default class Utils {
         return 1;
       }
       return 0;
+    });
+  }
+
+  static getFilmByid(films, id) {
+    return films.find((film) => {
+      return film.id === id;
     });
   }
 }

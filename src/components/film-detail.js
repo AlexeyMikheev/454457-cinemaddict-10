@@ -1,7 +1,9 @@
 import Utils from '../utils.js';
+import Rating from './rating.js';
 import Comments from './comments.js';
 import AddNewCommentForm from './add-comment-form.js';
-import AbstractComponent from './abstract-component.js';
+import {FilmDetailType} from '../const.js';
+import AbstractSmartComponent from './abstract-smart-component.js';
 
 const getGenresTemplate = (genres) => {
   return genres.map((genre) => {
@@ -11,7 +13,7 @@ const getGenresTemplate = (genres) => {
 
 const getFilmDetailTemplate = (filmCard) => {
 
-  const {poster, age, title, originalTitle, rating, producer, writers, actors, duration, country, releaseDate, description, genres} = filmCard;
+  const {poster, age, title, originalTitle, rating, producer, writers, actors, duration, country, releaseDate, description, genres, isFavorite, isWaitingWatched, isWatched} = filmCard;
 
   const formatedWriters = writers.join(`, `);
   const formatedActors = actors.join(`, `);
@@ -19,6 +21,10 @@ const getFilmDetailTemplate = (filmCard) => {
   const formatedDuration = Utils.getFormatedDuration(duration);
   const genresTitle = genres.length > 1 ? `genres` : `genre`;
   const genresTemplate = getGenresTemplate(genres);
+
+  const isWaitingWatchedChecked = isWaitingWatched ? `checked` : ``;
+  const isWatchedChecked = isWatched ? `checked` : ``;
+  const isFavoriteChecked = isFavorite ? `checked` : ``;
 
   return `<section class="film-details">
   <form class="film-details__inner" action="" method="get">
@@ -87,15 +93,19 @@ const getFilmDetailTemplate = (filmCard) => {
       </div>
 
       <section class="film-details__controls">
-        <input type="checkbox" class="film-details__control-input visually-hidden" id="watchlist" name="watchlist">
+        <input type="checkbox" class="film-details__control-input visually-hidden" id="watchlist" name="watchlist" ${isWaitingWatchedChecked} data-detail-type="${FilmDetailType.WATCHLIST}">
         <label for="watchlist" class="film-details__control-label film-details__control-label--watchlist">Add to watchlist</label>
 
-        <input type="checkbox" class="film-details__control-input visually-hidden" id="watched" name="watched">
+        <input type="checkbox" class="film-details__control-input visually-hidden" id="watched" name="watched" ${isWatchedChecked} data-detail-type="${FilmDetailType.WATCHED}">
         <label for="watched" class="film-details__control-label film-details__control-label--watched">Already watched</label>
 
-        <input type="checkbox" class="film-details__control-input visually-hidden" id="favorite" name="favorite">
+        <input type="checkbox" class="film-details__control-input visually-hidden" id="favorite" name="favorite" ${isFavoriteChecked} data-detail-type="${FilmDetailType.FAVORITE}">
         <label for="favorite" class="film-details__control-label film-details__control-label--favorite">Add to favorites</label>
       </section>
+    </div>
+
+    <div class="form-details__middle-container">
+
     </div>
 
     <div class="form-details__bottom-container">
@@ -107,25 +117,76 @@ const getFilmDetailTemplate = (filmCard) => {
 </section>`;
 };
 
-export default class FilmDeatil extends AbstractComponent {
-  constructor(film) {
+export default class FilmDetail extends AbstractSmartComponent {
+  constructor(film, container, onDataChange) {
     super();
+    this._container = container;
     this._film = film;
     this._onClickCb = null;
+    this._closeBtn = null;
+    this._detailsContainer = null;
+    this._ratingContainer = null;
+    this._ratingComponent = null;
+    this._commentsComponent = null;
+    this._addCommentComponent = null;
+    this._onDataChange = onDataChange;
+
+    this._onDetailCheckedChange = (evt) => {
+      const target = evt.target;
+
+      switch (target.dataset[`detailType`]) {
+        case FilmDetailType.WATCHLIST:
+          const isWaitingWatched = target.checked;
+          this._onDataChange(this._film, {isWaitingWatched});
+          break;
+        case FilmDetailType.WATCHED:
+          const isWatched = target.checked;
+          const rating = isWatched ? this._film.rating : 0;
+          this._onDataChange(this._film, {rating, isWatched});
+          break;
+        case FilmDetailType.FAVORITE:
+          const isFavorite = target.checked;
+          this._onDataChange(this._film, {isFavorite});
+          break;
+      }
+    };
   }
 
-  initComments() {
-    const {comments} = this._film;
+  getTemplate() {
+    return getFilmDetailTemplate(this._film);
+  }
 
-    if (comments !== null && comments.length > 0) {
-      let commentsComponent = new Comments(comments);
+  get container() {
+    return this._container;
+  }
 
-      const commentWrapper = this.getCommentWrapper();
-      if (commentWrapper !== null) {
-        commentWrapper.appendChild(commentsComponent.getTitleElement());
-        commentWrapper.appendChild(commentsComponent.getElement());
-        commentsComponent.initComments();
-      }
+  set film(value) {
+    this._film = value;
+  }
+
+  initComponents() {
+    this.initComments();
+    this.initAddCommentForm();
+    this.initRating();
+  }
+
+  initRating() {
+    if (this._film.isWatched) {
+      this._ratingContainer = this._element.querySelector(`.form-details__middle-container`);
+      this._ratingComponent = new Rating(this._film);
+      this._ratingContainer.appendChild(this._ratingComponent.getElement());
+
+    } else if (this._ratingComponent !== null) {
+      this._ratingComponent.removeCheckedChangeEvent();
+      this._ratingComponent.removeElement();
+      this._ratingComponent = null;
+      this._ratingContainer = null;
+    }
+  }
+
+  addRatingCheckedChangeEvent() {
+    if (this._ratingComponent !== null) {
+      this._ratingComponent.addCheckedChangeEvent(this._onDataChange);
     }
   }
 
@@ -133,16 +194,27 @@ export default class FilmDeatil extends AbstractComponent {
     return this._element.querySelector(`.film-details__comments-wrap`);
   }
 
-  initAddCommentForm() {
-    const commentWrapper = this.getCommentWrapper();
-    if (commentWrapper !== null) {
-      let addCommentComponent = new AddNewCommentForm();
-      commentWrapper.appendChild(addCommentComponent.getElement());
+  initComments() {
+    const {comments} = this._film;
+
+    if (comments !== null && comments.length > 0) {
+      this._commentsComponent = new Comments(comments);
+
+      const commentWrapper = this.getCommentWrapper();
+      if (commentWrapper !== null) {
+        commentWrapper.appendChild(this._commentsComponent.getTitleElement());
+        commentWrapper.appendChild(this._commentsComponent.getElement());
+        this._commentsComponent.initComments();
+      }
     }
   }
 
-  getTemplate() {
-    return getFilmDetailTemplate(this._film);
+  initAddCommentForm() {
+    const commentWrapper = this.getCommentWrapper();
+    if (commentWrapper !== null) {
+      this._addCommentComponent = new AddNewCommentForm();
+      commentWrapper.appendChild(this._addCommentComponent.getElement());
+    }
   }
 
   addCloseEvent(cb) {
@@ -150,12 +222,49 @@ export default class FilmDeatil extends AbstractComponent {
       cb(evt);
     };
 
-    const closeBtn = this._element.querySelector(`.film-details__close-btn`);
-    closeBtn.addEventListener(`click`, this._onClickCb);
+    this._closeBtn = this._element.querySelector(`.film-details__close-btn`);
+    this._closeBtn.addEventListener(`click`, this._onClickCb);
   }
 
-  removeCb() {
-    this._element.removeEventListener(`click`, this._onClickCb);
+  addDetailCheckedChangeEvent() {
+    this._detailsContainer = this._element.querySelector(`.film-details__controls`);
+    this._detailsContainer.addEventListener(`change`, this._onDetailCheckedChange);
+  }
+
+  removeComponents() {
+    if (this._commentsComponent !== null) {
+      this._commentsComponent.removeElement();
+    }
+
+    if (this._addCommentComponent !== null) {
+      this._addCommentComponent.removeElement();
+    }
+
+    if (this._ratingComponent !== null) {
+      this._ratingComponent.removeElement();
+    }
+  }
+
+  removeEvents() {
+    this._closeBtn.removeEventListener(`click`, this._onClickCb);
     this._onClickCb = null;
+
+    this._detailsContainer.removeEventListener(`change`, this._onDetailCheckedChange);
+    this._onDetailCheckedChange = null;
+
+    if (this._ratingComponent !== null) {
+      this._ratingComponent.removeCheckedChangeEvent();
+    }
+  }
+
+
+  recoveryListeners() {
+    this._detailsContainer = this._element.querySelector(`.film-details__controls`);
+    this._detailsContainer.addEventListener(`change`, this._onDetailCheckedChange);
+
+    this._closeBtn = this._element.querySelector(`.film-details__close-btn`);
+    this._closeBtn.addEventListener(`click`, this._onClickCb);
+
+    this.addRatingCheckedChangeEvent();
   }
 }

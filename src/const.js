@@ -54,3 +54,18 @@ export const SortTypes = {
   DATE: 1,
   RATING: 2
 };
+
+export const FilmDetailType = {
+  WATCHLIST: `watchlist`,
+  WATCHED: `watched`,
+  FAVORITE: `favorite`,
+};
+
+export const MIN_RATING_VALUE = 1;
+export const MAX_RATING_VALUE = 9;
+export const RATING_RANGE = 1;
+
+export const MovieControllerMode = {
+  DEFAULT: `default`,
+  DETAILS: `details`,
+};

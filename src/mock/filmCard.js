@@ -1,4 +1,4 @@
-import {Emotion} from '../const.js';
+import {Emotion, MIN_RATING_VALUE, MAX_RATING_VALUE} from '../const.js';
 
 const FilmsNames = [
   `Правдивая ложь`,
@@ -73,9 +73,6 @@ const DESCRIPTION = `Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cr
 const MIN_MOCK_ITEMS_COUNT = 0;
 const MAX_MOCK_ITEMS_COUNT = 3;
 
-const MIN_RATING_COUNT = 0;
-const MAX_RATING_COUNT = 9;
-
 const MIN_DURATION_COUNT = 40;
 const MAX_DURATION_COUNT = 180;
 
@@ -84,6 +81,8 @@ const MAX_COMMENTS_COUNT = 20;
 
 const MIN_YEAR_LIMIT = 1990;
 const MAX_YEAR_LIMIT = 2020;
+
+let fimlCardIdCounter = 0;
 
 const getRandomDate = () => {
   const currentDate = new Date();
@@ -143,10 +142,13 @@ const createfilmCard = () => {
 
   const filmCardTitle = getRandomItem(FilmsNames);
 
+  const id = fimlCardIdCounter++;
+
   return {
+    id,
     title: filmCardTitle,
     originalTitle: filmCardTitle,
-    rating: getRandomDecimal(MIN_RATING_COUNT, MAX_RATING_COUNT),
+    rating: getRandomDecimal(MIN_RATING_VALUE, MAX_RATING_VALUE),
     producer: getRandomItem(Peoples),
     writers: createRandomItems(Peoples, MIN_MOCK_ITEMS_COUNT, MAX_MOCK_ITEMS_COUNT),
     actors: createRandomItems(Actors, MIN_MOCK_ITEMS_COUNT, MAX_MOCK_ITEMS_COUNT),
@@ -160,7 +162,7 @@ const createfilmCard = () => {
     isFavorite: getRandomBoolean(),
     isWaitingWatched,
     isWatched,
-    age: getRandomNumber(MIN_RATING_COUNT, MAX_RATING_COUNT)
+    age: getRandomNumber(MIN_RATING_VALUE, MAX_RATING_VALUE)
   };
 };
 

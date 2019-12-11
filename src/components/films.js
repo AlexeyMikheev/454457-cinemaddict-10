@@ -1,5 +1,4 @@
 import {FIMLS_COMPONENT_TYPES} from '../const.js';
-import Film from './film.js';
 import AbstractComponent from './abstract-component.js';
 
 const createFilmsListTemplate = () =>
@@ -21,10 +20,9 @@ const createFilmsMostCommentedTemplate = () =>
   </section/`;
 
 export default class Films extends AbstractComponent {
-  constructor(films, componentType) {
+  constructor(componentType) {
     super();
     this._componentType = componentType;
-    this._films = films;
   }
 
   getTemplate() {
@@ -37,36 +35,5 @@ export default class Films extends AbstractComponent {
         return createFilmsMostCommentedTemplate();
       default: return ``;
     }
-  }
-
-  set films(value) {
-    this._films = value;
-  }
-
-  refreshComponents(cb) {
-    this.clearComponents();
-    this.initComponets(cb);
-  }
-
-  initComponets(cb) {
-    this._filmsComponents = this._films.map((c) => {
-      return new Film(c);
-    });
-
-    const filmsListContainer = this._element.querySelector(`.films-list__container`);
-
-    this._filmsComponents.forEach((filmComponent) => {
-      filmsListContainer.appendChild(filmComponent.getElement());
-      filmComponent.addClickEvent(cb);
-    });
-  }
-
-  clearComponents() {
-    this._filmsComponents.forEach((filmComponent) => {
-      filmComponent.removeClickEvent();
-      filmComponent.removeElement();
-    });
-
-    this._filmsComponents = null;
   }
 }
