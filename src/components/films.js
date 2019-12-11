@@ -36,31 +36,4 @@ export default class Films extends AbstractComponent {
       default: return ``;
     }
   }
-
-  // refreshComponents(cb) {
-  //   this.clearComponents();
-  //   this.initComponets(cb);
-  // }
-
-  // initComponets(cb) {
-  //   this._filmsComponents = this._films.map((c) => {
-  //     return new Film(c);
-  //   });
-
-  //   const filmsListContainer = this._element.querySelector(`.films-list__container`);
-
-  //   this._filmsComponents.forEach((filmComponent) => {
-  //     filmsListContainer.appendChild(filmComponent.getElement());
-  //     filmComponent.addClickEvent(cb);
-  //   });
-  // }
-
-  // clearComponents() {
-  //   this._filmsComponents.forEach((filmComponent) => {
-  //     filmComponent.removeClickEvent();
-  //     filmComponent.removeElement();
-  //   });
-
-  //   this._filmsComponents = null;
-  // }
 }
