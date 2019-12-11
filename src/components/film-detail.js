@@ -132,12 +132,22 @@ export default class FilmDeatil extends AbstractSmartComponent {
     this._onDataChange = onDataChange;
   }
 
+  getTemplate() {
+    return getFilmDetailTemplate(this._film);
+  }
+
   get container() {
     return this._container;
   }
 
   set film(value) {
     this._film = value;
+  }
+
+  initComponents() {
+    this.initComments();
+    this.initAddCommentForm();
+    this.initRating();
   }
 
   initRating() {
@@ -160,10 +170,8 @@ export default class FilmDeatil extends AbstractSmartComponent {
     }
   }
 
-  removeRatingCheckedChangeEvent() {
-    if (this._ratingComponent !== null) {
-      this._ratingComponent.removeCheckedChangeEvent();
-    }
+  getCommentWrapper() {
+    return this._element.querySelector(`.film-details__comments-wrap`);
   }
 
   initComments() {
@@ -181,10 +189,6 @@ export default class FilmDeatil extends AbstractSmartComponent {
     }
   }
 
-  getCommentWrapper() {
-    return this._element.querySelector(`.film-details__comments-wrap`);
-  }
-
   initAddCommentForm() {
     const commentWrapper = this.getCommentWrapper();
     if (commentWrapper !== null) {
@@ -193,28 +197,13 @@ export default class FilmDeatil extends AbstractSmartComponent {
     }
   }
 
-  getTemplate() {
-    return getFilmDetailTemplate(this._film);
-  }
+  addCloseEvent(cb) {
+    this._onClickCb = (evt) => {
+      cb(evt);
+    };
 
-  initComponents() {
-    this.initComments();
-    this.initAddCommentForm();
-    this.initRating();
-  }
-
-  removeComponents() {
-    if (this._commentsComponent !== null) {
-      this._commentsComponent.removeElement();
-    }
-
-    if (this._addCommentComponent !== null) {
-      this._addCommentComponent.removeElement();
-    }
-
-    if (this._ratingComponent !== null) {
-      this._ratingComponent.removeElement();
-    }
+    this._closeBtn = this._element.querySelector(`.film-details__close-btn`);
+    this._closeBtn.addEventListener(`click`, this._onClickCb);
   }
 
   addDetailCheckedChangeEvent() {
@@ -241,24 +230,32 @@ export default class FilmDeatil extends AbstractSmartComponent {
     this._detailsContainer.addEventListener(`change`, this._onDetailCheckedChange);
   }
 
-  removeDetailCheckedChangeEvent() {
-    this._detailsContainer.removeEventListener(`change`, this._onDetailCheckedChange);
-    this._onDetailCheckedChange = null;
+  removeComponents() {
+    if (this._commentsComponent !== null) {
+      this._commentsComponent.removeElement();
+    }
+
+    if (this._addCommentComponent !== null) {
+      this._addCommentComponent.removeElement();
+    }
+
+    if (this._ratingComponent !== null) {
+      this._ratingComponent.removeElement();
+    }
   }
 
-  addCloseEvent(cb) {
-    this._onClickCb = (evt) => {
-      cb(evt);
-    };
-
-    this._closeBtn = this._element.querySelector(`.film-details__close-btn`);
-    this._closeBtn.addEventListener(`click`, this._onClickCb);
-  }
-
-  removeCloseEvent() {
+  removeEvents() {
     this._closeBtn.removeEventListener(`click`, this._onClickCb);
     this._onClickCb = null;
+
+    this._detailsContainer.removeEventListener(`change`, this._onDetailCheckedChange);
+    this._onDetailCheckedChange = null;
+
+    if (this._ratingComponent !== null) {
+      this._ratingComponent.removeCheckedChangeEvent();
+    }
   }
+
 
   recoveryListeners() {
     this._detailsContainer = this._element.querySelector(`.film-details__controls`);

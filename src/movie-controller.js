@@ -13,7 +13,8 @@ export default class MovieController {
 
     this._onCloseFilmDetail = () => {
       if (this._filmDetailComponent !== null) {
-        this._filmDetailComponent.removeCloseEvent();
+        this._filmDetailComponent.removeEvents();
+        this._filmDetailComponent.removeComponents();
         this._filmDetailComponent.removeElement();
         this._filmDetailComponent = null;
       }
@@ -71,10 +72,6 @@ export default class MovieController {
     }
   }
 
-  get HasFilmDeatail() {
-    return this._filmDetailComponent !== null;
-  }
-
   removeComponents() {
     this.removeDetailComponent();
     this.removeDetailComponentEvets();
@@ -105,8 +102,7 @@ export default class MovieController {
 
   removeDetailComponentEvets() {
     if (this._filmDetailComponent !== null) {
-      this._filmDetailComponent.removeCloseEvent();
-      this._filmDetailComponent.removeDetailCheckedChangeEvent();
+      this._filmDetailComponent.removeEvents();
     }
   }
 
