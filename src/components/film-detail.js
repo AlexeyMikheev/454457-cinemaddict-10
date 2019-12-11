@@ -117,7 +117,7 @@ const getFilmDetailTemplate = (filmCard) => {
 </section>`;
 };
 
-export default class FilmDeatil extends AbstractSmartComponent {
+export default class FilmDetail extends AbstractSmartComponent {
   constructor(film, container, onDataChange) {
     super();
     this._container = container;

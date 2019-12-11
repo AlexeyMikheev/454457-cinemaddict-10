@@ -1,7 +1,7 @@
 import Utils from './utils.js';
 import {MovieControllerMode} from './const.js';
 import Film from './components/film.js';
-import FilmDeatil from './components/film-detail.js';
+import FilmDetail from './components/film-detail.js';
 
 export default class MovieController {
   constructor(container, onDataChange, onViewChange) {
@@ -12,6 +12,13 @@ export default class MovieController {
     this._onDataChange = onDataChange;
     this._onViewChange = onViewChange;
     this._mode = MovieControllerMode.DEFAULT;
+  }
+
+  get film() {
+    return this._film;
+  }
+
+  render(film) {
 
     this._onCloseFilmDetail = () => {
       if (this._filmDetailComponent !== null) {
@@ -35,7 +42,7 @@ export default class MovieController {
 
       if (isClickAvaliable) {
 
-        this._filmDetailComponent = new FilmDeatil(this._film, document.body, this._onDataChange);
+        this._filmDetailComponent = new FilmDetail(this._film, document.body, this._onDataChange);
         Utils.render(this._filmDetailComponent.container, this._filmDetailComponent.getElement());
 
         this._filmDetailComponent.initComponents();
@@ -44,13 +51,7 @@ export default class MovieController {
         this._filmDetailComponent.addRatingCheckedChangeEvent();
       }
     };
-  }
 
-  get film() {
-    return this._film;
-  }
-
-  render(film) {
     this._film = film;
     const filmsListContainer = this._container.querySelector(`.films-list__container`);
 

@@ -34,7 +34,7 @@ export default class PageController {
         const filmId = filmController.film.id;
 
         if (filmId === oldValue.id) {
-          let filmToUpdate = Utils.getFilmByid(this._films, filmId);
+          const filmToUpdate = Utils.getFilmByid(this._films, filmId);
 
           if (filmToUpdate !== null) {
             Object.assign(filmToUpdate, newValue);
