@@ -188,15 +188,15 @@ export default class FilmDeatil extends AbstractSmartComponent {
 
       switch (target.dataset[`detailType`]) {
         case FilmDetailType.WATCHLIST:
-          const isWaitingWatched = !target.checked;
+          const isWaitingWatched = target.checked;
           cb(this._film, {isWaitingWatched});
           break;
         case FilmDetailType.WATCHED:
-          const isWatched = !target.checked;
+          const isWatched = target.checked;
           cb(this._film, {isWatched});
           break;
         case FilmDetailType.FAVORITE:
-          const isFavorite = !target.checked;
+          const isFavorite = target.checked;
           cb(this._film, {isFavorite});
           break;
       }

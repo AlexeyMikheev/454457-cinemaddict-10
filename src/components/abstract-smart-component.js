@@ -6,12 +6,17 @@ export default class AbstractSmartComponent extends AbstractComponent {
     this._container = container;
   }
 
+  initComponents() {
+    throw new Error(`Abstract method not implemented: initComponents`);
+  }
+
   rerender() {
     // const prevElemet = this.getElement();
     this.removeElement();
-    const newElement = this.getElement();
+    // const newElement = this.getElement();
     // this._container.replaceChild(newElement, prevElemet);
-    this._container.appendChild(newElement);
+    this._container.appendChild(this.getElement());
+    this.initComponents();
     this.recoveryListeners();
   }
 

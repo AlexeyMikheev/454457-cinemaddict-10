@@ -32,9 +32,7 @@ export default class MovieController {
         this._filmDetailComponent = new FilmDeatil(this._film, document.body);
         Utils.render(this._filmDetailComponent.container, this._filmDetailComponent.getElement());
 
-        this._filmDetailComponent.initComments();
-        this._filmDetailComponent.initAddCommentForm();
-        this._filmDetailComponent.initRating();
+        this._filmDetailComponent.initComponents();
         this._filmDetailComponent.addCloseEvent(this._onCloseFilmDetail);
         this._filmDetailComponent.addCheckedChangeEvent(this._onDataChange);
       }
@@ -67,9 +65,7 @@ export default class MovieController {
 
     if (this._filmDetailComponent !== null) {
       this._filmDetailComponent.film = this._film;
-      this._filmDetailComponent.removeComponents();
       this._filmDetailComponent.rerender();
-      this._filmDetailComponent.initComponents();
     }
   }
 
