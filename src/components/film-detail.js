@@ -118,7 +118,7 @@ const getFilmDetailTemplate = (filmCard) => {
 };
 
 export default class FilmDeatil extends AbstractSmartComponent {
-  constructor(film, container) {
+  constructor(film, container, onDataChange) {
     super();
     this._container = container;
     this._film = film;
@@ -129,6 +129,7 @@ export default class FilmDeatil extends AbstractSmartComponent {
     this._ratingComponent = null;
     this._commentsComponent = null;
     this._addCommentComponent = null;
+    this._onDataChange = onDataChange;
   }
 
   get container() {
@@ -146,8 +147,22 @@ export default class FilmDeatil extends AbstractSmartComponent {
       this._ratingContainer.appendChild(this._ratingComponent.getElement());
 
     } else if (this._ratingComponent !== null) {
+      this._ratingComponent.removeCheckedChangeEvent();
       this._ratingComponent.removeElement();
+      this._ratingComponent = null;
       this._ratingContainer = null;
+    }
+  }
+
+  addRatingCheckedChangeEvent() {
+    if (this._ratingComponent !== null) {
+      this._ratingComponent.addCheckedChangeEvent(this._onDataChange);
+    }
+  }
+
+  removeRatingCheckedChangeEvent() {
+    if (this._ratingComponent !== null) {
+      this._ratingComponent.removeCheckedChangeEvent();
     }
   }
 
@@ -202,23 +217,23 @@ export default class FilmDeatil extends AbstractSmartComponent {
     }
   }
 
-  addDetailCheckedChangeEvent(cb) {
+  addDetailCheckedChangeEvent() {
     this._onDetailCheckedChange = (evt) => {
       const target = evt.target;
 
       switch (target.dataset[`detailType`]) {
         case FilmDetailType.WATCHLIST:
           const isWaitingWatched = target.checked;
-          cb(this._film, {isWaitingWatched});
+          this._onDataChange(this._film, {isWaitingWatched});
           break;
         case FilmDetailType.WATCHED:
           const isWatched = target.checked;
           const rating = isWatched ? this._film.rating : 0;
-          cb(this._film, {rating, isWatched});
+          this._onDataChange(this._film, {rating, isWatched});
           break;
         case FilmDetailType.FAVORITE:
           const isFavorite = target.checked;
-          cb(this._film, {isFavorite});
+          this._onDataChange(this._film, {isFavorite});
           break;
       }
     };
@@ -251,5 +266,7 @@ export default class FilmDeatil extends AbstractSmartComponent {
 
     this._closeBtn = this._element.querySelector(`.film-details__close-btn`);
     this._closeBtn.addEventListener(`click`, this._onClickCb);
+
+    this.addRatingCheckedChangeEvent();
   }
 }

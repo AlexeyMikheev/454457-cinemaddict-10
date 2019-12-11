@@ -2,7 +2,7 @@
 import {MIN_RATING_VALUE, MAX_RATING_VALUE, RATING_RANGE} from '../const';
 import AbstractComponent from './abstract-component.js';
 
-const getRatingValuesTemplate = (selectedValue) =>{
+const getRatingValuesTemplate = (selectedValue) => {
   let template = ``;
 
   for (let rating = MIN_RATING_VALUE; rating <= MAX_RATING_VALUE; rating += RATING_RANGE) {
@@ -47,10 +47,31 @@ export default class Rating extends AbstractComponent {
   constructor(film) {
     super();
     this._film = film;
+    this._onCheckedChange = null;
   }
 
   getTemplate() {
     return getRatingTemplate(this._film);
   }
 
+  addCheckedChangeEvent(cb) {
+    this._onCheckedChange = (evt) => {
+      const rating = parseInt(evt.target.value, 10);
+      cb(this._film, {rating});
+
+    };
+
+    this._detailsContainer = this._element.querySelector(`.film-details__user-rating-score`);
+    this._detailsContainer.addEventListener(`change`, this._onCheckedChange);
+  }
+
+  removeCheckedChangeEvent() {
+    this._detailsContainer.removeEventListener(`change`, this._onDetailCheckedChange);
+    this._onDetailCheckedChange = null;
+  }
+
+  recoveryListeners() {
+    this._detailsContainer = this._element.querySelector(`.film-details__user-rating-score`);
+    this._detailsContainer.addEventListener(`change`, this._onCheckedChange);
+  }
 }

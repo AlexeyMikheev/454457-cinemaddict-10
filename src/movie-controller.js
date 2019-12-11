@@ -30,12 +30,13 @@ export default class MovieController {
 
       if (isClickAvaliable) {
 
-        this._filmDetailComponent = new FilmDeatil(this._film, document.body);
+        this._filmDetailComponent = new FilmDeatil(this._film, document.body, this._onDataChange);
         Utils.render(this._filmDetailComponent.container, this._filmDetailComponent.getElement());
 
         this._filmDetailComponent.initComponents();
         this._filmDetailComponent.addCloseEvent(this._onCloseFilmDetail);
-        this._filmDetailComponent.addDetailCheckedChangeEvent(this._onDataChange);
+        this._filmDetailComponent.addDetailCheckedChangeEvent();
+        this._filmDetailComponent.addRatingCheckedChangeEvent();
       }
     };
   }
