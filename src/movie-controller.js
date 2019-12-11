@@ -1,4 +1,5 @@
 import Utils from './utils.js';
+import {MovieControllerMode} from './const.js';
 import Film from './components/film.js';
 import FilmDeatil from './components/film-detail.js';
 
@@ -10,6 +11,7 @@ export default class MovieController {
     this._filmComponent = null;
     this._onDataChange = onDataChange;
     this._onViewChange = onViewChange;
+    this._mode = MovieControllerMode.DEFAULT;
 
     this._onCloseFilmDetail = () => {
       if (this._filmDetailComponent !== null) {
@@ -17,10 +19,12 @@ export default class MovieController {
         this._filmDetailComponent.removeComponents();
         this._filmDetailComponent.removeElement();
         this._filmDetailComponent = null;
+        this._mode = MovieControllerMode.DEFAULT;
       }
     };
 
     this._onShowFilmDetail = (evt) => {
+      this._mode = MovieControllerMode.DETAILS;
       this._onViewChange();
 
       const classList = evt.target.classList;
@@ -107,6 +111,8 @@ export default class MovieController {
   }
 
   setDefaultView() {
-    this._onCloseFilmDetail();
+    if (this._mode !== MovieControllerMode.DEFAULT) {
+      this._onCloseFilmDetail();
+    }
   }
 }

@@ -64,15 +64,18 @@ export default class Film extends AbstractComponent {
       switch (target.dataset[`detailType`]) {
         case FilmDetailType.WATCHLIST:
           const isWaitingWatched = !target.classList.contains(`film-card__controls-item--active`);
-          cb(this._film, {isWaitingWatched});
+
+          cb(this._film, Object.assign({}, this._film, {isWaitingWatched}));
           break;
         case FilmDetailType.WATCHED:
           const isWatched = !target.classList.contains(`film-card__controls-item--active`);
-          cb(this._film, {isWatched});
+
+          cb(this._film, Object.assign({}, this._film, {isWatched}));
           break;
         case FilmDetailType.FAVORITE:
           const isFavorite = !target.classList.contains(`film-card__controls-item--active`);
-          cb(this._film, {isFavorite});
+
+          cb(this._film, Object.assign({}, this._film, {isFavorite}));
           break;
       }
     };
