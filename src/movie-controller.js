@@ -34,7 +34,7 @@ export default class MovieController {
 
         this._filmDetailComponent.initComponents();
         this._filmDetailComponent.addCloseEvent(this._onCloseFilmDetail);
-        this._filmDetailComponent.addCheckedChangeEvent(this._onDataChange);
+        this._filmDetailComponent.addDetailCheckedChangeEvent(this._onDataChange);
       }
     };
   }
@@ -104,7 +104,7 @@ export default class MovieController {
   removeDetailComponentEvets() {
     if (this._filmDetailComponent !== null) {
       this._filmDetailComponent.removeCloseEvent();
-      this._filmDetailComponent.removeCheckedChangeEvent();
+      this._filmDetailComponent.removeDetailCheckedChangeEvent();
     }
   }
 }

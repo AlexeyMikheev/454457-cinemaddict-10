@@ -182,30 +182,6 @@ export default class FilmDeatil extends AbstractSmartComponent {
     return getFilmDetailTemplate(this._film);
   }
 
-  addCheckedChangeEvent(cb) {
-    this._onCheckedChange = (evt) => {
-      const target = evt.target;
-
-      switch (target.dataset[`detailType`]) {
-        case FilmDetailType.WATCHLIST:
-          const isWaitingWatched = target.checked;
-          cb(this._film, {isWaitingWatched});
-          break;
-        case FilmDetailType.WATCHED:
-          const isWatched = target.checked;
-          const rating = isWatched ? this._film.rating : 0;
-          cb(this._film, {rating, isWatched});
-          break;
-        case FilmDetailType.FAVORITE:
-          const isFavorite = target.checked;
-          cb(this._film, {isFavorite});
-          break;
-      }
-    };
-    this._detailsContainer = this._element.querySelector(`.film-details__controls`);
-    this._detailsContainer.addEventListener(`change`, this._onCheckedChange);
-  }
-
   initComponents() {
     this.initComments();
     this.initAddCommentForm();
@@ -226,9 +202,33 @@ export default class FilmDeatil extends AbstractSmartComponent {
     }
   }
 
-  removeCheckedChangeEvent() {
-    this._detailsContainer.removeEventListener(`change`, this._onCheckedChange);
-    this._onCheckedChange = null;
+  addDetailCheckedChangeEvent(cb) {
+    this._onDetailCheckedChange = (evt) => {
+      const target = evt.target;
+
+      switch (target.dataset[`detailType`]) {
+        case FilmDetailType.WATCHLIST:
+          const isWaitingWatched = target.checked;
+          cb(this._film, {isWaitingWatched});
+          break;
+        case FilmDetailType.WATCHED:
+          const isWatched = target.checked;
+          const rating = isWatched ? this._film.rating : 0;
+          cb(this._film, {rating, isWatched});
+          break;
+        case FilmDetailType.FAVORITE:
+          const isFavorite = target.checked;
+          cb(this._film, {isFavorite});
+          break;
+      }
+    };
+    this._detailsContainer = this._element.querySelector(`.film-details__controls`);
+    this._detailsContainer.addEventListener(`change`, this._onDetailCheckedChange);
+  }
+
+  removeDetailCheckedChangeEvent() {
+    this._detailsContainer.removeEventListener(`change`, this._onDetailCheckedChange);
+    this._onDetailCheckedChange = null;
   }
 
   addCloseEvent(cb) {
@@ -247,7 +247,7 @@ export default class FilmDeatil extends AbstractSmartComponent {
 
   recoveryListeners() {
     this._detailsContainer = this._element.querySelector(`.film-details__controls`);
-    this._detailsContainer.addEventListener(`change`, this._onCheckedChange);
+    this._detailsContainer.addEventListener(`change`, this._onDetailCheckedChange);
 
     this._closeBtn = this._element.querySelector(`.film-details__close-btn`);
     this._closeBtn.addEventListener(`click`, this._onClickCb);
