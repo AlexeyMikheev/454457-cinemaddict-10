@@ -53,6 +53,12 @@ export default class PageController {
       });
     };
 
+    this._onViewChange = () => {
+      this.getFilmsControlles().forEach((filmController) => {
+        filmController.setDefaultView();
+      });
+    };
+
     this._isMoreButtonVisible = () => {
       return (this._currentPage + 1) * ONE_TASKS_PAGE_COUNT < this._films.length;
     };
@@ -108,7 +114,7 @@ export default class PageController {
 
   renderFilms(container, films, filmsControllers) {
     films.forEach((film) => {
-      const filmControler = new MovieController(container, this._onDataChange);
+      const filmControler = new MovieController(container, this._onDataChange, this._onViewChange);
       filmControler.render(film);
 
       filmsControllers.push(filmControler);
