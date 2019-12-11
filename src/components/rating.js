@@ -57,7 +57,8 @@ export default class Rating extends AbstractComponent {
   addCheckedChangeEvent(cb) {
     this._onCheckedChange = (evt) => {
       const rating = parseInt(evt.target.value, 10);
-      cb(this._film, {rating});
+
+      cb(this._film, Object.assign({}, this._film, {rating}));
 
     };
 
