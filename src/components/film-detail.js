@@ -130,6 +130,26 @@ export default class FilmDeatil extends AbstractSmartComponent {
     this._commentsComponent = null;
     this._addCommentComponent = null;
     this._onDataChange = onDataChange;
+
+    this._onDetailCheckedChange = (evt) => {
+      const target = evt.target;
+
+      switch (target.dataset[`detailType`]) {
+        case FilmDetailType.WATCHLIST:
+          const isWaitingWatched = target.checked;
+          this._onDataChange(this._film, {isWaitingWatched});
+          break;
+        case FilmDetailType.WATCHED:
+          const isWatched = target.checked;
+          const rating = isWatched ? this._film.rating : 0;
+          this._onDataChange(this._film, {rating, isWatched});
+          break;
+        case FilmDetailType.FAVORITE:
+          const isFavorite = target.checked;
+          this._onDataChange(this._film, {isFavorite});
+          break;
+      }
+    };
   }
 
   getTemplate() {
@@ -207,25 +227,6 @@ export default class FilmDeatil extends AbstractSmartComponent {
   }
 
   addDetailCheckedChangeEvent() {
-    this._onDetailCheckedChange = (evt) => {
-      const target = evt.target;
-
-      switch (target.dataset[`detailType`]) {
-        case FilmDetailType.WATCHLIST:
-          const isWaitingWatched = target.checked;
-          this._onDataChange(this._film, {isWaitingWatched});
-          break;
-        case FilmDetailType.WATCHED:
-          const isWatched = target.checked;
-          const rating = isWatched ? this._film.rating : 0;
-          this._onDataChange(this._film, {rating, isWatched});
-          break;
-        case FilmDetailType.FAVORITE:
-          const isFavorite = target.checked;
-          this._onDataChange(this._film, {isFavorite});
-          break;
-      }
-    };
     this._detailsContainer = this._element.querySelector(`.film-details__controls`);
     this._detailsContainer.addEventListener(`change`, this._onDetailCheckedChange);
   }
