@@ -19,10 +19,6 @@ export const Emotion = {
   ANGRY: `angry`
 };
 
-export const MONTHS = [`January`, `February`, `March`, `April`, `May`, `June`,
-  `July`, `August`, `September`, `October`, `November`, `December`
-];
-
 export const ESC_KEY = 27;
 
 export const COUNT_FILMS = 15;
@@ -69,3 +65,7 @@ export const MovieControllerMode = {
   DEFAULT: `default`,
   DETAILS: `details`,
 };
+
+export const RELEASE_DATE_FORMTA = `DD MMMM YYYY`;
+
+export const DURATION_FORMTA = `h[h] mm[m]`;
