@@ -73,8 +73,8 @@ const DESCRIPTION = `Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cr
 const MIN_MOCK_ITEMS_COUNT = 0;
 const MAX_MOCK_ITEMS_COUNT = 3;
 
-const MIN_DURATION_COUNT = 40;
-const MAX_DURATION_COUNT = 180;
+const MIN_DURATION_COUNT = 40 * 60 * 1000;
+const MAX_DURATION_COUNT = 180 * 60 * 1000;
 
 const MIN_COMMENTS_COUNT = 0;
 const MAX_COMMENTS_COUNT = 20;

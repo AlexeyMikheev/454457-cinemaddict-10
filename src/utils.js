@@ -1,4 +1,5 @@
-import {ProfileRating, MONTHS, Filters, ONE_TASKS_PAGE_COUNT, RenderPosition, MINUTE_IN_HOUR, MIN_DESCRIPTION_LENGTH, MAX_DESCRIPTION_LENGTH, DESCRIPTION_SPACE, MANY_COMMENTS_COUNT, ONE_DAY, SortTypes} from './const.js';
+import {ProfileRating, Filters, ONE_TASKS_PAGE_COUNT, RenderPosition, MINUTE_IN_HOUR, MIN_DESCRIPTION_LENGTH, MAX_DESCRIPTION_LENGTH, DESCRIPTION_SPACE, MANY_COMMENTS_COUNT, ONE_DAY, SortTypes, DIFFERENCE_DATE_FORMAT} from './const.js';
+import moment from 'moment';
 
 export default class Utils {
 
@@ -19,29 +20,8 @@ export default class Utils {
     }
   }
 
-  static getFormatedReleaseDate(date) {
-
-    const {year, month, day} = this.getDateValues(new Date(date));
-
-    return `${year} ${MONTHS[month]} ${day}`;
-  }
-
   static getEllipsisDescription(description) {
     return (description.length > MAX_DESCRIPTION_LENGTH) ? `${description.substring(MIN_DESCRIPTION_LENGTH, (MAX_DESCRIPTION_LENGTH - DESCRIPTION_SPACE))}...` : description;
-  }
-
-  static getFormatedDuration(duration) {
-    let formatedDuration = ``;
-
-    if (duration < MINUTE_IN_HOUR) {
-      formatedDuration += `${duration}m`;
-    } else if (duration === MINUTE_IN_HOUR) {
-      formatedDuration += `${this.getHours(duration)}h`;
-    } else {
-      formatedDuration += `${this.getHours(duration)}h ${this.getMinutes(duration)}m`;
-    }
-
-    return formatedDuration;
   }
 
   static getFormatedRating(totalWatchedFilms) {
@@ -59,14 +39,14 @@ export default class Utils {
   }
 
   static getFormatedDiffrenceDate(date, currentDate) {
-    const differenceTimestamp = currentDate.valueOf() - date.valueOf();
+    const differenceTimestamp = currentDate - date;
     if (differenceTimestamp < ONE_DAY) {
       return `Today`;
     }
 
     const differenceDays = differenceTimestamp % ONE_DAY;
     if (differenceDays > 3) {
-      return this.getFormatedCommentDate(date);
+      return this.formatTimeStamp(date, DIFFERENCE_DATE_FORMAT);
     }
     return (differenceDays > 1) ? `${differenceDays} days ago` : `${differenceDays} day ago`;
 
@@ -163,6 +143,10 @@ export default class Utils {
     const {year, month, day, hours, minutes} = this.getDateValues(date);
 
     return `${year}/${month}/${day} ${hours}:${minutes}`;
+  }
+
+  static formatTimeStamp(date, format) {
+    return moment(date).format(format);
   }
 
   static getSortedFilmsByProperty(films, propertyName) {

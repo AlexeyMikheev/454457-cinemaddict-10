@@ -5,7 +5,7 @@ import AbstractComponent from './abstract-component.js';
 const getCommentTemplate = (comment) => {
 
   const {emotion, text, author, commentDate} = comment;
-  const formatedDifferenceDate = Utils.getFormatedDiffrenceDate(new Date(commentDate), new Date());
+  const formatedDifferenceDate = Utils.getFormatedDiffrenceDate(commentDate, new Date().valueOf());
 
   return `<li class="film-details__comment">
                 <span class="film-details__comment-emoji">
