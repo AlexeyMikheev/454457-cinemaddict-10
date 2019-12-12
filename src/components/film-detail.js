@@ -2,7 +2,7 @@ import Utils from '../utils.js';
 import Rating from './rating.js';
 import Comments from './comments.js';
 import AddNewCommentForm from './add-comment-form.js';
-import {FilmDetailType, RELEASE_DATE_FORMTA, DURATION_FORMTA} from '../const.js';
+import {FilmDetailType, RELEASE_DATE_FORMAT, DURATION_FORMAT} from '../const.js';
 import AbstractSmartComponent from './abstract-smart-component.js';
 
 const getGenresTemplate = (genres) => {
@@ -17,8 +17,8 @@ const getFilmDetailTemplate = (filmCard) => {
 
   const formatedWriters = writers.join(`, `);
   const formatedActors = actors.join(`, `);
-  const formatedReleaseDate = Utils.formatTimeStamp(releaseDate, RELEASE_DATE_FORMTA);
-  const formatedDuration = Utils.formatTimeStamp(duration, DURATION_FORMTA);
+  const formatedReleaseDate = Utils.formatTimeStamp(releaseDate, RELEASE_DATE_FORMAT);
+  const formatedDuration = Utils.formatTimeStamp(duration, DURATION_FORMAT);
   const genresTitle = genres.length > 1 ? `genres` : `genre`;
   const genresTemplate = getGenresTemplate(genres);
 

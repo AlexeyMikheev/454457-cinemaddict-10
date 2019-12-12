@@ -1,6 +1,6 @@
 
 import Utils from '../utils.js';
-import {FilmDetailType, DURATION_FORMTA} from '../const.js';
+import {FilmDetailType, DURATION_FORMAT} from '../const.js';
 import AbstractComponent from './abstract-component.js';
 
 const getFilmTemplate = (filmCard) => {
@@ -8,7 +8,7 @@ const getFilmTemplate = (filmCard) => {
   const {title, rating, releaseDate, duration, genres, poster, description, comments, isWaitingWatched, isWatched, isFavorite} = filmCard;
 
   const releaseYear = new Date(releaseDate).getFullYear();
-  const formatedDuration = Utils.formatTimeStamp(duration, DURATION_FORMTA);
+  const formatedDuration = Utils.formatTimeStamp(duration, DURATION_FORMAT);
   const formatedDescription = Utils.getEllipsisDescription(description);
   const formatedCommentsTitle = Utils.getFormatedCommentsTitle(comments);
   const formatedGenres = genres.length > 0 ? genres[0] : ``;

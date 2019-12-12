@@ -1,4 +1,4 @@
-import {ProfileRating, Filters, ONE_TASKS_PAGE_COUNT, RenderPosition, MINUTE_IN_HOUR, MIN_DESCRIPTION_LENGTH, MAX_DESCRIPTION_LENGTH, DESCRIPTION_SPACE, MANY_COMMENTS_COUNT, ONE_DAY, SortTypes} from './const.js';
+import {ProfileRating, Filters, ONE_TASKS_PAGE_COUNT, RenderPosition, MINUTE_IN_HOUR, MIN_DESCRIPTION_LENGTH, MAX_DESCRIPTION_LENGTH, DESCRIPTION_SPACE, MANY_COMMENTS_COUNT, ONE_DAY, SortTypes, DIFFERENCE_DATE_FORMAT} from './const.js';
 import moment from 'moment';
 
 export default class Utils {
@@ -39,14 +39,14 @@ export default class Utils {
   }
 
   static getFormatedDiffrenceDate(date, currentDate) {
-    const differenceTimestamp = currentDate.valueOf() - date.valueOf();
+    const differenceTimestamp = currentDate - date;
     if (differenceTimestamp < ONE_DAY) {
       return `Today`;
     }
 
     const differenceDays = differenceTimestamp % ONE_DAY;
     if (differenceDays > 3) {
-      return this.getFormatedCommentDate(date);
+      return this.formatTimeStamp(date, DIFFERENCE_DATE_FORMAT);
     }
     return (differenceDays > 1) ? `${differenceDays} days ago` : `${differenceDays} day ago`;
 

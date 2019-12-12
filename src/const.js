@@ -66,6 +66,8 @@ export const MovieControllerMode = {
   DETAILS: `details`,
 };
 
-export const RELEASE_DATE_FORMTA = `DD MMMM YYYY`;
+export const RELEASE_DATE_FORMAT = `DD MMMM YYYY`;
 
-export const DURATION_FORMTA = `h[h] mm[m]`;
+export const DURATION_FORMAT = `h[h] mm[m]`;
+
+export const DIFFERENCE_DATE_FORMAT = `YYYY/MM/DD HH:mm`;
