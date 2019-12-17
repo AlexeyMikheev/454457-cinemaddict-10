@@ -12,6 +12,7 @@ export default class Movies {
     this._sortTypeChangeCb = null;
     this._filterTypeChangeCb = null;
     this._moreButtonClickCb = null;
+    this._datachangeCb = null;
   }
 
   set films(value) {
@@ -25,10 +26,6 @@ export default class Movies {
 
   get totalFilms() {
     return this._films.length;
-  }
-
-  getFilmById(id) {
-    return Utils.getFilmByid(this._films, id);
   }
 
   get topRatedFilms() {
@@ -45,10 +42,6 @@ export default class Movies {
     });
 
     return Utils.getTopFilmsByProperty(hasCommentsFilms, `comments`);
-  }
-
-  _getCurrentCountFilms() {
-    return this._filterType === Filters.ALL.title ? this._films.length : this._displayedFilms.length;
   }
 
   get isAvaliableLoad() {
@@ -97,11 +90,35 @@ export default class Movies {
     this._filterTypeChangeCb = cb;
   }
 
+  set dataChangeCb(cb) {
+    this._datachangeCb = cb;
+  }
+
+  _getCurrentCountFilms() {
+    return this._filterType === Filters.ALL.title ? this._films.length : this._displayedFilms.length;
+  }
+
+  getFilmById(id) {
+    return Utils.getFilmByid(this._films, id);
+  }
+
   getFilms() {
     const filtredFilms = Utils.getFiltredFilms(this._filterType, this._films);
     this._displayedFilms = Utils.getSortedFilms(this._sortType, filtredFilms);
 
     return Utils.getFilmsByPageNumber(this._displayedFilms, this._currentPage);
+  }
+
+  updateFilm(id, newFilm) {
+    const index = this._films.findIndex((it) => it.id === id);
+
+    if (index === -1) {
+      return false;
+    }
+
+    this._films = [].concat(this._films.slice(0, index), newFilm, this._films.slice(index + 1));
+
+    return true;
   }
 
   _callCb(cb) {

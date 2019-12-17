@@ -10,6 +10,9 @@ export default class MovieController {
     this._filmDetailComponent = null;
     this._filmComponent = null;
     this._onDataChange = onDataChange;
+    this._onDataChangeCb = (oldValue, newValue) => {
+      this._onDataChange(this, oldValue, newValue);
+    };
     this._onViewChange = onViewChange;
     this._mode = MovieControllerMode.DEFAULT;
   }
@@ -42,7 +45,7 @@ export default class MovieController {
 
       if (isClickAvaliable) {
 
-        this._filmDetailComponent = new FilmDetail(this._film, document.body, this._onDataChange);
+        this._filmDetailComponent = new FilmDetail(this._film, document.body, this._onDataChangeCb);
         Utils.render(this._filmDetailComponent.container, this._filmDetailComponent.getElement());
 
         this._filmDetailComponent.initComponents();

@@ -29,22 +29,13 @@ export default class PageController {
     this._topRatedFilmsControllers = [];
     this._mostCommentFilmsControllers = [];
 
-    this._onDataChange = (oldValue, newValue) => {
-      this.getFilmsControlles().forEach((filmController) => {
-        const filmId = filmController.film.id;
-
-        if (filmId === oldValue.id) {
-          const filmToUpdate = this._films.getFilmById(filmId);
-
-          if (filmToUpdate !== null) {
-            Object.assign(filmToUpdate, newValue);
-            filmController.render(filmToUpdate);
-          }
-        }
-      });
-
-      this.initFilters();
-      this.initProfile();
+    this._onDataChange = (filmController, oldValue, newValue) => {
+      const isSuccess = this._films.updateFilm(oldValue.id, newValue);
+      if (isSuccess) {
+        filmController.render(newValue);
+        this.initFilters();
+        this.initProfile();
+      }
     };
 
     this._onViewChange = () => {
@@ -55,7 +46,7 @@ export default class PageController {
       this._films.currentPage++;
     };
 
-    this.__onMoreButtonClickCb = () => {
+    this._onMoreButtonClickCb = () => {
       this.renderListFilms(this._filmsComponentElement, this._films.getFilms());
 
       this.refreshMoreButton();
