@@ -150,6 +150,10 @@ export default class FilmDetail extends AbstractSmartComponent {
           break;
       }
     };
+
+    this._onCommentsChanged = (comments) => {
+      this._onDataChange(this._film, Object.assign({}, this._film, {comments}));
+    };
   }
 
   getTemplate() {
@@ -198,7 +202,7 @@ export default class FilmDetail extends AbstractSmartComponent {
     const {comments} = this._film;
 
     if (comments !== null && comments.length > 0) {
-      this._commentsComponent = new Comments(comments);
+      this._commentsComponent = new Comments(comments, this._onCommentsChanged);
 
       const commentWrapper = this.getCommentWrapper();
       if (commentWrapper !== null) {

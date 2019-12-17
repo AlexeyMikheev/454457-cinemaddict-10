@@ -83,6 +83,7 @@ const MIN_YEAR_LIMIT = 1990;
 const MAX_YEAR_LIMIT = 2020;
 
 let fimlCardIdCounter = 0;
+let commentIdCounter = 0;
 
 const getRandomDate = () => {
   const currentDate = new Date();
@@ -115,7 +116,10 @@ const createRandomItems = (items, min, max) => {
 };
 
 const createComment = () => {
+  const id = commentIdCounter++;
+
   return {
+    id,
     text: createRandomItems(DESCRIPTION.split(`.`), MIN_COMMENTS_COUNT, MAX_COMMENTS_COUNT).join(` `),
     emotion: getRandomItem(Emotions),
     author: getRandomItem(Peoples),
