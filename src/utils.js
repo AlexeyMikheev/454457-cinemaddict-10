@@ -117,6 +117,26 @@ export default class Utils {
     }
   }
 
+  static getFiltredFilms(filterType, films) {
+    switch (filterType) {
+      case Filters.ALL.title:
+        return films;
+      case Filters.WATCHLIST.title:
+        return films.filter((film) => {
+          return film.isWaitingWatched;
+        });
+      case Filters.HISTORY.title:
+        return films.filter((film) => {
+          return film.isWatched;
+        });
+      case Filters.FAVORITES.title:
+        return films.filter((film) => {
+          return film.isFavorite;
+        });
+      default: return films;
+    }
+  }
+
   static getHours(duration) {
     return Math.floor(duration / MINUTE_IN_HOUR);
   }

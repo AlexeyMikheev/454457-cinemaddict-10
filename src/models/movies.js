@@ -1,9 +1,10 @@
-import {ONE_TASKS_PAGE_COUNT, SortTypes} from '../const.js';
+import {ONE_TASKS_PAGE_COUNT, SortTypes, Filters} from '../const.js';
 import Utils from "../utils.js";
 
 export default class Movies {
   constructor() {
     this._films = [];
+    this._displayedFilms = [];
     this._currentPage = 0;
     this._sortType = SortTypes.DEFAULT;
     this._filterType = Utils.getDefaultSelectedFilter().title;
@@ -15,10 +16,15 @@ export default class Movies {
 
   set films(value) {
     this._films = value;
+    this._displayedFilms = value;
   }
 
   get films() {
     return this._films;
+  }
+
+  get totalFilms() {
+    return this._films.length;
   }
 
   getFilmById(id) {
@@ -41,8 +47,12 @@ export default class Movies {
     return Utils.getTopFilmsByProperty(hasCommentsFilms, `comments`);
   }
 
+  _getCurrentCountFilms() {
+    return this._filterType === Filters.ALL.title ? this._films.length : this._displayedFilms.length;
+  }
+
   get isAvaliableLoad() {
-    return (this._currentPage + 1) * ONE_TASKS_PAGE_COUNT < this._films.length;
+    return (this._currentPage + 1) * ONE_TASKS_PAGE_COUNT < this._getCurrentCountFilms();
   }
 
   set currentPage(value) {
@@ -88,8 +98,10 @@ export default class Movies {
   }
 
   getFilms() {
-    const pageFilms = Utils.getFilmsByPageNumber(this._films, this._currentPage);
-    return Utils.getSortedFilms(this._sortType, pageFilms);
+    const filtredFilms = Utils.getFiltredFilms(this._filterType, this._films);
+    this._displayedFilms = Utils.getSortedFilms(this._sortType, filtredFilms);
+
+    return Utils.getFilmsByPageNumber(this._displayedFilms, this._currentPage);
   }
 
   _callCb(cb) {

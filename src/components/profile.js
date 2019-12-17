@@ -16,6 +16,6 @@ export default class Profile extends AbstractComponent {
   }
 
   getTemplate() {
-    return getProfileTemplate();
+    return getProfileTemplate(this._totalWatched);
   }
 }

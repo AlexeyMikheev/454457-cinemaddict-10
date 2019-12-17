@@ -11,9 +11,9 @@ export const getSortFilterTemplate = (selectedFilter, sortFilter) => {
 export const getSortFiltersTemplate = () => `<ul class="sort"></ul>`;
 
 export default class Sort extends AbstractComponent {
-  constructor(selectedFilter) {
+  constructor(sortType) {
     super();
-    this._selectedFilter = selectedFilter;
+    this._sortType = sortType;
     this._sortElements = [];
     this._sortFilters = [
       {value: SortTypes.DEFAULT, text: `Sort by default`},
@@ -22,20 +22,20 @@ export default class Sort extends AbstractComponent {
   }
 
   getTemplate() {
-    return getSortFiltersTemplate(this._selectedFilter, this._sortFilters);
+    return getSortFiltersTemplate();
   }
 
-  set selectedFilter(value) {
-    this._selectedFilter = value;
+  set sortType(value) {
+    this._sortType = value;
   }
 
   addSortEvent(cb) {
     this._onClickCb = (evt) => {
       evt.preventDefault();
       if (evt.target.classList.contains(`sort__button`)) {
-        const selectedFilter = parseInt(evt.target.dataset[`sort`], 10);
-        if (this._selectedFilter !== selectedFilter) {
-          cb(selectedFilter);
+        const sortType = parseInt(evt.target.dataset[`sort`], 10);
+        if (this._sortType !== sortType) {
+          cb(sortType);
         }
       }
     };
@@ -50,7 +50,7 @@ export default class Sort extends AbstractComponent {
 
   renderSortElements() {
     this._sortElements = this._sortFilters.map((sortFilter)=>{
-      return Utils.createElement(getSortFilterTemplate(this._selectedFilter, sortFilter));
+      return Utils.createElement(getSortFilterTemplate(this._sortType, sortFilter));
     });
 
     this._sortElements.forEach((sortElement) => {

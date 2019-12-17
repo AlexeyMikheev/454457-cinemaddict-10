@@ -22,6 +22,7 @@ export default class PageController {
     this._mainContainer = mainContainer;
     this._footer = footer;
 
+    this._profileComponent = null;
     this._filterController = null;
 
     this._filmsControllers = [];
@@ -43,6 +44,7 @@ export default class PageController {
       });
 
       this.initFilters();
+      this.initProfile();
     };
 
     this._onViewChange = () => {
@@ -56,9 +58,7 @@ export default class PageController {
     this.__onMoreButtonClickCb = () => {
       this.renderListFilms(this._filmsComponentElement, this._films.getFilms());
 
-      if (!this._films.isAvaliableLoad) {
-        this._moreButton.removeElement();
-      }
+      this.refreshMoreButton();
     };
 
     this._films.moreButtonClickCb = this.__onMoreButtonClickCb;
@@ -74,6 +74,8 @@ export default class PageController {
         this._sortComponent.sortType = this._films.sortType;
         this._sortComponent.refreshSortElements();
       }
+
+      this.refreshMoreButton();
     };
 
     this._films.sortTypeChangeCb = this._sortTypeChangeCb;
@@ -87,6 +89,8 @@ export default class PageController {
     this._filterTypeChangeCb = () => {
       this.renderListFilms(this._filmsComponentElement, this._films.getFilms());
       this.initFilters();
+
+      this.refreshMoreButton();
     };
 
     this._films.filterTypeChangeCb = this._filterTypeChangeCb;
@@ -150,8 +154,7 @@ export default class PageController {
   initHeader() {
     this.initFilters();
 
-    const profileComponent = new Profile(this.totalWatchedFilms);
-    Utils.render(this._headerContainer, profileComponent.getElement());
+    this.initProfile();
 
     Utils.render(this._mainContainer, this._sortComponent.getElement());
     this._sortComponent.renderSortElements();
@@ -167,6 +170,16 @@ export default class PageController {
     this._filterController = new FilterController(this._mainContainer, this._films);
     this._filterController.render();
     this._filterController.addFilterEvent(this._onFilterButtonClick);
+  }
+
+  initProfile() {
+    if (this._profileComponent !== null) {
+      this._profileComponent.removeElement();
+      this._profileComponent = null;
+    }
+
+    this._profileComponent = new Profile(this.totalWatchedFilms);
+    Utils.render(this._headerContainer, this._profileComponent.getElement());
   }
 
   initContent() {
@@ -193,6 +206,12 @@ export default class PageController {
     Utils.render(filmsContainer, mostCommentFilmsComponentElement);
     this.renderMostCommentFilms(mostCommentFilmsComponentElement, this._films.mostCommentFilms);
 
+    this.refreshMoreButton();
+  }
+
+  refreshMoreButton() {
+    this.destroyMoreButton();
+
     if (this._films.isAvaliableLoad) {
       this._moreButton = new MoreButton();
       Utils.render(this._filmsComponentElement, this._moreButton.getElement());
@@ -200,8 +219,15 @@ export default class PageController {
     }
   }
 
+  destroyMoreButton() {
+    if (this._moreButton !== null) {
+      this._moreButton.removeElement();
+      this._moreButton = null;
+    }
+  }
+
   initStatistic() {
-    const statisticComponent = new Statistic(this._films.length);
+    const statisticComponent = new Statistic(this._films.totalFilms);
     statisticComponent.removeExist();
     Utils.render(this._footer, statisticComponent.getElement());
   }
