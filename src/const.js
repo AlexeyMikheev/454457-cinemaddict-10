@@ -1,9 +1,9 @@
 export const Filters = {
-  ALL: {title: `All movies`, anchor: `all`},
-  WATCHLIST: {title: `Watchlist`, anchor: `watchlist`},
-  HISTORY: {title: `History`, anchor: `history`},
-  FAVORITES: {title: `Favorites`, anchor: `favorites`},
-  STATS: {title: `Stats`, anchor: `stats`},
+  ALL: {title: `All movies`, anchor: `all`, count: 0},
+  WATCHLIST: {title: `Watchlist`, anchor: `watchlist`, count: 0},
+  HISTORY: {title: `History`, anchor: `history`, count: 0},
+  FAVORITES: {title: `Favorites`, anchor: `favorites`, count: 0},
+  STATS: {title: `Stats`, anchor: `stats`, count: 0},
 };
 
 export const ProfileRating = {

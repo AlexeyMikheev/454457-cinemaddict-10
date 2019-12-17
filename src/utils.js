@@ -166,4 +166,13 @@ export default class Utils {
       return film.id === id;
     });
   }
+
+  static getDefaultSelectedFilter() {
+    return Filters.ALL;
+  }
+
+  static getFilters() {
+    return [Filters.ALL, Filters.WATCHLIST, Filters.HISTORY, Filters.FAVORITES, Filters.STATS];
+  }
+
 }

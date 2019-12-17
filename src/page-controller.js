@@ -1,5 +1,4 @@
 import Profile from './components/profile.js';
-import Menu from './components/menu.js';
 import Sort from './components/sort.js';
 import Films from './components/films';
 import FilmsContainer from './components/films-container';
@@ -7,14 +6,14 @@ import MoreButton from './components/more-button.js';
 import Statistic from './components/statistic.js';
 import NoFilms from './components/no-films.js';
 import MovieController from './movie-controller.js';
+import FilterController from './filter-controller.js';
 
-import {Filters, FIMLS_COMPONENT_TYPES, RenderPosition, ESC_KEY} from './const.js';
+import {FIMLS_COMPONENT_TYPES, ESC_KEY} from './const.js';
 import Utils from './utils.js';
 
 export default class PageController {
   constructor(headerContainer, mainContainer, footer, films) {
     this._films = films;
-    this._filters = null;
     this._filmsComponent = null;
     this._filmsComponentElement = null;
     this._moreButton = null;
@@ -22,7 +21,8 @@ export default class PageController {
     this._headerContainer = headerContainer;
     this._mainContainer = mainContainer;
     this._footer = footer;
-    this._totalWatchedFilms = 0;
+
+    this._filterController = null;
 
     this._filmsControllers = [];
     this._topRatedFilmsControllers = [];
@@ -42,7 +42,7 @@ export default class PageController {
         }
       });
 
-      this.initMenuFilters();
+      this.initFilters();
     };
 
     this._onViewChange = () => {
@@ -81,13 +81,15 @@ export default class PageController {
     this._films.sortTypeChangeCb = this._sortTypeChangeCb;
   }
 
+  get totalWatchedFilms() {
+    return this._filterController !== null ? this._filterController.totalWatchedFilms : 0;
+  }
+
   getFilmsControlles() {
     return [...this._filmsControllers, ...this._topRatedFilmsControllers, ...this._mostCommentFilmsControllers];
   }
 
-  render(filters) {
-    this._filters = filters;
-
+  render() {
     this.initHeader();
     this.initContent();
     this.initDocumentEvents();
@@ -139,9 +141,9 @@ export default class PageController {
   }
 
   initHeader() {
-    this.initMenuFilters();
+    this.initFilters();
 
-    const profileComponent = new Profile(this._totalWatchedFilms);
+    const profileComponent = new Profile(this.totalWatchedFilms);
     Utils.render(this._headerContainer, profileComponent.getElement());
 
     Utils.render(this._mainContainer, this._sortComponent.getElement());
@@ -149,19 +151,14 @@ export default class PageController {
     this._sortComponent.addSortEvent(this._onSortButtonClick);
   }
 
-  initMenuFilters() {
-    this._totalWatchedFilms = 0;
-    this._filters.forEach((filter) => {
-      filter.count = Utils.getFilterValue(filter, this._films.films);
+  initFilters() {
+    if (this._filterController !== null) {
+      this._filterController.destroy();
+      this._filterController = null;
+    }
 
-      if (filter.title === Filters.ALL.title) {
-        this._totalWatchedFilms = filter.count;
-      }
-    });
-
-    const menuComponent = new Menu(this._filters);
-    menuComponent.removeExist();
-    Utils.render(this._mainContainer, menuComponent.getElement(), RenderPosition.AFTERBEGIN);
+    this._filterController = new FilterController(this._mainContainer, this._films);
+    this._filterController.render();
   }
 
   initContent() {

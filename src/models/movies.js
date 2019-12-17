@@ -6,6 +6,7 @@ export default class Movies {
     this._films = [];
     this._currentPage = 0;
     this._sortType = SortTypes.DEFAULT;
+    this._selectedFilter = Utils.getDefaultSelectedFilter();
     this._filterChangeCb = null;
     this._sortTypeChangeCb = null;
     this._moreButtonClickCb = null;
@@ -69,6 +70,10 @@ export default class Movies {
 
   set sortTypeChangeCb(cb) {
     this._sortTypeChangeCb = cb;
+  }
+
+  get selectedFilter() {
+    return this._selectedFilter;
   }
 
   getFilmsByPageNumber() {
