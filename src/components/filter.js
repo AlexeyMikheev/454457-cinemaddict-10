@@ -5,7 +5,7 @@ import Utils from '../utils.js';
 const getFilterTemplate = (selectedFilter, filter) => {
   const {title, anchor, count} = filter;
 
-  const activeClass = selectedFilter.title === filter.title ? `main-navigation__item--active` : ``;
+  const activeClass = selectedFilter === filter.title ? `main-navigation__item--active` : ``;
   let additionClass = ``;
 
   const isStat = filter.title === Filters.STATS.title;
@@ -16,10 +16,10 @@ const getFilterTemplate = (selectedFilter, filter) => {
   }
 
   if (isStat || isAll) {
-    return `<a href="#${anchor}" data-filter="${anchor}" class="main-navigation__item ${activeClass} ${additionClass}">${title}</a>`;
+    return `<a href="#${anchor}" data-filter="${title}" class="main-navigation__item ${activeClass} ${additionClass}">${title}</a>`;
   }
 
-  return `<a href="#${anchor}" data-filter="${anchor}" class="main-navigation__item ${activeClass}">${title} <span class="main-navigation__item-count">${count}</span></a>`;
+  return `<a href="#${anchor}" data-filter="${title}" class="main-navigation__item ${activeClass}">${title} <span class="main-navigation__item-count">${count}</span></a>`;
 };
 
 const getFiltersTemplate = () => `<nav class="main-navigation"></nav>`;
@@ -41,6 +41,18 @@ export default class Filter extends AbstractComponent {
     if (filtersContainer !== null) {
       filtersContainer.remove();
     }
+  }
+
+  addFilterEvent(cb) {
+    this._onClickCb = (evt) => {
+      evt.preventDefault();
+      if (evt.target.classList.contains(`main-navigation__item`)) {
+        const selectedFilter = evt.target.dataset[`filter`];
+        cb(selectedFilter);
+      }
+    };
+
+    this._element.addEventListener(`click`, this._onClickCb);
   }
 
   refreshSortElements() {

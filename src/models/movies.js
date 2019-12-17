@@ -6,9 +6,10 @@ export default class Movies {
     this._films = [];
     this._currentPage = 0;
     this._sortType = SortTypes.DEFAULT;
-    this._selectedFilter = Utils.getDefaultSelectedFilter();
+    this._filterType = Utils.getDefaultSelectedFilter().title;
     this._filterChangeCb = null;
     this._sortTypeChangeCb = null;
+    this._filterTypeChangeCb = null;
     this._moreButtonClickCb = null;
   }
 
@@ -72,11 +73,21 @@ export default class Movies {
     this._sortTypeChangeCb = cb;
   }
 
-  get selectedFilter() {
-    return this._selectedFilter;
+  get filterType() {
+    return this._filterType;
   }
 
-  getFilmsByPageNumber() {
+  set filterType(value) {
+    this._filterType = value;
+
+    this._callCb(this._filterTypeChangeCb);
+  }
+
+  set filterTypeChangeCb(cb) {
+    this._filterTypeChangeCb = cb;
+  }
+
+  getFilms() {
     const pageFilms = Utils.getFilmsByPageNumber(this._films, this._currentPage);
     return Utils.getSortedFilms(this._sortType, pageFilms);
   }

@@ -54,8 +54,7 @@ export default class PageController {
     };
 
     this.__onMoreButtonClickCb = () => {
-      const sortedFilms = this.getFilms();
-      this.renderListFilms(this._filmsComponentElement, sortedFilms);
+      this.renderListFilms(this._filmsComponentElement, this._films.getFilms());
 
       if (!this._films.isAvaliableLoad) {
         this._moreButton.removeElement();
@@ -69,16 +68,28 @@ export default class PageController {
     };
 
     this._sortTypeChangeCb = () => {
-      const sortedFilms = this.getFilms();
-      this.renderListFilms(this._filmsComponentElement, sortedFilms);
+      this.renderListFilms(this._filmsComponentElement, this._films.getFilms());
 
       if (this._sortComponent !== null) {
-        this._sortComponent.selectedFilter = this._films.sortType;
+        this._sortComponent.sortType = this._films.sortType;
         this._sortComponent.refreshSortElements();
       }
     };
 
     this._films.sortTypeChangeCb = this._sortTypeChangeCb;
+
+    this._onFilterButtonClick = (filterType) => {
+      if (this._films.selectedFilter !== filterType) {
+        this._films.filterType = filterType;
+      }
+    };
+
+    this._filterTypeChangeCb = () => {
+      this.renderListFilms(this._filmsComponentElement, this._films.getFilms());
+      this.initFilters();
+    };
+
+    this._films.filterTypeChangeCb = this._filterTypeChangeCb;
   }
 
   get totalWatchedFilms() {
@@ -136,10 +147,6 @@ export default class PageController {
     });
   }
 
-  getFilms() {
-    return this._films.getFilmsByPageNumber();
-  }
-
   initHeader() {
     this.initFilters();
 
@@ -159,6 +166,7 @@ export default class PageController {
 
     this._filterController = new FilterController(this._mainContainer, this._films);
     this._filterController.render();
+    this._filterController.addFilterEvent(this._onFilterButtonClick);
   }
 
   initContent() {
@@ -170,7 +178,7 @@ export default class PageController {
       return;
     }
 
-    const currentPageFimls = this._films.getFilmsByPageNumber();
+    const currentPageFimls = this._films.getFilms();
 
     this._filmsComponent = new Films(FIMLS_COMPONENT_TYPES.FIMLS);
     this._filmsComponentElement = this._filmsComponent.getElement();

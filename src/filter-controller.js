@@ -9,10 +9,15 @@ export default class FilterController {
     this._filterComponent = null;
     this._totalWatchedFilms = 0;
     this._filters = Utils.getFilters();
+    this._onClickCb = null;
   }
 
   get totalWatchedFilms() {
     return this._totalWatchedFilms;
+  }
+
+  addFilterEvent(cb) {
+    this._filterComponent.addFilterEvent(cb);
   }
 
   render() {
@@ -24,7 +29,7 @@ export default class FilterController {
       }
     });
 
-    this._filterComponent = new Filter(this._filters, this._films.selectedFilter);
+    this._filterComponent = new Filter(this._filters, this._films.filterType);
     this._filterComponent.removeExist();
     Utils.render(this._container, this._filterComponent.getElement(), RenderPosition.AFTERBEGIN);
     this._filterComponent.renderFiltersElements();
