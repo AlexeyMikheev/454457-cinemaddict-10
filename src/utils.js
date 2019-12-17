@@ -83,7 +83,7 @@ export default class Utils {
             total++;
           }
           return total;
-        }, filter.count);
+        }, 0);
 
       case Filters.HISTORY.title:
         return filmsCards.reduce((total, filmCard) => {
@@ -91,7 +91,7 @@ export default class Utils {
             total++;
           }
           return total;
-        }, filter.count);
+        }, 0);
 
       case Filters.FAVORITES.title:
         return filmsCards.reduce((total, filmCard) => {
@@ -99,7 +99,7 @@ export default class Utils {
             total++;
           }
           return total;
-        }, filter.count);
+        }, 0);
 
       default: return filter.count;
     }

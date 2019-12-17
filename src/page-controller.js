@@ -24,6 +24,7 @@ export default class PageController {
     this._headerContainer = headerContainer;
     this._mainContainer = mainContainer;
     this._footer = footer;
+    this._totalWatchedFilms = 0;
 
     this._filmsControllers = [];
     this._topRatedFilmsControllers = [];
@@ -42,6 +43,8 @@ export default class PageController {
           }
         }
       });
+
+      this.initMenuFilters();
     };
 
     this._onViewChange = () => {
@@ -138,25 +141,29 @@ export default class PageController {
   }
 
   initHeader() {
-    let totalWatchedFilms = 0;
-    this._filters.forEach((filter) => {
-      filter.count = Utils.getFilterValue(filter, this._films);
+    this.initMenuFilters();
 
-      if (filter.title === Filters.ALL.title) {
-        totalWatchedFilms = filter.count;
-      }
-    });
-
-    const profileComponent = new Profile(totalWatchedFilms);
+    const profileComponent = new Profile(this._totalWatchedFilms);
     Utils.render(this._headerContainer, profileComponent.getElement());
-
-    const menuComponent = new Menu(this._filters);
-    menuComponent.removeExist();
-    Utils.render(this._mainContainer, menuComponent.getElement(), RenderPosition.AFTERBEGIN);
 
     Utils.render(this._mainContainer, this._sortComponent.getElement());
     this._sortComponent.renderSortElements();
     this._sortComponent.addSortEvent(this._onSortButtonClick);
+  }
+
+  initMenuFilters() {
+    this._totalWatchedFilms = 0;
+    this._filters.forEach((filter) => {
+      filter.count = Utils.getFilterValue(filter, this._films);
+
+      if (filter.title === Filters.ALL.title) {
+        this._totalWatchedFilms = filter.count;
+      }
+    });
+
+    const menuComponent = new Menu(this._filters);
+    menuComponent.removeExist();
+    Utils.render(this._mainContainer, menuComponent.getElement(), RenderPosition.AFTERBEGIN);
   }
 
   initContent() {
