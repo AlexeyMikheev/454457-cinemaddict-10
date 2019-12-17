@@ -9,7 +9,7 @@ const getFilterTemplate = (selectedFilter, filter) => {
   let additionClass = ``;
 
   const isStat = filter.title === Filters.STATS.title;
-  const isAll = filter.title === Filters.STATS.title;
+  const isAll = filter.title === Filters.ALL.title;
 
   if (isStat) {
     additionClass = `main-navigation__item--additional`;

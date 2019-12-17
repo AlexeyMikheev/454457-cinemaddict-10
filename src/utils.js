@@ -1,4 +1,4 @@
-import {ProfileRating, Filters, ONE_TASKS_PAGE_COUNT, RenderPosition, MINUTE_IN_HOUR, MIN_DESCRIPTION_LENGTH, MAX_DESCRIPTION_LENGTH, DESCRIPTION_SPACE, MANY_COMMENTS_COUNT, ONE_DAY, SortTypes, DIFFERENCE_DATE_FORMAT} from './const.js';
+import {ProfileRating, Filters, ONE_TASKS_PAGE_COUNT, RenderPosition, MINUTE_IN_HOUR, MIN_DESCRIPTION_LENGTH, MAX_DESCRIPTION_LENGTH, DESCRIPTION_SPACE, MANY_COMMENTS_COUNT, ONE_DAY, SortTypes, DIFFERENCE_DATE_FORMAT, Emoji} from './const.js';
 import moment from 'moment';
 
 export default class Utils {
@@ -195,4 +195,13 @@ export default class Utils {
     return [Filters.ALL, Filters.WATCHLIST, Filters.HISTORY, Filters.FAVORITES, Filters.STATS];
   }
 
+  static getEmoji(emoji) {
+    switch (emoji) {
+      case Emoji.SMILE.value: return Emoji.SMILE;
+      case Emoji.NEUTRAL.value: return Emoji.NEUTRAL;
+      case Emoji.GRINNING.value: return Emoji.GRINNING;
+      case Emoji.ANGRY.value: return Emoji.ANGRY;
+      default: return null;
+    }
+  }
 }

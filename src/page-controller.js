@@ -52,7 +52,7 @@ export default class PageController {
       this.refreshMoreButton();
     };
 
-    this._films.moreButtonClickCb = this.__onMoreButtonClickCb;
+    this._films.moreButtonClickCb = this._onMoreButtonClickCb;
 
     this._onSortButtonClick = (sortType) => {
       this._films.sortType = sortType;

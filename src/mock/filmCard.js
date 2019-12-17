@@ -1,4 +1,4 @@
-import {Emotion, MIN_RATING_VALUE, MAX_RATING_VALUE} from '../const.js';
+import {Emoji, MIN_RATING_VALUE, MAX_RATING_VALUE} from '../const.js';
 
 const FilmsNames = [
   `Правдивая ложь`,
@@ -59,10 +59,10 @@ const Genres = [
 ];
 
 const Emotions = [
-  Emotion.SMILE,
-  Emotion.SLEEPING,
-  Emotion.PUKE,
-  Emotion.ANGRY,
+  Emoji.SMILE.value,
+  Emoji.NEUTRAL.value,
+  Emoji.GRINNING.value,
+  Emoji.ANGRY.value
 ];
 
 const RANDOM_LIMIT = 0.5;
@@ -77,7 +77,7 @@ const MIN_DURATION_COUNT = 40 * 60 * 1000;
 const MAX_DURATION_COUNT = 180 * 60 * 1000;
 
 const MIN_COMMENTS_COUNT = 0;
-const MAX_COMMENTS_COUNT = 20;
+const MAX_COMMENTS_COUNT = 5;
 
 const MIN_YEAR_LIMIT = 1990;
 const MAX_YEAR_LIMIT = 2020;

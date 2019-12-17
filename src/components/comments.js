@@ -17,7 +17,7 @@ export default class Comments extends AbstractComponent {
     super();
     this._comments = comments;
     this._onCommentsChanged = onCommentsChanged;
-    this._onDelete = (evt) => {
+    this._onDeleteCb = (evt) => {
       evt.preventDefault();
 
       const commentId = parseInt(evt.target.dataset[`id`], 10);
@@ -50,7 +50,7 @@ export default class Comments extends AbstractComponent {
 
     this._commentsComponents.forEach((comment) => {
       this._element.appendChild(comment.getElement());
-      comment.addDeleteButtonClick(this._onDelete);
+      comment.addDeleteButtonClick(this._onDeleteCb);
     });
   }
 

@@ -58,8 +58,8 @@ export default class Movies {
     return this._currentPage;
   }
 
-  set moreButtonClickCb(cb) {
-    this._moreButtonClickCb = cb;
+  set moreButtonClickCb(value) {
+    this._moreButtonClickCb = value;
   }
 
   set sortType(value) {

@@ -216,8 +216,11 @@ export default class FilmDetail extends AbstractSmartComponent {
   initAddCommentForm() {
     const commentWrapper = this.getCommentWrapper();
     if (commentWrapper !== null) {
-      this._addCommentComponent = new AddNewCommentForm();
+      const {comments} = this._film;
+
+      this._addCommentComponent = new AddNewCommentForm(comments, this._onCommentsChanged);
       commentWrapper.appendChild(this._addCommentComponent.getElement());
+      this._addCommentComponent.initEvents();
     }
   }
 
