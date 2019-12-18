@@ -8,12 +8,13 @@ import NoFilms from './components/no-films.js';
 import MovieController from './movie-controller.js';
 import FilterController from './filter-controller.js';
 
-import {FIMLS_COMPONENT_TYPES, ESC_KEY} from './const.js';
+import {FIMLS_COMPONENT_TYPES, ESC_KEY, Filters} from './const.js';
 import Utils from './utils.js';
 
 export default class PageController {
   constructor(headerContainer, mainContainer, footer, films) {
     this._films = films;
+    this._filmsContainerComponent = null;
     this._filmsComponent = null;
     this._filmsComponentElement = null;
     this._moreButton = null;
@@ -74,6 +75,14 @@ export default class PageController {
     this._onFilterButtonClick = (filterType) => {
       if (this._films.selectedFilter !== filterType) {
         this._films.filterType = filterType;
+
+        if (filterType === Filters.STATS.title) {
+          this._filmsContainerComponent.hide();
+          this._sortComponent.hide();
+        } else {
+          this._filmsContainerComponent.show();
+          this._sortComponent.show();
+        }
       }
     };
 
@@ -174,11 +183,13 @@ export default class PageController {
   }
 
   initContent() {
-    const filmsContainer = new FilmsContainer().getElement();
-    Utils.render(this._mainContainer, filmsContainer);
+    this._filmsContainerComponent = new FilmsContainer();
+    const filmsContainerComponentElement = this._filmsContainerComponent.getElement();
+
+    Utils.render(this._mainContainer, filmsContainerComponentElement);
 
     if (this._films.length === 0) {
-      Utils.render(filmsContainer, new NoFilms().getElement());
+      Utils.render(filmsContainerComponentElement, new NoFilms().getElement());
       return;
     }
 
@@ -186,15 +197,15 @@ export default class PageController {
 
     this._filmsComponent = new Films(FIMLS_COMPONENT_TYPES.FIMLS);
     this._filmsComponentElement = this._filmsComponent.getElement();
-    Utils.render(filmsContainer, this._filmsComponentElement);
+    Utils.render(filmsContainerComponentElement, this._filmsComponentElement);
     this.renderListFilms(this._filmsComponentElement, currentPageFimls);
 
     const topRatedFilmsComponentElement = new Films(FIMLS_COMPONENT_TYPES.TOP_RATED).getElement();
-    Utils.render(filmsContainer, topRatedFilmsComponentElement);
+    Utils.render(filmsContainerComponentElement, topRatedFilmsComponentElement);
     this.renderTopRatedFilms(topRatedFilmsComponentElement, this._films.topRatedFilms);
 
     const mostCommentFilmsComponentElement = new Films(FIMLS_COMPONENT_TYPES.MOST_COMMENTS).getElement();
-    Utils.render(filmsContainer, mostCommentFilmsComponentElement);
+    Utils.render(filmsContainerComponentElement, mostCommentFilmsComponentElement);
     this.renderMostCommentFilms(mostCommentFilmsComponentElement, this._films.mostCommentFilms);
 
     this.refreshMoreButton();
