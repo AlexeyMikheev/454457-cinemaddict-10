@@ -1,4 +1,4 @@
-import {Emoji, MIN_RATING_VALUE, MAX_RATING_VALUE} from '../const.js';
+import {Emoji, MIN_RATING_VALUE, MAX_RATING_VALUE, GENRES} from '../const.js';
 
 const FilmsNames = [
   `Правдивая ложь`,
@@ -48,14 +48,6 @@ const Posters = [
   `sagebrush-trail.jpg`,
   `santa-claus-conquers-the-martians.jpg`,
   `the-dance-of-life.jpg`
-];
-
-const Genres = [
-  `Musical`,
-  `Western`,
-  `Dramma`,
-  `Comedy`,
-  `Cartoon`
 ];
 
 const Emotions = [
@@ -159,7 +151,7 @@ const createfilmCard = () => {
     releaseDate: getRandomDate(),
     duration: getRandomNumber(MIN_DURATION_COUNT, MAX_DURATION_COUNT),
     country: getRandomItem(Countries),
-    genres: createRandomItems(Genres, MIN_MOCK_ITEMS_COUNT, MAX_MOCK_ITEMS_COUNT),
+    genres: createRandomItems(GENRES, MIN_MOCK_ITEMS_COUNT, MAX_MOCK_ITEMS_COUNT),
     poster: getRandomItem(Posters),
     description: createRandomItems(DESCRIPTION.split(`.`), MIN_MOCK_ITEMS_COUNT, MAX_MOCK_ITEMS_COUNT).join(` `),
     comments: createComments(getRandomNumber(MIN_COMMENTS_COUNT, MAX_COMMENTS_COUNT)),

@@ -1,8 +1,8 @@
 import AbstractComponent from './abstract-component.js';
-import {Period} from '../const.js';
+import {Period, GENRES} from '../const.js';
 import Utils from '../utils.js';
 
-const getStatisticTemplate = (totalFilms, totalDuration) => {
+const getStatisticTemplate = (totalFilms, totalDuration, topGenreName) => {
   const durationHours = Utils.getHours(totalDuration);
   const durationMinutes = Utils.getMinutes(totalDuration);
 
@@ -43,7 +43,7 @@ const getStatisticTemplate = (totalFilms, totalDuration) => {
     </li>
     <li class="statistic__text-item">
       <h4 class="statistic__item-title">Top genre</h4>
-      <p class="statistic__item-text">Sci-Fi</p>
+      <p class="statistic__item-text">${topGenreName}</p>
     </li>
   </ul>
 
@@ -58,14 +58,59 @@ export default class Statistic extends AbstractComponent {
   constructor(films) {
     super();
     this._films = films;
+    this._totalWatchedFilms = 0;
+    this._totalDurationFilms = 0;
+    this._topGenreName = `-`;
+    this._genres = new Map();
+    this._genresLabels = [];
+    this._genresValues = [];
+    this._updateStatistics();
+  }
+
+  getTemplate() {
+    return getStatisticTemplate(this._totalWatchedFilms.length, this._totalDurationFilms, this._topGenreName);
+  }
+
+  _updateStatistics() {
     this._totalWatchedFilms = this._films.getWathedFilmsByPeriod(Period.ALL);
+
     this._totalDurationFilms = this._totalWatchedFilms.reduce((total, film) => {
       total += film.duration;
       return total;
     }, 0);
-  }
 
-  getTemplate() {
-    return getStatisticTemplate(this._totalWatchedFilms.length, this._totalDurationFilms);
+    let genres = new Map();
+
+    GENRES.forEach((genre) => {
+      genres.set(genre, 0);
+    });
+
+    const filmsGenres = this._totalWatchedFilms.reduce((allGenres, film) => {
+      allGenres.push(...film.genres);
+      return allGenres;
+    }, []);
+
+    filmsGenres.forEach((filmGenre) => {
+      let genreValue = genres.get(filmGenre);
+      if (genreValue === null) {
+        genres.set(filmGenre, 0);
+      } else {
+        genres.set(filmGenre, ++genreValue);
+      }
+    });
+
+    this._genres = new Map([...genres.entries()].sort((a, b) => b[1] - a[1]));
+
+    let maxGenreValue = 0;
+    Array.from(this._genres.entries()).forEach((genre) => {
+      const genreLabel = genre[0];
+      const genreValue = genre[1];
+      this._genresLabels.push(genreLabel);
+      this._genresValues.push(genreValue);
+      if (genreValue > maxGenreValue) {
+        maxGenreValue = genreValue;
+        this._topGenreName = genreLabel;
+      }
+    });
   }
 }
