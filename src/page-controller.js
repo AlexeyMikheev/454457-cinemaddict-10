@@ -100,10 +100,6 @@ export default class PageController {
     this._films.filterTypeChangeCb = this._filterTypeChangeCb;
   }
 
-  get totalWatchedFilms() {
-    return this._filterController !== null ? this._filterController.totalWatchedFilms : 0;
-  }
-
   _getFilmsControlles() {
     return [...this._filmsControllers, ...this._topRatedFilmsControllers, ...this._mostCommentFilmsControllers];
   }
@@ -182,7 +178,7 @@ export default class PageController {
       this._profileComponent = null;
     }
 
-    this._profileComponent = new Profile(this.totalWatchedFilms);
+    this._profileComponent = new Profile(this._films.totalWatchedFilmsCount);
     Utils.render(this._headerContainer, this._profileComponent.getElement());
   }
 

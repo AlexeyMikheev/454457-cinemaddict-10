@@ -29,6 +29,10 @@ export default class Movies {
     return this._films.length;
   }
 
+  get totalWatchedFilmsCount() {
+    return Utils.getFiltredFilms(Filters.HISTORY.title, this._films).length;
+  }
+
   get topRatedFilms() {
     const hasRatingFilms = this._films.filter((f) => {
       return f.rating > 0;

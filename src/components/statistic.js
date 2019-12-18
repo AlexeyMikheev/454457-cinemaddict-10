@@ -5,12 +5,13 @@ import Utils from '../utils.js';
 const getStatisticTemplate = (totalFilms, totalDuration, topGenreName) => {
   const durationHours = Utils.getHours(totalDuration);
   const durationMinutes = Utils.getMinutes(totalDuration);
+  const formatedRating = Utils.getFormatedRating(totalFilms);
 
   return `<section class="statistic">
   <p class="statistic__rank">
     Your rank
     <img class="statistic__img" src="images/bitmap@2x.png" alt="Avatar" width="35" height="35">
-    <span class="statistic__rank-label">Sci-Fighter</span>
+    <span class="statistic__rank-label">${formatedRating}</span>
   </p>
 
   <form action="https://echo.htmlacademy.ru/" method="get" class="statistic__filters">
