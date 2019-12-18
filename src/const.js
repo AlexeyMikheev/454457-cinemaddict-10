@@ -6,6 +6,14 @@ export const Filters = {
   STATS: {title: `Stats`, anchor: `stats`, count: 0},
 };
 
+export const Period = {
+  ALL: 0,
+  TODAY: 1,
+  WEEK: 2,
+  MONTH: 3,
+  YEAR: 4
+};
+
 export const Emoji = {
   SMILE: {value: `sleeping`, img: `smile`},
   NEUTRAL: {value: `neutral-face`, img: `sleeping`},

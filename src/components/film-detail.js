@@ -18,7 +18,7 @@ const getFilmDetailTemplate = (filmCard) => {
   const formatedWriters = writers.join(`, `);
   const formatedActors = actors.join(`, `);
   const formatedReleaseDate = Utils.formatTimeStamp(releaseDate, RELEASE_DATE_FORMAT);
-  const formatedDuration = Utils.formatTimeStamp(duration, DURATION_FORMAT);
+  const formatedDuration = Utils.formatDurationTimeStamp(duration, DURATION_FORMAT);
   const genresTitle = genres.length > 1 ? `genres` : `genre`;
   const genresTemplate = getGenresTemplate(genres);
 

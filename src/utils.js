@@ -1,5 +1,8 @@
 import {ProfileRating, Filters, ONE_TASKS_PAGE_COUNT, RenderPosition, MINUTE_IN_HOUR, MIN_DESCRIPTION_LENGTH, MAX_DESCRIPTION_LENGTH, DESCRIPTION_SPACE, MANY_COMMENTS_COUNT, ONE_DAY, SortTypes, DIFFERENCE_DATE_FORMAT, Emoji} from './const.js';
 import moment from 'moment';
+import duration from 'moment-duration-format';
+
+duration(moment);
 
 export default class Utils {
 
@@ -137,13 +140,13 @@ export default class Utils {
     }
   }
 
-  static getHours(duration) {
-    return Math.floor(duration / MINUTE_IN_HOUR);
-  }
+  // static getHours(timestamp) {
+  //   return Math.floor(timestamp / MINUTE_IN_HOUR);
+  // }
 
-  static getMinutes(duration) {
-    return Math.floor(duration % MINUTE_IN_HOUR);
-  }
+  // static getMinutes(timestamp) {
+  //   return Math.floor(timestamp % MINUTE_IN_HOUR);
+  // }
 
   static getFormatedValue(value) {
     return value < 10 ? `0${value}` : value.toString();
@@ -167,6 +170,23 @@ export default class Utils {
 
   static formatTimeStamp(date, format) {
     return moment(date).format(format);
+  }
+
+  static formatDurationTimeStamp(date, format) {
+    return moment.duration(date, `milliseconds`).format(format);
+  }
+
+  static getHours(timestamp) {
+    return moment.duration(timestamp, `milliseconds`).hours();
+  }
+
+  static getMinutes(timestamp) {
+    const minutes = moment.duration(timestamp, `milliseconds`).minutes();
+    if (minutes > MINUTE_IN_HOUR) {
+      const hours = this.getHours(timestamp);
+      return minutes - (hours * MINUTE_IN_HOUR);
+    }
+    return minutes;
   }
 
   static getSortedFilmsByProperty(films, propertyName) {

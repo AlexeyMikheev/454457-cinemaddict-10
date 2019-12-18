@@ -3,6 +3,7 @@ import Sort from './components/sort.js';
 import Films from './components/films';
 import FilmsContainer from './components/films-container';
 import MoreButton from './components/more-button.js';
+import FooterStatistic from './components/footer-statistic.js';
 import Statistic from './components/statistic.js';
 import NoFilms from './components/no-films.js';
 import MovieController from './movie-controller.js';
@@ -19,6 +20,7 @@ export default class PageController {
     this._filmsComponentElement = null;
     this._moreButton = null;
     this._sortComponent = new Sort(this._sortType);
+    this._statisticComponent = null;
     this._headerContainer = headerContainer;
     this._mainContainer = mainContainer;
     this._footer = footer;
@@ -34,13 +36,13 @@ export default class PageController {
       const isSuccess = this._films.updateFilm(oldValue.id, newValue);
       if (isSuccess) {
         filmController.render(newValue);
-        this.initFilters();
-        this.initProfile();
+        this._initFilters();
+        this._initProfile();
       }
     };
 
     this._onViewChange = () => {
-      this.setDefaultView();
+      this._setDefaultView();
     };
 
     this._onMoreButtonClick = () => {
@@ -50,7 +52,7 @@ export default class PageController {
     this._onMoreButtonClickCb = () => {
       this.renderListFilms(this._filmsComponentElement, this._films.getPreparedFilms());
 
-      this.refreshMoreButton();
+      this._refreshMoreButton();
     };
 
     this._films.moreButtonClickCb = this._onMoreButtonClickCb;
@@ -67,7 +69,7 @@ export default class PageController {
         this._sortComponent.refreshSortElements();
       }
 
-      this.refreshMoreButton();
+      this._refreshMoreButton();
     };
 
     this._films.sortTypeChangeCb = this._sortTypeChangeCb;
@@ -79,18 +81,20 @@ export default class PageController {
         if (filterType === Filters.STATS.title) {
           this._filmsContainerComponent.hide();
           this._sortComponent.hide();
+          this._initStatistic();
         } else {
           this._filmsContainerComponent.show();
           this._sortComponent.show();
+          this._destroyStatistic();
         }
       }
     };
 
     this._filterTypeChangeCb = () => {
       this.renderListFilms(this._filmsComponentElement, this._films.getPreparedFilms());
-      this.initFilters();
+      this._initFilters();
 
-      this.refreshMoreButton();
+      this._refreshMoreButton();
     };
 
     this._films.filterTypeChangeCb = this._filterTypeChangeCb;
@@ -105,31 +109,31 @@ export default class PageController {
   }
 
   render() {
-    this.initHeader();
-    this.initContent();
-    this.initDocumentEvents();
-    this.initStatistic();
+    this._initHeader();
+    this._initContent();
+    this._initDocumentEvents();
+    this._initFooterStatistic();
   }
 
-  renderListFilms(container, films) {
-    this.clearFilms(this._filmsControllers);
+  _renderListFilms(container, films) {
+    this._clearFilms(this._filmsControllers);
     this._filmsControllers = [];
-    this.renderFilms(container, films, this._filmsControllers);
+    this._renderFilms(container, films, this._filmsControllers);
   }
 
-  renderTopRatedFilms(container, films) {
-    this.clearFilms(this._topRatedFilmsControllers);
+  _renderTopRatedFilms(container, films) {
+    this._clearFilms(this._topRatedFilmsControllers);
     this._topRatedFilmsControllers = [];
-    this.renderFilms(container, films, this._topRatedFilmsControllers);
+    this._renderFilms(container, films, this._topRatedFilmsControllers);
   }
 
-  renderMostCommentFilms(container, films) {
-    this.clearFilms(this._mostCommentFilmsControllers);
+  _renderMostCommentFilms(container, films) {
+    this._clearFilms(this._mostCommentFilmsControllers);
     this._mostCommentFilmsControllers = [];
-    this.renderFilms(container, films, this._mostCommentFilmsControllers);
+    this._renderFilms(container, films, this._mostCommentFilmsControllers);
   }
 
-  renderFilms(container, films, filmsControllers) {
+  _renderFilms(container, films, filmsControllers) {
     films.forEach((film) => {
       const filmControler = new MovieController(container, this._onDataChange, this._onViewChange);
       filmControler.render(film);
@@ -138,30 +142,30 @@ export default class PageController {
     });
   }
 
-  clearFilms(filmsControllers) {
+  _clearFilms(filmsControllers) {
     filmsControllers.forEach((filmController) => {
       filmController.removeComponents();
       filmController = null;
     });
   }
 
-  setDefaultView() {
+  _setDefaultView() {
     this.getFilmsControlles().forEach((filmController) => {
       filmController.setDefaultView();
     });
   }
 
-  initHeader() {
-    this.initFilters();
+  _initHeader() {
+    this._initFilters();
 
-    this.initProfile();
+    this._initProfile();
 
     Utils.render(this._mainContainer, this._sortComponent.getElement());
     this._sortComponent._renderSortElements();
     this._sortComponent.addSortButtonClick(this._onSortButtonClick);
   }
 
-  initFilters() {
+  _initFilters() {
     if (this._filterController !== null) {
       this._filterController.destroy();
       this._filterController = null;
@@ -172,7 +176,7 @@ export default class PageController {
     this._filterController.addFilterEvent(this._onFilterButtonClick);
   }
 
-  initProfile() {
+  _initProfile() {
     if (this._profileComponent !== null) {
       this._profileComponent.removeElement();
       this._profileComponent = null;
@@ -182,7 +186,7 @@ export default class PageController {
     Utils.render(this._headerContainer, this._profileComponent.getElement());
   }
 
-  initContent() {
+  _initContent() {
     this._filmsContainerComponent = new FilmsContainer();
     const filmsContainerComponentElement = this._filmsContainerComponent.getElement();
 
@@ -202,17 +206,17 @@ export default class PageController {
 
     const topRatedFilmsComponentElement = new Films(FIMLS_COMPONENT_TYPES.TOP_RATED).getElement();
     Utils.render(filmsContainerComponentElement, topRatedFilmsComponentElement);
-    this.renderTopRatedFilms(topRatedFilmsComponentElement, this._films.topRatedFilms);
+    this._renderTopRatedFilms(topRatedFilmsComponentElement, this._films.topRatedFilms);
 
     const mostCommentFilmsComponentElement = new Films(FIMLS_COMPONENT_TYPES.MOST_COMMENTS).getElement();
     Utils.render(filmsContainerComponentElement, mostCommentFilmsComponentElement);
-    this.renderMostCommentFilms(mostCommentFilmsComponentElement, this._films.mostCommentFilms);
+    this._renderMostCommentFilms(mostCommentFilmsComponentElement, this._films.mostCommentFilms);
 
-    this.refreshMoreButton();
+    this._refreshMoreButton();
   }
 
-  refreshMoreButton() {
-    this.destroyMoreButton();
+  _refreshMoreButton() {
+    this._destroyMoreButton();
 
     if (this._films.isAvaliableLoad) {
       this._moreButton = new MoreButton();
@@ -221,23 +225,36 @@ export default class PageController {
     }
   }
 
-  destroyMoreButton() {
+  _destroyMoreButton() {
     if (this._moreButton !== null) {
       this._moreButton.removeElement();
       this._moreButton = null;
     }
   }
 
-  initStatistic() {
-    const statisticComponent = new Statistic(this._films.totalFilms);
-    statisticComponent.removeExist();
-    Utils.render(this._footer, statisticComponent.getElement());
+  _initFooterStatistic() {
+    const footerStatisticComponent = new FooterStatistic(this._films.totalFilms);
+    footerStatisticComponent.removeExist();
+    Utils.render(this._footer, footerStatisticComponent.getElement());
   }
 
-  initDocumentEvents() {
+  _initStatistic() {
+    this._statisticComponent = new Statistic(this._films);
+    Utils.render(this._mainContainer, this._statisticComponent.getElement());
+  }
+
+  _destroyStatistic() {
+    if (this._statisticComponent !== null) {
+      this._statisticComponent.removeElement();
+      this._statisticComponent = null;
+    }
+  }
+
+
+  _initDocumentEvents() {
     document.addEventListener(`keydown`, (evt) => {
       if (evt.keyCode === ESC_KEY) {
-        this.setDefaultView();
+        this._setDefaultView();
       }
     });
   }

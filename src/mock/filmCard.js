@@ -165,6 +165,7 @@ const createfilmCard = () => {
     comments: createComments(getRandomNumber(MIN_COMMENTS_COUNT, MAX_COMMENTS_COUNT)),
     isFavorite: getRandomBoolean(),
     isWaitingWatched,
+    watchedDate: new Date().valueOf(),
     isWatched,
     age: getRandomNumber(MIN_RATING_VALUE, MAX_RATING_VALUE)
   };

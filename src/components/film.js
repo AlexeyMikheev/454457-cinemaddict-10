@@ -8,7 +8,7 @@ const getFilmTemplate = (filmCard) => {
   const {title, rating, releaseDate, duration, genres, poster, description, comments, isWaitingWatched, isWatched, isFavorite} = filmCard;
 
   const releaseYear = new Date(releaseDate).getFullYear();
-  const formatedDuration = Utils.formatTimeStamp(duration, DURATION_FORMAT);
+  const formatedDuration = Utils.formatDurationTimeStamp(duration, DURATION_FORMAT);
   const formatedDescription = Utils.getEllipsisDescription(description);
   const formatedCommentsTitle = Utils.getFormatedCommentsTitle(comments);
   const formatedGenres = genres.length > 0 ? genres[0] : ``;

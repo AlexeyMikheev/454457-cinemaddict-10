@@ -22,6 +22,7 @@
   "dependencies": {
     "he": "1.2.0",
     "moment": "2.24.0",
+    "moment-duration-format": "2.3.2",
     "moment-locales-webpack-plugin": "1.1.2"
   }
 }
