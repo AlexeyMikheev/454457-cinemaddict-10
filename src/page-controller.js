@@ -104,7 +104,7 @@ export default class PageController {
     return this._filterController !== null ? this._filterController.totalWatchedFilms : 0;
   }
 
-  getFilmsControlles() {
+  _getFilmsControlles() {
     return [...this._filmsControllers, ...this._topRatedFilmsControllers, ...this._mostCommentFilmsControllers];
   }
 
@@ -150,7 +150,7 @@ export default class PageController {
   }
 
   _setDefaultView() {
-    this.getFilmsControlles().forEach((filmController) => {
+    this._getFilmsControlles().forEach((filmController) => {
       filmController.setDefaultView();
     });
   }
