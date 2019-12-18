@@ -79,6 +79,12 @@ export default class MovieController {
     }
   }
 
+  setDefaultView() {
+    if (this._mode !== MovieControllerMode.DEFAULT) {
+      this._onCloseFilmDetail();
+    }
+  }
+
   removeComponents() {
     this._removeDetailComponent();
     this._removeFilmComponent();
@@ -95,12 +101,6 @@ export default class MovieController {
     if (this._filmDetailComponent !== null) {
       this._filmDetailComponent.removeElement();
       this._filmDetailComponent = null;
-    }
-  }
-
-  setDefaultView() {
-    if (this._mode !== MovieControllerMode.DEFAULT) {
-      this._onCloseFilmDetail();
     }
   }
 }
