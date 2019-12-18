@@ -58,7 +58,7 @@ export default class Statistic extends AbstractComponent {
   constructor(films) {
     super();
     this._films = films;
-    this._totalWatchedFilms = this._films.getWathedFilmsByPeriod(Period.WEEK);
+    this._totalWatchedFilms = this._films.getWathedFilmsByPeriod(Period.ALL);
     this._totalDurationFilms = this._totalWatchedFilms.reduce((total, film) => {
       total += film.duration;
       return total;

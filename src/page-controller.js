@@ -50,7 +50,7 @@ export default class PageController {
     };
 
     this._onMoreButtonClickCb = () => {
-      this.renderListFilms(this._filmsComponentElement, this._films.getPreparedFilms());
+      this._renderListFilms(this._filmsComponentElement, this._films.getPreparedFilms());
 
       this._refreshMoreButton();
     };
@@ -62,7 +62,7 @@ export default class PageController {
     };
 
     this._sortTypeChangeCb = () => {
-      this.renderListFilms(this._filmsComponentElement, this._films.getPreparedFilms());
+      this._renderListFilms(this._filmsComponentElement, this._films.getPreparedFilms());
 
       if (this._sortComponent !== null) {
         this._sortComponent.sortType = this._films.sortType;
@@ -91,7 +91,7 @@ export default class PageController {
     };
 
     this._filterTypeChangeCb = () => {
-      this.renderListFilms(this._filmsComponentElement, this._films.getPreparedFilms());
+      this._renderListFilms(this._filmsComponentElement, this._films.getPreparedFilms());
       this._initFilters();
 
       this._refreshMoreButton();
@@ -202,7 +202,7 @@ export default class PageController {
     this._filmsComponent = new Films(FIMLS_COMPONENT_TYPES.FIMLS);
     this._filmsComponentElement = this._filmsComponent.getElement();
     Utils.render(filmsContainerComponentElement, this._filmsComponentElement);
-    this.renderListFilms(this._filmsComponentElement, currentPageFimls);
+    this._renderListFilms(this._filmsComponentElement, currentPageFimls);
 
     const topRatedFilmsComponentElement = new Films(FIMLS_COMPONENT_TYPES.TOP_RATED).getElement();
     Utils.render(filmsContainerComponentElement, topRatedFilmsComponentElement);
