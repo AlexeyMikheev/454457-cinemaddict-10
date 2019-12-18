@@ -43,6 +43,11 @@ export default class Comments extends AbstractComponent {
     return this._titleElement;
   }
 
+  removeTitleElement() {
+    this._titleElement.remove();
+    this._titleElement = null;
+  }
+
   initComments() {
     this._commentsComponents = this._comments.map((c) => {
       return new Comment(c);
@@ -52,11 +57,6 @@ export default class Comments extends AbstractComponent {
       this._element.appendChild(comment.getElement());
       comment.addDeleteButtonClick(this._onDeleteCb);
     });
-  }
-
-  removeTitleElement() {
-    this._titleElement.remove();
-    this._titleElement = null;
   }
 
   removeComments() {

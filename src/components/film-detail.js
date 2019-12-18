@@ -122,7 +122,7 @@ export default class FilmDetail extends AbstractSmartComponent {
     super();
     this._container = container;
     this._film = film;
-    this._onClickCb = null;
+    this._onCloseButtonClickCb = null;
     this._closeBtn = null;
     this._detailsContainer = null;
     this._ratingContainer = null;
@@ -130,6 +130,7 @@ export default class FilmDetail extends AbstractSmartComponent {
     this._commentsComponent = null;
     this._addCommentComponent = null;
     this._onDataChange = onDataChange;
+    this._commentWrapper = null;
 
     this._onDetailCheckedChange = (evt) => {
       const target = evt.target;
@@ -156,10 +157,6 @@ export default class FilmDetail extends AbstractSmartComponent {
     };
   }
 
-  getTemplate() {
-    return getFilmDetailTemplate(this._film);
-  }
-
   get container() {
     return this._container;
   }
@@ -168,69 +165,41 @@ export default class FilmDetail extends AbstractSmartComponent {
     this._film = value;
   }
 
-  initComponents() {
-    this.initComments();
-    this.initAddCommentForm();
-    this.initRating();
+  getTemplate() {
+    return getFilmDetailTemplate(this._film);
   }
 
-  initRating() {
-    if (this._film.isWatched) {
-      this._ratingContainer = this._element.querySelector(`.form-details__middle-container`);
-      this._ratingComponent = new Rating(this._film);
-      this._ratingContainer.appendChild(this._ratingComponent.getElement());
+  recoveryListeners() {
+    this._detailsContainer = this._element.querySelector(`.film-details__controls`);
+    this._detailsContainer.addEventListener(`change`, this._onDetailCheckedChange);
 
-    } else if (this._ratingComponent !== null) {
-      this._ratingComponent.removeCheckedChangeEvent();
-      this._ratingComponent.removeElement();
-      this._ratingComponent = null;
-      this._ratingContainer = null;
-    }
+    this._closeBtn = this._element.querySelector(`.film-details__close-btn`);
+    this._closeBtn.addEventListener(`click`, this._onCloseButtonClickCb);
+
+    this.addRatingCheckedChangeEvent();
+  }
+
+  initComponents() {
+    this.removeComponents();
+
+    this._initComments();
+    this._initAddCommentForm();
+    this._initRating();
   }
 
   addRatingCheckedChangeEvent() {
     if (this._ratingComponent !== null) {
-      this._ratingComponent.addCheckedChangeEvent(this._onDataChange);
+      this._ratingComponent.addRatingCheckedChange(this._onDataChange);
     }
   }
 
-  getCommentWrapper() {
-    return this._element.querySelector(`.film-details__comments-wrap`);
-  }
-
-  initComments() {
-    const {comments} = this._film;
-
-    if (comments !== null && comments.length > 0) {
-      this._commentsComponent = new Comments(comments, this._onCommentsChanged);
-
-      const commentWrapper = this.getCommentWrapper();
-      if (commentWrapper !== null) {
-        commentWrapper.appendChild(this._commentsComponent.getTitleElement());
-        commentWrapper.appendChild(this._commentsComponent.getElement());
-        this._commentsComponent.initComments();
-      }
-    }
-  }
-
-  initAddCommentForm() {
-    const commentWrapper = this.getCommentWrapper();
-    if (commentWrapper !== null) {
-      const {comments} = this._film;
-
-      this._addCommentComponent = new AddNewCommentForm(comments, this._onCommentsChanged);
-      commentWrapper.appendChild(this._addCommentComponent.getElement());
-      this._addCommentComponent.initEvents();
-    }
-  }
-
-  addCloseEvent(cb) {
-    this._onClickCb = (evt) => {
+  addCloseButtonClickEvent(cb) {
+    this._onCloseButtonClickCb = (evt) => {
       cb(evt);
     };
 
     this._closeBtn = this._element.querySelector(`.film-details__close-btn`);
-    this._closeBtn.addEventListener(`click`, this._onClickCb);
+    this._closeBtn.addEventListener(`click`, this._onCloseButtonClickCb);
   }
 
   addDetailCheckedChangeEvent() {
@@ -250,28 +219,66 @@ export default class FilmDetail extends AbstractSmartComponent {
     if (this._ratingComponent !== null) {
       this._ratingComponent.removeElement();
     }
+
+    this._commentWrapper = null;
   }
 
   removeEvents() {
-    this._closeBtn.removeEventListener(`click`, this._onClickCb);
-    this._onClickCb = null;
+    this._closeBtn.removeEventListener(`click`, this._onCloseButtonClickCb);
+    this._onCloseButtonClickCb = null;
 
     this._detailsContainer.removeEventListener(`change`, this._onDetailCheckedChange);
     this._onDetailCheckedChange = null;
 
     if (this._ratingComponent !== null) {
-      this._ratingComponent.removeCheckedChangeEvent();
+      this._ratingComponent.removeRatingCheckedChange();
     }
   }
 
+  _getCommentWrapper() {
+    if (this._commentWrapper === null) {
+      this._commentWrapper = this._element.querySelector(`.film-details__comments-wrap`);
+    }
+    return this._commentWrapper;
+  }
 
-  recoveryListeners() {
-    this._detailsContainer = this._element.querySelector(`.film-details__controls`);
-    this._detailsContainer.addEventListener(`change`, this._onDetailCheckedChange);
+  _initRating() {
+    if (this._film.isWatched) {
+      this._ratingContainer = this._element.querySelector(`.form-details__middle-container`);
+      this._ratingComponent = new Rating(this._film);
+      this._ratingContainer.appendChild(this._ratingComponent.getElement());
 
-    this._closeBtn = this._element.querySelector(`.film-details__close-btn`);
-    this._closeBtn.addEventListener(`click`, this._onClickCb);
+    } else if (this._ratingComponent !== null) {
+      this._ratingComponent.removeRatingCheckedChange();
+      this._ratingComponent.removeElement();
+      this._ratingComponent = null;
+      this._ratingContainer = null;
+    }
+  }
 
-    this.addRatingCheckedChangeEvent();
+  _initComments() {
+    const {comments} = this._film;
+
+    if (comments !== null && comments.length > 0) {
+      this._commentsComponent = new Comments(comments, this._onCommentsChanged);
+
+      const commentWrapper = this._getCommentWrapper();
+      if (commentWrapper !== null) {
+        commentWrapper.appendChild(this._commentsComponent.getTitleElement());
+        commentWrapper.appendChild(this._commentsComponent.getElement());
+        this._commentsComponent.initComments();
+      }
+    }
+  }
+
+  _initAddCommentForm() {
+    const commentWrapper = this._getCommentWrapper();
+    if (commentWrapper !== null) {
+      const {comments} = this._film;
+
+      this._addCommentComponent = new AddNewCommentForm(comments, this._onCommentsChanged);
+      commentWrapper.appendChild(this._addCommentComponent.getElement());
+      this._addCommentComponent.initEvents();
+    }
   }
 }

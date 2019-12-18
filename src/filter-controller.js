@@ -17,7 +17,7 @@ export default class FilterController {
   }
 
   addFilterEvent(cb) {
-    this._filterComponent.addFilterEvent(cb);
+    this._filterComponent.addFilterButtonClick(cb);
   }
 
   render() {
@@ -32,7 +32,7 @@ export default class FilterController {
     this._filterComponent = new Filter(this._filters, this._films.filterType);
     this._filterComponent.removeExist();
     Utils.render(this._container, this._filterComponent.getElement(), RenderPosition.AFTERBEGIN);
-    this._filterComponent.renderFiltersElements();
+    this._filterComponent.refreshSortElements();
   }
 
   destroy() {

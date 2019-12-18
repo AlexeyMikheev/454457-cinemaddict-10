@@ -94,15 +94,11 @@ export default class Movies {
     this._datachangeCb = cb;
   }
 
-  _getCurrentCountFilms() {
-    return this._filterType === Filters.ALL.title ? this._films.length : this._displayedFilms.length;
-  }
-
   getFilmById(id) {
     return Utils.getFilmByid(this._films, id);
   }
 
-  getFilms() {
+  getPreparedFilms() {
     const filtredFilms = Utils.getFiltredFilms(this._filterType, this._films);
     this._displayedFilms = Utils.getSortedFilms(this._sortType, filtredFilms);
 
@@ -125,5 +121,9 @@ export default class Movies {
     if (cb !== null) {
       cb();
     }
+  }
+
+  _getCurrentCountFilms() {
+    return this._filterType === Filters.ALL.title ? this._films.length : this._displayedFilms.length;
   }
 }

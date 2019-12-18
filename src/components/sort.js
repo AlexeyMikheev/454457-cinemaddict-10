@@ -29,8 +29,8 @@ export default class Sort extends AbstractComponent {
     this._sortType = value;
   }
 
-  addSortEvent(cb) {
-    this._onClickCb = (evt) => {
+  addSortButtonClick(cb) {
+    this._onSortButtonClickCb = (evt) => {
       evt.preventDefault();
       if (evt.target.classList.contains(`sort__button`)) {
         const sortType = parseInt(evt.target.dataset[`sort`], 10);
@@ -40,15 +40,15 @@ export default class Sort extends AbstractComponent {
       }
     };
 
-    this._element.addEventListener(`click`, this._onClickCb);
+    this._element.addEventListener(`click`, this._onSortButtonClickCb);
   }
 
   refreshSortElements() {
-    this.removeSortElements();
-    this.renderSortElements();
+    this._removeSortElements();
+    this._renderSortElements();
   }
 
-  renderSortElements() {
+  _renderSortElements() {
     this._sortElements = this._sortFilters.map((sortFilter)=>{
       return Utils.createElement(getSortFilterTemplate(this._sortType, sortFilter));
     });
@@ -58,14 +58,9 @@ export default class Sort extends AbstractComponent {
     });
   }
 
-  removeSortElements() {
+  _removeSortElements() {
     this._sortElements.forEach((sortElement)=>{
       sortElement.remove();
     });
-  }
-
-  removeSortEvent() {
-    this._element.removeEventListener(`click`, this._onClickCb);
-    this._onClickCb = null;
   }
 }

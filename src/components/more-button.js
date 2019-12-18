@@ -12,7 +12,7 @@ export default class MoreButton extends AbstractComponent {
     return getMoreButtonTemplate();
   }
 
-  initClickEvent(cb) {
+  initMoreButtonClick(cb) {
     this._element.addEventListener(`click`, () => {
       cb();
     });

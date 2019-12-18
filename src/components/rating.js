@@ -47,31 +47,31 @@ export default class Rating extends AbstractComponent {
   constructor(film) {
     super();
     this._film = film;
-    this._onCheckedChange = null;
+    this._onRatingCheckedChangeCb = null;
   }
 
   getTemplate() {
     return getRatingTemplate(this._film);
   }
 
-  addCheckedChangeEvent(cb) {
-    this._onCheckedChange = (evt) => {
+  addRatingCheckedChange(cb) {
+    this._onRatingCheckedChangeCb = (evt) => {
       const rating = parseInt(evt.target.value, 10);
 
       cb(this._film, Object.assign({}, this._film, {rating}));
     };
 
     this._detailsContainer = this._element.querySelector(`.film-details__user-rating-score`);
-    this._detailsContainer.addEventListener(`change`, this._onCheckedChange);
+    this._detailsContainer.addEventListener(`change`, this._onRatingCheckedChangeCb);
   }
 
-  removeCheckedChangeEvent() {
-    this._detailsContainer.removeEventListener(`change`, this._onDetailCheckedChange);
-    this._onDetailCheckedChange = null;
+  removeRatingCheckedChange() {
+    this._detailsContainer.removeEventListener(`change`, this._onRatingCheckedChangeCb);
+    this._onRatingCheckedChangeCb = null;
   }
 
   recoveryListeners() {
     this._detailsContainer = this._element.querySelector(`.film-details__user-rating-score`);
-    this._detailsContainer.addEventListener(`change`, this._onCheckedChange);
+    this._detailsContainer.addEventListener(`change`, this._onRatingCheckedChangeCb);
   }
 }

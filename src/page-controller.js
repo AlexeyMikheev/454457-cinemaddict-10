@@ -47,7 +47,7 @@ export default class PageController {
     };
 
     this._onMoreButtonClickCb = () => {
-      this.renderListFilms(this._filmsComponentElement, this._films.getFilms());
+      this.renderListFilms(this._filmsComponentElement, this._films.getPreparedFilms());
 
       this.refreshMoreButton();
     };
@@ -59,7 +59,7 @@ export default class PageController {
     };
 
     this._sortTypeChangeCb = () => {
-      this.renderListFilms(this._filmsComponentElement, this._films.getFilms());
+      this.renderListFilms(this._filmsComponentElement, this._films.getPreparedFilms());
 
       if (this._sortComponent !== null) {
         this._sortComponent.sortType = this._films.sortType;
@@ -78,7 +78,7 @@ export default class PageController {
     };
 
     this._filterTypeChangeCb = () => {
-      this.renderListFilms(this._filmsComponentElement, this._films.getFilms());
+      this.renderListFilms(this._filmsComponentElement, this._films.getPreparedFilms());
       this.initFilters();
 
       this.refreshMoreButton();
@@ -148,8 +148,8 @@ export default class PageController {
     this.initProfile();
 
     Utils.render(this._mainContainer, this._sortComponent.getElement());
-    this._sortComponent.renderSortElements();
-    this._sortComponent.addSortEvent(this._onSortButtonClick);
+    this._sortComponent._renderSortElements();
+    this._sortComponent.addSortButtonClick(this._onSortButtonClick);
   }
 
   initFilters() {
@@ -182,7 +182,7 @@ export default class PageController {
       return;
     }
 
-    const currentPageFimls = this._films.getFilms();
+    const currentPageFimls = this._films.getPreparedFilms();
 
     this._filmsComponent = new Films(FIMLS_COMPONENT_TYPES.FIMLS);
     this._filmsComponentElement = this._filmsComponent.getElement();
@@ -206,7 +206,7 @@ export default class PageController {
     if (this._films.isAvaliableLoad) {
       this._moreButton = new MoreButton();
       Utils.render(this._filmsComponentElement, this._moreButton.getElement());
-      this._moreButton.initClickEvent(this._onMoreButtonClick);
+      this._moreButton.initMoreButtonClick(this._onMoreButtonClick);
     }
   }
 

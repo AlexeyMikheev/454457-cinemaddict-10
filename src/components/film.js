@@ -41,8 +41,8 @@ export default class Film extends AbstractComponent {
   constructor(film) {
     super();
     this._film = film;
-    this._onClickCb = null;
-    this._onButtonChange = null;
+    this._onFilmCardClickCb = null;
+    this._onDetailButtonClick = null;
     this._detailsContainer = null;
   }
 
@@ -50,15 +50,15 @@ export default class Film extends AbstractComponent {
     return getFilmTemplate(this._film);
   }
 
-  addClickEvent(cb) {
-    this._onClickCb = (evt) => {
+  addFilmCardClickEvent(cb) {
+    this._onFilmCardClickCb = (evt) => {
       cb(evt);
     };
-    this._element.addEventListener(`click`, this._onClickCb);
+    this._element.addEventListener(`click`, this._onFilmCardClickCb);
   }
 
-  addButtonChangeEvent(cb) {
-    this._onButtonChange = (evt) => {
+  addDetailButtonClickEvent(cb) {
+    this._onDetailButtonClick = (evt) => {
       const target = evt.target;
 
       switch (target.dataset[`detailType`]) {
@@ -80,15 +80,6 @@ export default class Film extends AbstractComponent {
       }
     };
     this._detailsContainer = this._element.querySelector(`.film-card__controls`);
-    this._detailsContainer.addEventListener(`click`, this._onButtonChange);
-  }
-
-  removeClickEvent() {
-    this._element.removeEventListener(`click`, this._onClickCb);
-  }
-
-  removeBttonChangeEvent() {
-    this._detailsContainer.removeEventListener(`click`, this._onButtonChange);
-    this._onButtonChange = null;
+    this._detailsContainer.addEventListener(`click`, this._onDetailButtonClick);
   }
 }

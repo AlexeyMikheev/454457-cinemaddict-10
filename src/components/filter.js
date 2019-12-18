@@ -43,24 +43,25 @@ export default class Filter extends AbstractComponent {
     }
   }
 
-  addFilterEvent(cb) {
-    this._onClickCb = (evt) => {
+  addFilterButtonClick(cb) {
+    this._onfilterButtonClickCb = (evt) => {
       evt.preventDefault();
+
       if (evt.target.classList.contains(`main-navigation__item`)) {
         const selectedFilter = evt.target.dataset[`filter`];
         cb(selectedFilter);
       }
     };
 
-    this._element.addEventListener(`click`, this._onClickCb);
+    this._element.addEventListener(`click`, this._onfilterButtonClickCb);
   }
 
   refreshSortElements() {
-    this.removeFiltersElements();
-    this.renderFiltersElements();
+    this._removeFiltersElements();
+    this._renderFiltersElements();
   }
 
-  renderFiltersElements() {
+  _renderFiltersElements() {
     this._filterElements = this._filters.map((sortFilter) => {
       return Utils.createElement(getFilterTemplate(this._selectedFilter, sortFilter));
     });
@@ -70,14 +71,9 @@ export default class Filter extends AbstractComponent {
     });
   }
 
-  removeFiltersElements() {
+  _removeFiltersElements() {
     this._filterElements.forEach((filterElement) => {
       filterElement.remove();
     });
-  }
-
-  removeSortEvent() {
-    this._element.removeEventListener(`click`, this._onClickCb);
-    this._onClickCb = null;
   }
 }
