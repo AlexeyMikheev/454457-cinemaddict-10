@@ -28,8 +28,8 @@ const getStatisticTemplate = (totalFilms, totalDuration, topGenreName) => {
     <input type="radio" data-period="${Period.WEEK}" class="statistic__filters-input visually-hidden" name="statistic-filter" id="statistic-week" value="week">
     <label for="statistic-week" class="statistic__filters-label">Week</label>
 
-    <input type="radio" class="statistic__filters-input visually-hidden" name="statistic-filter" id="statistic-month" value="month">
-    <label for="statistic-month" date-period="${Period.MONTH}" class="statistic__filters-label">Month</label>
+    <input type="radio" data-period="${Period.MONTH}" class="statistic__filters-input visually-hidden" name="statistic-filter" id="statistic-month" value="month">
+    <label for="statistic-month" class="statistic__filters-label">Month</label>
 
     <input type="radio" data-period="${Period.YEAR}" class="statistic__filters-input visually-hidden" name="statistic-filter" id="statistic-year" value="year">
     <label for="statistic-year" class="statistic__filters-label">Year</label>
@@ -79,7 +79,6 @@ export default class Statistic extends AbstractComponent {
     };
 
     this._updateStatistics();
-
   }
 
   getTemplate() {

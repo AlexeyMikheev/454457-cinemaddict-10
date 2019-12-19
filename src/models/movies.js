@@ -106,7 +106,7 @@ export default class Movies {
       case Period.ALL: return watchedfilms;
       case Period.TODAY:
         return watchedfilms.filter((film) => {
-          const startDate = Utils.changeDate(today, `days`, -1);
+          const startDate = Utils.changeDate(today, `day`, -1);
           return Utils.isDateInRange(film.watchedDate, startDate, today);
         });
       case Period.WEEK:
