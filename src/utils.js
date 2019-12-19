@@ -193,6 +193,14 @@ export default class Utils {
     return moment(startDate).diff(moment(endDate), unit);
   }
 
+  static isDateInRange(date, startDate, entDate) {
+    return moment(date).isBetween(startDate, entDate, null, `[]`);
+  }
+
+  static changeDate(date, unit, count) {
+    return moment(date).add(count, unit).valueOf();
+  }
+
   static getSortedFilmsByProperty(films, propertyName) {
     return films.slice().sort((prevFilm, nextFilm) => {
       if (prevFilm[propertyName] > nextFilm[propertyName]) {

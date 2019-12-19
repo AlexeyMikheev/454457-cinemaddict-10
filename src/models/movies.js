@@ -106,19 +106,23 @@ export default class Movies {
       case Period.ALL: return watchedfilms;
       case Period.TODAY:
         return watchedfilms.filter((film) => {
-          return Utils.getDifferentDates(today, film.watchedDate, `days`) === 0;
+          const startDate = Utils.changeDate(today, `days`, -1);
+          return Utils.isDateInRange(film.watchedDate, startDate, today);
         });
       case Period.WEEK:
         return watchedfilms.filter((film) => {
-          return Utils.getDifferentDates(today, film.watchedDate, `week`) === 0;
+          const startDate = Utils.changeDate(today, `week`, -1);
+          return Utils.isDateInRange(film.watchedDate, startDate, today);
         });
       case Period.MONTH:
         return watchedfilms.filter((film) => {
-          return Utils.getDifferentDates(today, film.watchedDate, `month`) === 0;
+          const startDate = Utils.changeDate(today, `months`, -1);
+          return Utils.isDateInRange(film.watchedDate, startDate, today);
         });
       case Period.YEAR:
         return watchedfilms.filter((film) => {
-          return Utils.getDifferentDates(today, film.watchedDate, `year`) === 0;
+          const startDate = Utils.changeDate(today, `year`, -1);
+          return Utils.isDateInRange(film.watchedDate, startDate, today);
         });
       default: return watchedfilms;
     }
