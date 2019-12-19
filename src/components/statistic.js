@@ -1,5 +1,5 @@
 import AbstractComponent from './abstract-component.js';
-import {Period, GENRES} from '../const.js';
+import {Period} from '../const.js';
 import Utils from '../utils.js';
 
 const getStatisticTemplate = (totalFilms, totalDuration, topGenreName) => {
@@ -80,16 +80,18 @@ export default class Statistic extends AbstractComponent {
       return total;
     }, 0);
 
-    let genres = new Map();
-
-    GENRES.forEach((genre) => {
-      genres.set(genre, 0);
-    });
-
     const filmsGenres = this._totalWatchedFilms.reduce((allGenres, film) => {
       allGenres.push(...film.genres);
       return allGenres;
     }, []);
+
+    const distinctionGenres = new Set(filmsGenres);
+
+    let genres = new Map();
+
+    distinctionGenres.forEach((genre) => {
+      genres.set(genre, 0);
+    });
 
     filmsGenres.forEach((filmGenre) => {
       let genreValue = genres.get(filmGenre);

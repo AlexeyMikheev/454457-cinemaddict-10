@@ -14,14 +14,6 @@ export const Period = {
   YEAR: 4
 };
 
-export const GENRES = [
-  `Musical`,
-  `Western`,
-  `Dramma`,
-  `Comedy`,
-  `Cartoon`
-];
-
 export const Emoji = {
   SMILE: {value: `sleeping`, img: `smile`},
   NEUTRAL: {value: `neutral-face`, img: `sleeping`},
