@@ -176,7 +176,7 @@ export default class Statistic extends AbstractComponent {
 
     const distinctionGenres = new Set(filmsGenres);
 
-    let genres = new Map();
+    const genres = new Map();
 
     distinctionGenres.forEach((genre) => {
       genres.set(genre, 0);

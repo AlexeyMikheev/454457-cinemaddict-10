@@ -79,8 +79,7 @@ export default class AddNewCommentForm extends AbstractComponent {
           newCommentId++;
         }
 
-        const newComment =
-        {
+        const newComment = {
           id: newCommentId,
           text: commentText,
           emotion: this._selectedEmoji !== null ? this._selectedEmoji.value : null,

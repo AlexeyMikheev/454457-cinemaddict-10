@@ -1,5 +1,5 @@
 import {ONE_TASKS_PAGE_COUNT, SortTypes, Filters, Period} from '../const.js';
-import Utils from "../utils.js";
+import Utils from '../utils.js';
 
 export default class Movies {
   constructor() {
