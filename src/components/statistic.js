@@ -1,5 +1,5 @@
 import AbstractComponent from './abstract-component.js';
-import {Period} from '../const.js';
+import { Period } from '../const.js';
 import Utils from '../utils.js';
 import Chart from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
@@ -127,45 +127,64 @@ export default class Statistic extends AbstractComponent {
     const minXLimit = 0;
     const maxXLimit = Math.max(...this._genresValues);
 
-    const statisticCharContext = this._element.querySelector(`.statistic__chart`).getContext(`2d`);
+    const statisticCharContextCanvas = this._element.querySelector(`.statistic__chart`)
+
+    statisticCharContextCanvas.height = 300;
+
+    const statisticCharContext = statisticCharContextCanvas.getContext(`2d`);
+
+    const labelsFontSize = 20;
+    const yaxisTickColor = `#FFF`;
+    const labelColor = `#000`;
 
     const chartData = {
       labels: this._genresLabels,
       datasets: [{
         data: this._genresValues,
         backgroundColor: this._genresColors,
-        datalabels: {
-          color: `black`
-        }
+
       }]
+    };
+
+    const chartOptions = {
+      plugins: {
+        datalabels: {
+          color: labelColor,
+          fontSize: labelsFontSize
+        }
+      },
+      scales: {
+        xAxes: [{
+          display: false,
+          ticks: {
+            suggestedMin: minXLimit,
+            suggestedMax: maxXLimit
+          }
+        }],
+        yAxes: [{
+          gridLines: {
+            display: false,
+            drawBorder: false,
+          },
+          ticks: {
+            fontColor: yaxisTickColor,
+            fontSize: labelsFontSize
+          }
+        }]
+      },
+      legend: {
+        display: false
+      }
     };
 
     this._statisticChart = new Chart(statisticCharContext, {
       type: `horizontalBar`,
       data: chartData,
       responsive: true,
+      maintainAspectRatio: false,
       showTooltips: false,
       plugins: [ChartDataLabels],
-      options: {
-        scales: {
-          xAxes: [{
-            display: false,
-            ticks: {
-              suggestedMin: minXLimit,
-              suggestedMax: maxXLimit
-            }
-          }],
-          yAxes: [{
-            gridLines: {
-              display: false,
-              drawBorder: false,
-            }
-          }]
-        },
-        legend: {
-          display: false
-        }
-      }
+      options: chartOptions
     });
   }
 }
