@@ -1,7 +1,8 @@
 import AbstractComponent from './abstract-component.js';
-import { Period, RenderPosition } from '../const.js';
+import {Period} from '../const.js';
 import Utils from '../utils.js';
 import Chart from 'chart.js';
+import ChartDataLabels from 'chartjs-plugin-datalabels';
 
 const getStatisticTemplate = (totalFilms, totalDuration, topGenreName) => {
   const durationHours = Utils.getHours(totalDuration);
@@ -67,7 +68,7 @@ export default class Statistic extends AbstractComponent {
     this._genresLabels = [];
     this._genresValues = [];
     this._genresColors = [];
-    this._statisticChar = null;
+    this._statisticChart = null;
     this._updateStatistics();
   }
 
@@ -111,10 +112,9 @@ export default class Statistic extends AbstractComponent {
     Array.from(this._genres.entries()).forEach((genre) => {
       const genreLabel = genre[0];
       const genreValue = genre[1];
-      this._genresLabels.push(genreLabel);
+      this._genresLabels.push(`${genreLabel}      ${genreValue}      `);
       this._genresValues.push(genreValue);
       this._genresColors.push(`#FBE44D`);
-
       if (genreValue > maxGenreValue) {
         maxGenreValue = genreValue;
         this._topGenreName = genreLabel;
@@ -129,19 +129,23 @@ export default class Statistic extends AbstractComponent {
 
     const statisticCharContext = this._element.querySelector(`.statistic__chart`).getContext(`2d`);
 
-    const MeSeData = {
+    const chartData = {
       labels: this._genresLabels,
       datasets: [{
         data: this._genresValues,
         backgroundColor: this._genresColors,
+        datalabels: {
+          color: `black`
+        }
       }]
     };
 
-    this._statisticChar = new Chart(statisticCharContext, {
+    this._statisticChart = new Chart(statisticCharContext, {
       type: `horizontalBar`,
-      data: MeSeData,
+      data: chartData,
       responsive: true,
       showTooltips: false,
+      plugins: [ChartDataLabels],
       options: {
         scales: {
           xAxes: [{
