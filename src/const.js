@@ -1,9 +1,24 @@
 export const Filters = {
-  ALL: {title: `All movies`, anchor: `all`},
-  WATCHLIST: {title: `Watchlist`, anchor: `watchlist`},
-  HISTORY: {title: `History`, anchor: `history`},
-  FAVORITES: {title: `Favorites`, anchor: `favorites`},
-  STATS: {title: `Stats`, anchor: `stats`},
+  ALL: {title: `All movies`, anchor: `all`, count: 0},
+  WATCHLIST: {title: `Watchlist`, anchor: `watchlist`, count: 0},
+  HISTORY: {title: `History`, anchor: `history`, count: 0},
+  FAVORITES: {title: `Favorites`, anchor: `favorites`, count: 0},
+  STATS: {title: `Stats`, anchor: `stats`, count: 0},
+};
+
+export const Period = {
+  ALL: 0,
+  TODAY: 1,
+  WEEK: 2,
+  MONTH: 3,
+  YEAR: 4
+};
+
+export const Emoji = {
+  SMILE: {value: `sleeping`, img: `smile`},
+  NEUTRAL: {value: `neutral-face`, img: `sleeping`},
+  GRINNING: {value: `grinning`, img: `puke`},
+  ANGRY: {value: `angry`, img: `angry`}
 };
 
 export const ProfileRating = {
@@ -12,14 +27,8 @@ export const ProfileRating = {
   MOVIE_BUFF: {min: 21, name: `movie buff`},
 };
 
-export const Emotion = {
-  SMILE: `smile`,
-  SLEEPING: `sleeping`,
-  PUKE: `puke`,
-  ANGRY: `angry`
-};
-
 export const ESC_KEY = 27;
+export const ENTER_KEY = 13;
 
 export const COUNT_FILMS = 15;
 export const ONE_TASKS_PAGE_COUNT = 5;

@@ -1,5 +1,8 @@
-import {ProfileRating, Filters, ONE_TASKS_PAGE_COUNT, RenderPosition, MINUTE_IN_HOUR, MIN_DESCRIPTION_LENGTH, MAX_DESCRIPTION_LENGTH, DESCRIPTION_SPACE, MANY_COMMENTS_COUNT, ONE_DAY, SortTypes, DIFFERENCE_DATE_FORMAT} from './const.js';
+import {ProfileRating, Filters, ONE_TASKS_PAGE_COUNT, RenderPosition, MINUTE_IN_HOUR, MIN_DESCRIPTION_LENGTH, MAX_DESCRIPTION_LENGTH, DESCRIPTION_SPACE, MANY_COMMENTS_COUNT, ONE_DAY, SortTypes, DIFFERENCE_DATE_FORMAT, Emoji} from './const.js';
 import moment from 'moment';
+import duration from 'moment-duration-format';
+
+duration(moment);
 
 export default class Utils {
 
@@ -25,7 +28,7 @@ export default class Utils {
   }
 
   static getFormatedRating(totalWatchedFilms) {
-    let formatedProfileRating = null;
+    let formatedProfileRating = ``;
 
     if (ProfileRating.NOVICE.min <= totalWatchedFilms && totalWatchedFilms <= ProfileRating.NOVICE.max) {
       formatedProfileRating = ProfileRating.NOVICE.name;
@@ -83,7 +86,7 @@ export default class Utils {
             total++;
           }
           return total;
-        }, filter.count);
+        }, 0);
 
       case Filters.HISTORY.title:
         return filmsCards.reduce((total, filmCard) => {
@@ -91,7 +94,7 @@ export default class Utils {
             total++;
           }
           return total;
-        }, filter.count);
+        }, 0);
 
       case Filters.FAVORITES.title:
         return filmsCards.reduce((total, filmCard) => {
@@ -99,7 +102,7 @@ export default class Utils {
             total++;
           }
           return total;
-        }, filter.count);
+        }, 0);
 
       default: return filter.count;
     }
@@ -117,13 +120,33 @@ export default class Utils {
     }
   }
 
-  static getHours(duration) {
-    return Math.floor(duration / MINUTE_IN_HOUR);
+  static getFiltredFilms(filterType, films) {
+    switch (filterType) {
+      case Filters.ALL.title:
+        return films;
+      case Filters.WATCHLIST.title:
+        return films.filter((film) => {
+          return film.isWaitingWatched;
+        });
+      case Filters.HISTORY.title:
+        return films.filter((film) => {
+          return film.isWatched;
+        });
+      case Filters.FAVORITES.title:
+        return films.filter((film) => {
+          return film.isFavorite;
+        });
+      default: return films;
+    }
   }
 
-  static getMinutes(duration) {
-    return Math.floor(duration % MINUTE_IN_HOUR);
-  }
+  // static getHours(timestamp) {
+  //   return Math.floor(timestamp / MINUTE_IN_HOUR);
+  // }
+
+  // static getMinutes(timestamp) {
+  //   return Math.floor(timestamp % MINUTE_IN_HOUR);
+  // }
 
   static getFormatedValue(value) {
     return value < 10 ? `0${value}` : value.toString();
@@ -149,6 +172,35 @@ export default class Utils {
     return moment(date).format(format);
   }
 
+  static formatDurationTimeStamp(date, format) {
+    return moment.duration(date, `milliseconds`).format(format);
+  }
+
+  static getHours(timestamp) {
+    return moment.duration(timestamp, `milliseconds`).hours();
+  }
+
+  static getMinutes(timestamp) {
+    const minutes = moment.duration(timestamp, `milliseconds`).minutes();
+    if (minutes > MINUTE_IN_HOUR) {
+      const hours = this.getHours(timestamp);
+      return minutes - (hours * MINUTE_IN_HOUR);
+    }
+    return minutes;
+  }
+
+  static getDifferentDates(startDate, endDate, unit) {
+    return moment(startDate).diff(moment(endDate), unit);
+  }
+
+  static isDateInRange(date, startDate, entDate) {
+    return moment(date).isBetween(startDate, entDate, null, `[]`);
+  }
+
+  static changeDate(date, unit, count) {
+    return moment(date).add(count, unit).valueOf();
+  }
+
   static getSortedFilmsByProperty(films, propertyName) {
     return films.slice().sort((prevFilm, nextFilm) => {
       if (prevFilm[propertyName] > nextFilm[propertyName]) {
@@ -165,5 +217,23 @@ export default class Utils {
     return films.find((film) => {
       return film.id === id;
     });
+  }
+
+  static getDefaultSelectedFilter() {
+    return Filters.ALL;
+  }
+
+  static getFilters() {
+    return [Filters.ALL, Filters.WATCHLIST, Filters.HISTORY, Filters.FAVORITES, Filters.STATS];
+  }
+
+  static getEmoji(emoji) {
+    switch (emoji) {
+      case Emoji.SMILE.value: return Emoji.SMILE;
+      case Emoji.NEUTRAL.value: return Emoji.NEUTRAL;
+      case Emoji.GRINNING.value: return Emoji.GRINNING;
+      case Emoji.ANGRY.value: return Emoji.ANGRY;
+      default: return null;
+    }
   }
 }

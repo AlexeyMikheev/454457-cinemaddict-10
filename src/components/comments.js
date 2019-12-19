@@ -13,9 +13,23 @@ const getCommentsTemplate = () => {
 
 export default class Comments extends AbstractComponent {
 
-  constructor(comments) {
+  constructor(comments, onCommentsChanged) {
     super();
     this._comments = comments;
+    this._onCommentsChanged = onCommentsChanged;
+    this._onDeleteCb = (evt) => {
+      evt.preventDefault();
+
+      const commentId = parseInt(evt.target.dataset[`id`], 10);
+      const deletedIndex = this._comments.findIndex((comment)=>{
+        return comment.id === commentId;
+      });
+
+      if (deletedIndex !== -1) {
+        const changedComments = [].concat(this._comments.slice(0, deletedIndex), this._comments.slice(deletedIndex + 1));
+        this._onCommentsChanged(changedComments);
+      }
+    };
   }
 
   getTemplate() {
@@ -29,6 +43,11 @@ export default class Comments extends AbstractComponent {
     return this._titleElement;
   }
 
+  removeTitleElement() {
+    this._titleElement.remove();
+    this._titleElement = null;
+  }
+
   initComments() {
     this._commentsComponents = this._comments.map((c) => {
       return new Comment(c);
@@ -36,12 +55,8 @@ export default class Comments extends AbstractComponent {
 
     this._commentsComponents.forEach((comment) => {
       this._element.appendChild(comment.getElement());
+      comment.addDeleteButtonClick(this._onDeleteCb);
     });
-  }
-
-  removeTitleElement() {
-    this._titleElement.remove();
-    this._titleElement = null;
   }
 
   removeComments() {

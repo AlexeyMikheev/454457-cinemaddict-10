@@ -1,4 +1,5 @@
-import {Emotion, MIN_RATING_VALUE, MAX_RATING_VALUE} from '../const.js';
+import {Emoji, MIN_RATING_VALUE, MAX_RATING_VALUE} from '../const.js';
+import Utils from '../utils.js';
 
 const FilmsNames = [
   `Правдивая ложь`,
@@ -50,7 +51,7 @@ const Posters = [
   `the-dance-of-life.jpg`
 ];
 
-const Genres = [
+export const Genres = [
   `Musical`,
   `Western`,
   `Dramma`,
@@ -59,10 +60,10 @@ const Genres = [
 ];
 
 const Emotions = [
-  Emotion.SMILE,
-  Emotion.SLEEPING,
-  Emotion.PUKE,
-  Emotion.ANGRY,
+  Emoji.SMILE.value,
+  Emoji.NEUTRAL.value,
+  Emoji.GRINNING.value,
+  Emoji.ANGRY.value
 ];
 
 const RANDOM_LIMIT = 0.5;
@@ -77,12 +78,13 @@ const MIN_DURATION_COUNT = 40 * 60 * 1000;
 const MAX_DURATION_COUNT = 180 * 60 * 1000;
 
 const MIN_COMMENTS_COUNT = 0;
-const MAX_COMMENTS_COUNT = 20;
+const MAX_COMMENTS_COUNT = 5;
 
 const MIN_YEAR_LIMIT = 1990;
 const MAX_YEAR_LIMIT = 2020;
 
 let fimlCardIdCounter = 0;
+let commentIdCounter = 0;
 
 const getRandomDate = () => {
   const currentDate = new Date();
@@ -115,7 +117,10 @@ const createRandomItems = (items, min, max) => {
 };
 
 const createComment = () => {
+  const id = commentIdCounter++;
+
   return {
+    id,
     text: createRandomItems(DESCRIPTION.split(`.`), MIN_COMMENTS_COUNT, MAX_COMMENTS_COUNT).join(` `),
     emotion: getRandomItem(Emotions),
     author: getRandomItem(Peoples),
@@ -161,6 +166,7 @@ const createfilmCard = () => {
     comments: createComments(getRandomNumber(MIN_COMMENTS_COUNT, MAX_COMMENTS_COUNT)),
     isFavorite: getRandomBoolean(),
     isWaitingWatched,
+    watchedDate: Utils.changeDate(new Date().valueOf(), `day`, -12),
     isWatched,
     age: getRandomNumber(MIN_RATING_VALUE, MAX_RATING_VALUE)
   };
