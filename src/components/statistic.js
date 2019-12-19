@@ -1,6 +1,7 @@
 import AbstractComponent from './abstract-component.js';
-import {Period} from '../const.js';
+import { Period, RenderPosition } from '../const.js';
 import Utils from '../utils.js';
+import Chart from 'chart.js';
 
 const getStatisticTemplate = (totalFilms, totalDuration, topGenreName) => {
   const durationHours = Utils.getHours(totalDuration);
@@ -65,6 +66,8 @@ export default class Statistic extends AbstractComponent {
     this._genres = new Map();
     this._genresLabels = [];
     this._genresValues = [];
+    this._genresColors = [];
+    this._statisticChar = null;
     this._updateStatistics();
   }
 
@@ -110,9 +113,54 @@ export default class Statistic extends AbstractComponent {
       const genreValue = genre[1];
       this._genresLabels.push(genreLabel);
       this._genresValues.push(genreValue);
+      this._genresColors.push(`#FBE44D`);
+
       if (genreValue > maxGenreValue) {
         maxGenreValue = genreValue;
         this._topGenreName = genreLabel;
+      }
+    });
+  }
+
+  renderChart() {
+
+    const minXLimit = 0;
+    const maxXLimit = Math.max(...this._genresValues);
+
+    const statisticCharContext = this._element.querySelector(`.statistic__chart`).getContext(`2d`);
+
+    const MeSeData = {
+      labels: this._genresLabels,
+      datasets: [{
+        data: this._genresValues,
+        backgroundColor: this._genresColors,
+      }]
+    };
+
+    this._statisticChar = new Chart(statisticCharContext, {
+      type: `horizontalBar`,
+      data: MeSeData,
+      responsive: true,
+      showTooltips: false,
+      options: {
+        scales: {
+          xAxes: [{
+            display: false,
+            ticks: {
+              suggestedMin: minXLimit,
+              suggestedMax: maxXLimit
+            }
+          }],
+          yAxes: [{
+            gridLines: {
+              display: false,
+              drawBorder: false,
+            }
+          }]
+        },
+        legend: {
+          display: false
+        }
       }
     });
   }

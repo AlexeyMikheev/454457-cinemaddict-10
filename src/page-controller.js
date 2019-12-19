@@ -237,6 +237,7 @@ export default class PageController {
   _initStatistic() {
     this._statisticComponent = new Statistic(this._films);
     Utils.render(this._mainContainer, this._statisticComponent.getElement());
+    this._statisticComponent.renderChart();
   }
 
   _destroyStatistic() {
