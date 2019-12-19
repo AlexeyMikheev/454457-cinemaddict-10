@@ -28,7 +28,7 @@ export default class Utils {
   }
 
   static getFormatedRating(totalWatchedFilms) {
-    let formatedProfileRating = null;
+    let formatedProfileRating = ``;
 
     if (ProfileRating.NOVICE.min <= totalWatchedFilms && totalWatchedFilms <= ProfileRating.NOVICE.max) {
       formatedProfileRating = ProfileRating.NOVICE.name;
@@ -187,6 +187,10 @@ export default class Utils {
       return minutes - (hours * MINUTE_IN_HOUR);
     }
     return minutes;
+  }
+
+  static getDifferentDates(startDate, endDate, unit) {
+    return moment(startDate).diff(moment(endDate), unit);
   }
 
   static getSortedFilmsByProperty(films, propertyName) {

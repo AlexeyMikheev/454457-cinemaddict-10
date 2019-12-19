@@ -1,6 +1,5 @@
 import {ONE_TASKS_PAGE_COUNT, SortTypes, Filters, Period} from '../const.js';
 import Utils from "../utils.js";
-import moment from 'moment';
 
 export default class Movies {
   constructor() {
@@ -101,25 +100,25 @@ export default class Movies {
 
   getWathedFilmsByPeriod(period = Period.ALL) {
     const watchedfilms = Utils.getFiltredFilms(Filters.HISTORY.title, this._films);
-    const todayMoment = moment(new Date().valueOf());
+    const today = new Date().valueOf();
 
     switch (period) {
       case Period.ALL: return watchedfilms;
       case Period.TODAY:
         return watchedfilms.filter((film) => {
-          return this._getDifferentDates(todayMoment, moment(film.watchedDate), `days`) === 0;
+          return Utils.getDifferentDates(today, film.watchedDate, `days`) === 0;
         });
       case Period.WEEK:
         return watchedfilms.filter((film) => {
-          return this._getDifferentDates(todayMoment, moment(film.watchedDate), `week`) === 0;
+          return Utils.getDifferentDates(today, film.watchedDate, `week`) === 0;
         });
       case Period.MONTH:
         return watchedfilms.filter((film) => {
-          return this._getDifferentDates(todayMoment, moment(film.watchedDate), `month`) === 0;
+          return Utils.getDifferentDates(today, film.watchedDate, `month`) === 0;
         });
       case Period.YEAR:
         return watchedfilms.filter((film) => {
-          return this._getDifferentDates(todayMoment, moment(film.watchedDate), `year`) === 0;
+          return Utils.getDifferentDates(today, film.watchedDate, `year`) === 0;
         });
       default: return watchedfilms;
     }
@@ -156,9 +155,5 @@ export default class Movies {
 
   _getCurrentCountFilms() {
     return this._filterType === Filters.ALL.title ? this._films.length : this._displayedFilms.length;
-  }
-
-  _getDifferentDates(startMoment, endMoment, unit) {
-    return startMoment.diff(endMoment, unit);
   }
 }
