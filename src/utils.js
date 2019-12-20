@@ -1,8 +1,6 @@
 import {ProfileRating, Filters, ONE_TASKS_PAGE_COUNT, RenderPosition, MINUTE_IN_HOUR, MIN_DESCRIPTION_LENGTH, MAX_DESCRIPTION_LENGTH, DESCRIPTION_SPACE, MANY_COMMENTS_COUNT, ONE_DAY, SortTypes, DIFFERENCE_DATE_FORMAT, Emoji} from './const.js';
 import moment from 'moment';
-import duration from 'moment-duration-format';
-
-duration(moment);
+import 'moment-duration-format';
 
 export default class Utils {
 

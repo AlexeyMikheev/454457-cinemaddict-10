@@ -116,12 +116,18 @@ export default class Statistic extends AbstractComponent {
   _renderChart() {
     this._destroyChart();
 
-    const minXLimit = 0;
-    const maxXLimit = Math.max(...this._genresValues);
+    const MIN_X_LIMIT = 0;
 
-    const labelsFontSize = 20;
-    const yaxisTickColor = `#FFF`;
-    const labelColor = `#000`;
+    const LABEL_FONT_SIZE = 20;
+    const LABEL_COLOR = `#FFF`;
+    const LABEL_PADDING = 100;
+    const LABEL_OFFSET = 50;
+    const LABEL_ALIGNT = `left`;
+    const LABEL_ANCHOR = `start`;
+
+    const BAR_HEIGHT = 50;
+
+    const maxXLimit = Math.max(...this._genresValues);
 
     const chartData = {
       labels: this._genresLabels,
@@ -135,15 +141,18 @@ export default class Statistic extends AbstractComponent {
     const chartOptions = {
       plugins: {
         datalabels: {
-          color: labelColor,
-          fontSize: labelsFontSize
+          color: LABEL_COLOR,
+          fontSize: LABEL_FONT_SIZE,
+          anchor: LABEL_ANCHOR,
+          align: LABEL_ALIGNT,
+          offset: LABEL_OFFSET,
         }
       },
       scales: {
         xAxes: [{
           display: false,
           ticks: {
-            suggestedMin: minXLimit,
+            suggestedMin: MIN_X_LIMIT,
             suggestedMax: maxXLimit
           }
         }],
@@ -153,19 +162,23 @@ export default class Statistic extends AbstractComponent {
             drawBorder: false,
           },
           ticks: {
-            fontColor: yaxisTickColor,
-            fontSize: labelsFontSize
+            fontColor: LABEL_COLOR,
+            fontSize: LABEL_FONT_SIZE,
+            padding: LABEL_PADDING,
           }
         }]
       },
       legend: {
         display: false
-      }
+      },
+      tooltips: {
+        enabled: false
+      },
     };
 
     const statisticCharContextCanvas = this._element.querySelector(`.statistic__chart`);
 
-    statisticCharContextCanvas.height = 300;
+    statisticCharContextCanvas.height = BAR_HEIGHT * this._genresLabels.length;
 
     const statisticCharContext = statisticCharContextCanvas.getContext(`2d`);
 
@@ -219,13 +232,15 @@ export default class Statistic extends AbstractComponent {
 
     this._genres = new Map([...genres.entries()].sort((a, b) => b[1] - a[1]));
 
+    const GENRE_COLOR = `#FBE44D`;
+
     let maxGenreValue = 0;
     Array.from(this._genres.entries()).forEach((genre) => {
       const genreLabel = genre[0];
       const genreValue = genre[1];
-      this._genresLabels.push(`${genreLabel}      ${genreValue}      `);
+      this._genresLabels.push(`${genreLabel}`);
       this._genresValues.push(genreValue);
-      this._genresColors.push(`#FBE44D`);
+      this._genresColors.push(GENRE_COLOR);
       if (genreValue > maxGenreValue) {
         maxGenreValue = genreValue;
         this._topGenreName = genreLabel;
