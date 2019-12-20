@@ -1,5 +1,4 @@
 import Utils from './utils.js';
-import {MovieControllerMode} from './const.js';
 import Film from './components/film.js';
 import FilmDetail from './components/film-detail.js';
 
@@ -10,18 +9,17 @@ export default class MovieController {
     this._filmDetailComponent = null;
     this._filmComponent = null;
     this._onDataChange = onDataChange;
+
     this._onDataChangeCb = (oldValue, newValue) => {
       this._onDataChange(this, oldValue, newValue);
     };
+
     this._onViewChange = onViewChange;
-    this._mode = MovieControllerMode.DEFAULT;
-  }
 
-  get film() {
-    return this._film;
-  }
-
-  render(film) {
+    this._renderMode = {
+      default: true,
+      details: false
+    };
 
     this._onCloseFilmDetail = () => {
       if (this._filmDetailComponent !== null) {
@@ -29,12 +27,12 @@ export default class MovieController {
         this._filmDetailComponent.removeComponents();
         this._filmDetailComponent.removeElement();
         this._filmDetailComponent = null;
-        this._mode = MovieControllerMode.DEFAULT;
+        this._renderMode.details = false;
       }
     };
 
     this._onShowFilmDetail = (evt) => {
-      this._mode = MovieControllerMode.DETAILS;
+      this._renderMode.details = true;
       this._onViewChange();
 
       const classList = evt.target.classList;
@@ -54,8 +52,42 @@ export default class MovieController {
         this._filmDetailComponent.addRatingCheckedChangeEvent();
       }
     };
+  }
 
+  get film() {
+    return this._film;
+  }
+
+  set defaultModeVisibility(value) {
+    this._renderMode.default = value;
+  }
+
+  render(film) {
     this._film = film;
+
+    if (this._renderMode.default) {
+      this._renderFilmComponent();
+    } else {
+      this._removeFilmComponent();
+    }
+
+    if (this._renderMode.details) {
+      this._renderFilmDetailComponent();
+    }
+  }
+
+  setDefaultView() {
+    if (this._renderMode.details) {
+      this._onCloseFilmDetail();
+    }
+  }
+
+  removeComponents() {
+    this._removeDetailComponent();
+    this._removeFilmComponent();
+  }
+
+  _renderFilmComponent() {
     const filmsListContainer = this._container.querySelector(`.films-list__container`);
 
     if (this._filmComponent === null) {
@@ -72,22 +104,13 @@ export default class MovieController {
 
     this._filmComponent.addFilmCardClickEvent(this._onShowFilmDetail);
     this._filmComponent.addDetailButtonClickEvent(this._onDataChangeCb);
+  }
 
+  _renderFilmDetailComponent() {
     if (this._filmDetailComponent !== null) {
       this._filmDetailComponent.film = this._film;
       this._filmDetailComponent.rerender();
     }
-  }
-
-  setDefaultView() {
-    if (this._mode !== MovieControllerMode.DEFAULT) {
-      this._onCloseFilmDetail();
-    }
-  }
-
-  removeComponents() {
-    this._removeDetailComponent();
-    this._removeFilmComponent();
   }
 
   _removeFilmComponent() {
@@ -99,6 +122,8 @@ export default class MovieController {
 
   _removeDetailComponent() {
     if (this._filmDetailComponent !== null) {
+      this._filmDetailComponent.removeEvents();
+      this._filmDetailComponent.removeComponents();
       this._filmDetailComponent.removeElement();
       this._filmDetailComponent = null;
     }

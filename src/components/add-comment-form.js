@@ -45,7 +45,7 @@ export default class AddNewCommentForm extends AbstractComponent {
     this._onCommentsChanged = onCommentsChanged;
     this._selectedEmojiElement = null;
     this._selectedEmoji = null;
- 
+
     this._emojiList = null;
     this._onEmojiListChange = (evt) => {
       this._selectedEmoji = Utils.getEmoji(evt.target.value);

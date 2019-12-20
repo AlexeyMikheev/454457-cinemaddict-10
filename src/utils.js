@@ -121,32 +121,24 @@ export default class Utils {
   }
 
   static getFiltredFilms(filterType, films) {
-    switch (filterType) {
-      case Filters.ALL.title:
-        return films;
-      case Filters.WATCHLIST.title:
-        return films.filter((film) => {
-          return film.isWaitingWatched;
-        });
-      case Filters.HISTORY.title:
-        return films.filter((film) => {
-          return film.isWatched;
-        });
-      case Filters.FAVORITES.title:
-        return films.filter((film) => {
-          return film.isFavorite;
-        });
-      default: return films;
-    }
+    return films.filter((film) => {
+      return this.isFilmAvaliableAtFilter(filterType, film);
+    });
   }
 
-  // static getHours(timestamp) {
-  //   return Math.floor(timestamp / MINUTE_IN_HOUR);
-  // }
-
-  // static getMinutes(timestamp) {
-  //   return Math.floor(timestamp % MINUTE_IN_HOUR);
-  // }
+  static isFilmAvaliableAtFilter(filterType, film) {
+    switch (filterType) {
+      case Filters.ALL.title:
+        return true;
+      case Filters.WATCHLIST.title:
+        return film.isWaitingWatched;
+      case Filters.HISTORY.title:
+        return film.isWatched;
+      case Filters.FAVORITES.title:
+        return film.isFavorite;
+      default: return false;
+    }
+  }
 
   static getFormatedValue(value) {
     return value < 10 ? `0${value}` : value.toString();
