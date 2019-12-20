@@ -44,7 +44,7 @@ export default class PageController {
     this._onDataChange = (filmController, oldValue, newValue) => {
       const isSuccess = this._films.updateFilm(oldValue.id, newValue);
       if (isSuccess) {
-        filmController.defaultModeVisibility = this._films.isFilmAvaliableAtCurrentFilter(newValue);
+        // filmController.defaultModeVisibility = this._films.isFilmAvaliableAtCurrentFilter(newValue); про это я просил у куратора
 
         filmController.render(newValue);
 
