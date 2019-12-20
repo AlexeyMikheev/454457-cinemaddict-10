@@ -185,6 +185,11 @@ export default class FilmDetail extends AbstractSmartComponent {
     this._initComments();
     this._initAddCommentForm();
     this._initRating();
+    this._updateRating();
+  }
+
+  _updateRating() {
+    this._element.querySelector(`.film-details__total-rating`).innerText = this._film.rating;
   }
 
   addRatingCheckedChangeEvent() {
@@ -209,10 +214,12 @@ export default class FilmDetail extends AbstractSmartComponent {
 
   removeComponents() {
     if (this._commentsComponent !== null) {
+      this._commentsComponent.removeComments();
       this._commentsComponent.removeElement();
     }
 
     if (this._addCommentComponent !== null) {
+      this._addCommentComponent.removeEvents();
       this._addCommentComponent.removeElement();
     }
 
@@ -224,11 +231,15 @@ export default class FilmDetail extends AbstractSmartComponent {
   }
 
   removeEvents() {
-    this._closeBtn.removeEventListener(`click`, this._onCloseButtonClickCb);
-    this._onCloseButtonClickCb = null;
+    if (this._closeBtn !== null) {
+      this._closeBtn.removeEventListener(`click`, this._onCloseButtonClickCb);
+      this._onCloseButtonClickCb = null;
+    }
 
-    this._detailsContainer.removeEventListener(`change`, this._onDetailCheckedChange);
-    this._onDetailCheckedChange = null;
+    if (this._detailsContainer !== null) {
+      this._detailsContainer.removeEventListener(`change`, this._onDetailCheckedChange);
+      this._onDetailCheckedChange = null;
+    }
 
     if (this._ratingComponent !== null) {
       this._ratingComponent.removeRatingCheckedChange();

@@ -39,6 +39,7 @@ export default class Comment extends AbstractComponent {
   constructor(comment) {
     super();
     this._comment = comment;
+    this._deletebutton = null;
   }
 
   getTemplate() {
@@ -46,7 +47,18 @@ export default class Comment extends AbstractComponent {
   }
 
   addDeleteButtonClick(cb) {
-    const deletebutton = this._element.querySelector(`.film-details__comment-delete`);
-    deletebutton.addEventListener(`click`, cb);
+    this._onDeleteButtonClickCb = (evt) => {
+      cb(evt);
+    };
+
+    this._deletebutton = this._element.querySelector(`.film-details__comment-delete`);
+    this._deletebutton.addEventListener(`click`, this._onDeleteButtonClickCb);
+  }
+
+  removeEvents() {
+    if (this._deletebutton !== null) {
+      this._deletebutton.removeEventListener(`click`, this._onDeleteButtonClickCb);
+      this._deletebutton = null;
+    }
   }
 }

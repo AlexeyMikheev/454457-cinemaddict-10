@@ -229,10 +229,14 @@ export default class Utils {
 
   static getEmoji(emoji) {
     switch (emoji) {
-      case Emoji.SMILE.value: return Emoji.SMILE;
-      case Emoji.NEUTRAL.value: return Emoji.NEUTRAL;
-      case Emoji.GRINNING.value: return Emoji.GRINNING;
-      case Emoji.ANGRY.value: return Emoji.ANGRY;
+      case Emoji.SMILE.value:
+        return Emoji.SMILE;
+      case Emoji.NEUTRAL.value:
+        return Emoji.NEUTRAL;
+      case Emoji.GRINNING.value:
+        return Emoji.GRINNING;
+      case Emoji.ANGRY.value:
+        return Emoji.ANGRY;
       default: return null;
     }
   }
