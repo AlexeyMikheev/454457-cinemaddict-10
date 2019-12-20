@@ -45,24 +45,17 @@ export default class AddNewCommentForm extends AbstractComponent {
     this._onCommentsChanged = onCommentsChanged;
     this._selectedEmojiElement = null;
     this._selectedEmoji = null;
-  }
 
-  getTemplate() {
-    return getAddNewCommentTemplate();
-  }
-
-  initEvents() {
-    const emojiList = this._element.querySelector(`.film-details__emoji-list`);
-    emojiList.addEventListener(`change`, (evt) => {
+    this._emojiList = null;
+    this._onEmojiListChange = (evt) => {
       this._selectedEmoji = Utils.getEmoji(evt.target.value);
       if (this._selectedEmoji !== null) {
         this._refreshSelectedEmoji();
       }
-    });
+    };
 
-    const commentInput = this._element.querySelector(`.film-details__comment-input`);
-    commentInput.addEventListener(`keydown`, (evt) => {
-
+    this._commentInput = null;
+    this._onCommentInputKeyDown = (evt) => {
       if (evt.ctrlKey && evt.keyCode === ENTER_KEY) {
         if (this._selectedEmoji === null || !evt.target.value) {
           return;
@@ -90,7 +83,31 @@ export default class AddNewCommentForm extends AbstractComponent {
         const changedComments = [].concat(this._comments, newComment);
         this._onCommentsChanged(changedComments);
       }
-    });
+    };
+  }
+
+  getTemplate() {
+    return getAddNewCommentTemplate();
+  }
+
+  initEvents() {
+    this._emojiList = this._element.querySelector(`.film-details__emoji-list`);
+    this._emojiList.addEventListener(`change`, this._onEmojiListChange);
+
+    this._commentInput = this._element.querySelector(`.film-details__comment-input`);
+    this._commentInput.addEventListener(`keydown`, this._onCommentInputKeyDown);
+  }
+
+  removeEvents() {
+    if (this._emojiList !== null) {
+      this._emojiList.removeEventListener(`change`, this._onEmojiListChange);
+      this._emojiList = null;
+    }
+
+    if (this._commentInput !== null) {
+      this._commentInput.removeEventListener(`keydown`, this._onCommentInputKeyDown);
+      this._commentInput = null;
+    }
   }
 
   _refreshSelectedEmoji() {

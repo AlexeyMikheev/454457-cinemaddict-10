@@ -21,7 +21,7 @@ export default class Comments extends AbstractComponent {
       evt.preventDefault();
 
       const commentId = parseInt(evt.target.dataset[`id`], 10);
-      const deletedIndex = this._comments.findIndex((comment)=>{
+      const deletedIndex = this._comments.findIndex((comment) => {
         return comment.id === commentId;
       });
 
@@ -60,9 +60,16 @@ export default class Comments extends AbstractComponent {
   }
 
   removeComments() {
-    this._commentsComponent.forEach((comment) => {
-      comment.remove();
-    });
-    this._commentsComponents = null;
+    if (this._commentsComponents !== null) {
+      this._commentsComponents.forEach((comment) => {
+        comment.removeEvents();
+        comment.removeElement();
+      });
+      this._commentsComponents = null;
+    }
+
+    if (this._titleElement !== null) {
+      this._titleElement.remove();
+    }
   }
 }

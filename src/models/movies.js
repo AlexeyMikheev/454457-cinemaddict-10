@@ -98,6 +98,10 @@ export default class Movies {
     this._datachangeCb = cb;
   }
 
+  isFilmAvaliableAtCurrentFilter(film) {
+    return Utils.isFilmAvaliableAtFilter(this._filterType, film);
+  }
+
   getWathedFilmsByPeriod(period = Period.ALL) {
     const watchedfilms = Utils.getFiltredFilms(Filters.HISTORY.title, this._films);
     const today = new Date().valueOf();

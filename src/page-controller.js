@@ -24,6 +24,8 @@ export default class PageController {
     this._headerContainer = headerContainer;
     this._mainContainer = mainContainer;
     this._footer = footer;
+    this._topRatedFilmsComponentElement = null;
+    this._mostCommentFilmsComponentElement = null;
 
     this._profileComponent = null;
     this._filterController = null;
@@ -32,16 +34,31 @@ export default class PageController {
     this._topRatedFilmsControllers = [];
     this._mostCommentFilmsControllers = [];
 
-    this._onDataChange = (filmController, oldValue, newValue) => {
-      const isSuccess = this._films.updateFilm(oldValue.id, newValue);
-      if (isSuccess) {
-        filmController.render(newValue);
-        this._initFilters();
-        this._initProfile();
+    this._onDocumentKeyDown = (evt) => {
+      if (evt.keyCode === ESC_KEY) {
+        this._setDefaultView();
+        this._removeDocumentEvents();
       }
     };
 
-    this._onViewChange = () => {
+    this._onDataChange = (filmController, oldValue, newValue) => {
+      const isSuccess = this._films.updateFilm(oldValue.id, newValue);
+      if (isSuccess) {
+        // filmController.defaultModeVisibility = this._films.isFilmAvaliableAtCurrentFilter(newValue); про это я просил у куратора
+
+        filmController.render(newValue);
+
+        this._update();
+      }
+    };
+
+    this._onViewChange = (movieController) => {
+      if (movieController.detailsModeVisibility) {
+        this._initDocumentEvents();
+      } else {
+        this._removeDocumentEvents();
+      }
+
       this._setDefaultView();
     };
 
@@ -81,11 +98,11 @@ export default class PageController {
         if (filterType === Filters.STATS.title) {
           this._filmsContainerComponent.hide();
           this._sortComponent.hide();
-          this._initStatistic();
+          this._statisticComponent.show();
         } else {
           this._filmsContainerComponent.show();
           this._sortComponent.show();
-          this._destroyStatistic();
+          this._statisticComponent.hide();
         }
       }
     };
@@ -100,15 +117,22 @@ export default class PageController {
     this._films.filterTypeChangeCb = this._filterTypeChangeCb;
   }
 
-  _getFilmsControlles() {
-    return [...this._filmsControllers, ...this._topRatedFilmsControllers, ...this._mostCommentFilmsControllers];
-  }
-
   render() {
     this._initHeader();
     this._initContent();
-    this._initDocumentEvents();
+    this._initStatistic();
     this._initFooterStatistic();
+  }
+
+  _update() {
+    this._initFilters();
+    this._initProfile();
+    this._updateTopRatedFilms();
+    this._updateMostCommentFilms();
+  }
+
+  _getFilmsControlles() {
+    return [...this._filmsControllers, ...this._topRatedFilmsControllers, ...this._mostCommentFilmsControllers];
   }
 
   _renderListFilms(container, films) {
@@ -117,10 +141,18 @@ export default class PageController {
     this._renderFilms(container, films, this._filmsControllers);
   }
 
+  _updateTopRatedFilms() {
+    this._renderTopRatedFilms(this._topRatedFilmsComponentElement, this._films.topRatedFilms);
+  }
+
   _renderTopRatedFilms(container, films) {
     this._clearFilms(this._topRatedFilmsControllers);
     this._topRatedFilmsControllers = [];
     this._renderFilms(container, films, this._topRatedFilmsControllers);
+  }
+
+  _updateMostCommentFilms() {
+    this._renderMostCommentFilms(this._mostCommentFilmsComponentElement, this._films.mostCommentFilms);
   }
 
   _renderMostCommentFilms(container, films) {
@@ -200,13 +232,13 @@ export default class PageController {
     Utils.render(filmsContainerComponentElement, this._filmsComponentElement);
     this._renderListFilms(this._filmsComponentElement, currentPageFimls);
 
-    const topRatedFilmsComponentElement = new Films(FIMLS_COMPONENT_TYPES.TOP_RATED).getElement();
-    Utils.render(filmsContainerComponentElement, topRatedFilmsComponentElement);
-    this._renderTopRatedFilms(topRatedFilmsComponentElement, this._films.topRatedFilms);
+    this._topRatedFilmsComponentElement = new Films(FIMLS_COMPONENT_TYPES.TOP_RATED).getElement();
+    Utils.render(filmsContainerComponentElement, this._topRatedFilmsComponentElement);
+    this._renderTopRatedFilms(this._topRatedFilmsComponentElement, this._films.topRatedFilms);
 
-    const mostCommentFilmsComponentElement = new Films(FIMLS_COMPONENT_TYPES.MOST_COMMENTS).getElement();
-    Utils.render(filmsContainerComponentElement, mostCommentFilmsComponentElement);
-    this._renderMostCommentFilms(mostCommentFilmsComponentElement, this._films.mostCommentFilms);
+    this._mostCommentFilmsComponentElement = new Films(FIMLS_COMPONENT_TYPES.MOST_COMMENTS).getElement();
+    Utils.render(filmsContainerComponentElement, this._mostCommentFilmsComponentElement);
+    this._renderMostCommentFilms(this._mostCommentFilmsComponentElement, this._films.mostCommentFilms);
 
     this._refreshMoreButton();
   }
@@ -237,23 +269,15 @@ export default class PageController {
   _initStatistic() {
     this._statisticComponent = new Statistic(this._films);
     Utils.render(this._mainContainer, this._statisticComponent.getElement());
-    this._statisticComponent.addStatisticFilterschangeCb();
-    this._statisticComponent.renderChart();
+    this._statisticComponent.addFiltesChangeEvents();
+    this._statisticComponent.hide();
   }
-
-  _destroyStatistic() {
-    if (this._statisticComponent !== null) {
-      this._statisticComponent.removeElement();
-      this._statisticComponent = null;
-    }
-  }
-
 
   _initDocumentEvents() {
-    document.addEventListener(`keydown`, (evt) => {
-      if (evt.keyCode === ESC_KEY) {
-        this._setDefaultView();
-      }
-    });
+    document.addEventListener(`keydown`, this._onDocumentKeyDown);
+  }
+
+  _removeDocumentEvents() {
+    document.removeEventListener(`keydown`, this._onDocumentKeyDown);
   }
 }

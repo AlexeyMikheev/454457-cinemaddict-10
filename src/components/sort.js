@@ -49,7 +49,7 @@ export default class Sort extends AbstractComponent {
   }
 
   _renderSortElements() {
-    this._sortElements = this._sortFilters.map((sortFilter)=>{
+    this._sortElements = this._sortFilters.map((sortFilter) => {
       return Utils.createElement(getSortFilterTemplate(this._sortType, sortFilter));
     });
 
@@ -59,8 +59,13 @@ export default class Sort extends AbstractComponent {
   }
 
   _removeSortElements() {
-    this._sortElements.forEach((sortElement)=>{
+    this._sortElements.forEach((sortElement) => {
       sortElement.remove();
     });
+  }
+  _removeEvents() {
+    if (this._element !== null) {
+      this._element.removeEventListener(`click`, this._onSortButtonClickCb);
+    }
   }
 }

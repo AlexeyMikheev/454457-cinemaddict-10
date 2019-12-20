@@ -4,9 +4,28 @@ import Utils from '../utils.js';
 import Chart from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 
-const getStatisticTemplate = (totalFilms, totalDuration, topGenreName) => {
+const getStatisticHeaderTemplate = (totalFilms, totalDuration, topGenreName) => {
   const durationHours = Utils.getHours(totalDuration);
   const durationMinutes = Utils.getMinutes(totalDuration);
+
+  return `<ul class="statistic__text-list">
+    <li class="statistic__text-item">
+    <h4 class="statistic__item-title">You watched</h4>
+    <p class="statistic__item-text">${totalFilms} <span class="statistic__item-description">movies</span></p>
+    </li>
+    <li class="statistic__text-item">
+      <h4 class="statistic__item-title">Total duration</h4>
+      <p class="statistic__item-text">${durationHours} <span class="statistic__item-description">h</span> ${durationMinutes} <span class="statistic__item-description">m</span></p>
+    </li>
+    <li class="statistic__text-item">
+      <h4 class="statistic__item-title">Top genre</h4>
+      <p class="statistic__item-text">${topGenreName}</p>
+    </li>
+  </ul>`;
+};
+
+const getStatisticTemplate = (totalFilms) => {
+
   const formatedRating = Utils.getFormatedRating(totalFilms);
 
   return `<section class="statistic">
@@ -35,20 +54,7 @@ const getStatisticTemplate = (totalFilms, totalDuration, topGenreName) => {
     <label for="statistic-year" class="statistic__filters-label">Year</label>
   </form>
 
-  <ul class="statistic__text-list">
-    <li class="statistic__text-item">
-      <h4 class="statistic__item-title">You watched</h4>
-      <p class="statistic__item-text">${totalFilms} <span class="statistic__item-description">movies</span></p>
-    </li>
-    <li class="statistic__text-item">
-      <h4 class="statistic__item-title">Total duration</h4>
-      <p class="statistic__item-text">${durationHours} <span class="statistic__item-description">h</span> ${durationMinutes} <span class="statistic__item-description">m</span></p>
-    </li>
-    <li class="statistic__text-item">
-      <h4 class="statistic__item-title">Top genre</h4>
-      <p class="statistic__item-text">${topGenreName}</p>
-    </li>
-  </ul>
+  <ul class="statistic__text-list"></ul>
 
   <div class="statistic__chart-wrap">
     <canvas class="statistic__chart" width="1000"></canvas>
@@ -70,27 +76,44 @@ export default class Statistic extends AbstractComponent {
     this._genresValues = [];
     this._genresColors = [];
     this._statisticChart = null;
-    this._statisticFiltersContainer = null;
+    this._statisticHeaderElement = null;
+
     this._onStatisticFiltersContainerChangeCb = (evt) => {
       this._selectedPeriod = parseInt(evt.target.dataset[`period`], 10);
 
-      this._updateStatistics();
-      this.renderChart();
+      this._update();
     };
-
-    this._updateStatistics();
   }
 
   getTemplate() {
-    return getStatisticTemplate(this._totalWatchedFilms.length, this._totalDurationFilms, this._topGenreName);
+    return getStatisticTemplate(this._totalWatchedFilms, this._totalDurationFilms, this._topGenreName);
   }
 
-  addStatisticFilterschangeCb() {
-    this._statisticFiltersContainer = this._element.querySelector(`.statistic__filters`);
-    this._statisticFiltersContainer.addEventListener(`change`, this._onStatisticFiltersContainerChangeCb);
+  show() {
+    super.show();
+
+    this._update();
   }
 
-  renderChart() {
+  _update() {
+    this._updateStatistics();
+    this._updateStatisticHeader();
+    this._renderChart();
+  }
+
+  _updateStatisticHeader() {
+    const statisticHeaderElement = Utils.createElement(getStatisticHeaderTemplate(this._totalWatchedFilms, this._totalDurationFilms, this._topGenreName));
+
+    const oldStatisticHeaderElement = this._statisticHeaderElement !== null ? this._statisticHeaderElement : this._element.querySelector(`.statistic__text-list`);
+
+    this._element.replaceChild(statisticHeaderElement, oldStatisticHeaderElement);
+  }
+
+  addFiltesChangeEvents() {
+    this._element.querySelector(`.statistic__filters`).addEventListener(`change`, this._onStatisticFiltersContainerChangeCb);
+  }
+
+  _renderChart() {
     this._destroyChart();
 
     const minXLimit = 0;
@@ -161,15 +184,18 @@ export default class Statistic extends AbstractComponent {
     this._genresLabels = [];
     this._genresValues = [];
     this._genresColors = [];
+    this._topGenreName = `-`;
 
-    this._totalWatchedFilms = this._films.getWathedFilmsByPeriod(this._selectedPeriod);
+    const totalWatchedFilms = this._films.getWathedFilmsByPeriod(this._selectedPeriod);
 
-    this._totalDurationFilms = this._totalWatchedFilms.reduce((total, film) => {
+    this._totalWatchedFilms = totalWatchedFilms.length;
+
+    this._totalDurationFilms = totalWatchedFilms.reduce((total, film) => {
       total += film.duration;
       return total;
     }, 0);
 
-    const filmsGenres = this._totalWatchedFilms.reduce((allGenres, film) => {
+    const filmsGenres = totalWatchedFilms.reduce((allGenres, film) => {
       allGenres.push(...film.genres);
       return allGenres;
     }, []);
