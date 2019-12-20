@@ -143,7 +143,8 @@ export default class FilmDetail extends AbstractSmartComponent {
         case FilmDetailType.WATCHED:
           const isWatched = target.checked;
           const rating = isWatched ? this._film.rating : 0;
-          this._onDataChange(this._film, Object.assign({}, this._film, {rating, isWatched}));
+          const watchedDate = isWatched ? new Date().valueOf() : 0;
+          this._onDataChange(this._film, Object.assign({}, this._film, {rating, isWatched, watchedDate}));
           break;
         case FilmDetailType.FAVORITE:
           const isFavorite = target.checked;

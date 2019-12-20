@@ -69,8 +69,8 @@ export default class Film extends AbstractComponent {
           break;
         case FilmDetailType.WATCHED:
           const isWatched = !target.classList.contains(`film-card__controls-item--active`);
-
-          cb(this._film, Object.assign({}, this._film, {isWatched}));
+          const watchedDate = isWatched ? new Date().valueOf() : 0;
+          cb(this._film, Object.assign({}, this._film, {isWatched, watchedDate}));
           break;
         case FilmDetailType.FAVORITE:
           const isFavorite = !target.classList.contains(`film-card__controls-item--active`);
