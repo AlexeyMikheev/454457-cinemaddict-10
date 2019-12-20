@@ -1,5 +1,5 @@
 import AbstractComponent from './abstract-component.js';
-import { Period } from '../const.js';
+import {Period} from '../const.js';
 import Utils from '../utils.js';
 import Chart from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
