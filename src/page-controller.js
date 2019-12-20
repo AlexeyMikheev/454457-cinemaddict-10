@@ -32,6 +32,13 @@ export default class PageController {
     this._topRatedFilmsControllers = [];
     this._mostCommentFilmsControllers = [];
 
+    this._onDocumentKeyDown = (evt) => {
+      if (evt.keyCode === ESC_KEY) {
+        this._setDefaultView();
+        this._removeDocumentEvents();
+      }
+    };
+
     this._onDataChange = (filmController, oldValue, newValue) => {
       const isSuccess = this._films.updateFilm(oldValue.id, newValue);
       if (isSuccess) {
@@ -44,7 +51,13 @@ export default class PageController {
       }
     };
 
-    this._onViewChange = () => {
+    this._onViewChange = (movieController) => {
+      if (movieController.detailsModeVisibility) {
+        this._initDocumentEvents();
+      } else {
+        this._removeDocumentEvents();
+      }
+
       this._setDefaultView();
     };
 
@@ -84,11 +97,11 @@ export default class PageController {
         if (filterType === Filters.STATS.title) {
           this._filmsContainerComponent.hide();
           this._sortComponent.hide();
-          this._initStatistic();
+          this._statisticComponent.show();
         } else {
           this._filmsContainerComponent.show();
           this._sortComponent.show();
-          this._destroyStatistic();
+          this._statisticComponent.hide();
         }
       }
     };
@@ -110,7 +123,7 @@ export default class PageController {
   render() {
     this._initHeader();
     this._initContent();
-    this._initDocumentEvents();
+    this._initStatistic();
     this._initFooterStatistic();
   }
 
@@ -240,23 +253,15 @@ export default class PageController {
   _initStatistic() {
     this._statisticComponent = new Statistic(this._films);
     Utils.render(this._mainContainer, this._statisticComponent.getElement());
-    this._statisticComponent.addStatisticFilterschangeCb();
-    this._statisticComponent.renderChart();
+    this._statisticComponent.addFiltesChangeEvents();
+    this._statisticComponent.hide();
   }
-
-  _destroyStatistic() {
-    if (this._statisticComponent !== null) {
-      this._statisticComponent.removeElement();
-      this._statisticComponent = null;
-    }
-  }
-
 
   _initDocumentEvents() {
-    document.addEventListener(`keydown`, (evt) => {
-      if (evt.keyCode === ESC_KEY) {
-        this._setDefaultView();
-      }
-    });
+    document.addEventListener(`keydown`, this._onDocumentKeyDown);
+  }
+
+  _removeDocumentEvents() {
+    document.removeEventListener(`keydown`, this._onDocumentKeyDown);
   }
 }
