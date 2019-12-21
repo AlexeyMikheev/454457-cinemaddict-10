@@ -143,14 +143,44 @@ export default class Movies {
     return Utils.getFilmsByPageNumber(this._displayedFilms, this._currentPage);
   }
 
-  updateFilm(id, newFilm) {
+  updateFilm(id, film) {
     const index = this._films.findIndex((it) => it.id === id);
 
     if (index === -1) {
       return false;
     }
 
-    this._films = [].concat(this._films.slice(0, index), newFilm, this._films.slice(index + 1));
+    this._films = [].concat(this._films.slice(0, index), film, this._films.slice(index + 1));
+
+    return true;
+  }
+
+  addComment(comment, filmId) {
+    const film = this.getFilmById(filmId);
+
+    if (film === null) {
+      return false;
+    }
+
+    film.comments = [].concat(film.comments, comment);
+
+    return true;
+  }
+
+  removeComment(id, filmId) {
+    const film = this.getFilmById(filmId);
+
+    if (film === null) {
+      return false;
+    }
+
+    const index = film.comments.findIndex((it) => it.id === id);
+
+    if (index === -1) {
+      return false;
+    }
+
+    film.comments = [].concat(film.comments.slice(0, index), film.comments.slice(index + 1));
 
     return true;
   }

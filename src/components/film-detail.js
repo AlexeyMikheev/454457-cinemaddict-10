@@ -153,8 +153,8 @@ export default class FilmDetail extends AbstractSmartComponent {
       }
     };
 
-    this._onCommentsChanged = (comments) => {
-      this._onDataChange(this._film, Object.assign({}, this._film, {comments}));
+    this._onCommentsChanged = (newValue, oldValue) => {
+      this._onDataChange(newValue, oldValue, this._film);
     };
   }
 

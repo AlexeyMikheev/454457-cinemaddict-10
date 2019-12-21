@@ -9,7 +9,7 @@ import NoFilms from './components/no-films.js';
 import MovieController from './movie-controller.js';
 import FilterController from './filter-controller.js';
 
-import {FIMLS_COMPONENT_TYPES, ESC_KEY, Filters} from './const.js';
+import { FIMLS_COMPONENT_TYPES, ESC_KEY, Filters } from './const.js';
 import Utils from './utils.js';
 
 export default class PageController {
@@ -41,14 +41,30 @@ export default class PageController {
       }
     };
 
-    this._onDataChange = (filmController, oldValue, newValue) => {
-      const isSuccess = this._films.updateFilm(oldValue.id, newValue);
-      if (isSuccess) {
-        // filmController.defaultModeVisibility = this._films.isFilmAvaliableAtCurrentFilter(newValue); про это я просил у куратора
+    this._onDataChange = (filmController, oldValue, newValue, parentValue = null) => {
+      if (parentValue === null) {
+        const isSuccess = this._films.updateFilm(oldValue.id, newValue);
+        if (isSuccess) {
+          // filmController.defaultModeVisibility = this._films.isFilmAvaliableAtCurrentFilter(newValue); про это я просил у куратора
 
-        filmController.render(newValue);
+          filmController.render(newValue);
 
-        this._update();
+          this._update();
+        }
+      } else {
+        if (newValue !== null) {
+          const isSuccess = this._films.addComment(newValue, parentValue.id);
+          if (isSuccess) {
+            const updatedFilm = this._films.getFilmById(parentValue.id);
+            filmController.render(updatedFilm);
+          }
+        } else if (oldValue !== null) {
+          const isSuccess = this._films.removeComment(oldValue.id, parentValue.id);
+          if (isSuccess) {
+            const updatedFilm = this._films.getFilmById(parentValue.id);
+            filmController.render(updatedFilm);
+          }
+        }
       }
     };
 
