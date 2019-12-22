@@ -20,7 +20,7 @@ export default class Comments extends AbstractComponent {
     this._onDeleteCb = (evt) => {
       evt.preventDefault();
 
-      const commentId = parseInt(evt.target.dataset[`id`], 10);
+      const commentId = evt.target.dataset[`id`];
       const deletedComment = this._comments.find((comment) => {
         return comment.id === commentId;
       });

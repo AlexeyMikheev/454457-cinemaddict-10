@@ -20,6 +20,15 @@ const pageController = new PageController(headerContainer, mainContainer, footer
 api.getFilms()
   .then((films) => {
     filmsModel.films = films;
-    pageController.render();
+
+    const commentsPromisses = filmsModel.films.map((film) => {
+      return api.getComments(film.id).then((comments) => {
+        film.comments = comments;
+      });
+    });
+
+    Promise.all(commentsPromisses).then(() => {
+      pageController.render();
+    });
   });
 

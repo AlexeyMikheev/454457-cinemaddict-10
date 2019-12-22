@@ -33,13 +33,25 @@ export default class Film {
   toRAW() {
     return {
       'id': this.id,
+      'title': this.title,
+      'alternative_title': this.originalTitle,
+      'total_rating': this.rating,
+      'runtime': this.duration,
+      'director': this.producer,
+      'age_rating': this.age,
+      'writers': this.writers,
+      'release': {
+        'data': this.releaseDate !== null ? this.releaseDate.toISOString() : null,
+        'release_country': this.country
+      },
+      'genre': this.genres,
+      'poster': this.poster,
       'description': this.description,
-      'due_date': this.dueDate ? this.dueDate.toISOString() : null,
-      'tags': Array.from(this.tags),
-      'repeating_days': this.repeatingDays,
-      'color': this.color,
-      'is_favorite': this.isFavorite,
-      'is_archived': this.isArchive,
+      'favorite': this.favorite,
+      'personal_rating': this.personalRating,
+      'watchlist': this.isWatched,
+      'watching_date': this.watchedDate !== null ? this.watchedDate.toISOString() : null,
+      'already_watched': this.isWatched
     };
   }
 

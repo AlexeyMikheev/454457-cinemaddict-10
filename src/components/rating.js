@@ -26,7 +26,7 @@ const getRatingTemplate = (film) => {
 
   <div class="film-details__user-score">
     <div class="film-details__user-rating-poster">
-      <img src="./images/posters/${poster}" alt="film-poster" class="film-details__user-rating-img">
+      <img src="./${poster}" alt="film-poster" class="film-details__user-rating-img">
     </div>
 
     <section class="film-details__user-rating-inner">
@@ -56,9 +56,9 @@ export default class Rating extends AbstractComponent {
 
   addRatingCheckedChange(cb) {
     this._onRatingCheckedChangeCb = (evt) => {
-      const rating = parseInt(evt.target.value, 10);
+      const personalRating = parseInt(evt.target.value, 10);
 
-      cb(this._film, Object.assign({}, this._film, {rating}));
+      cb(this._film, Object.assign({}, this._film, {personalRating}));
     };
 
     this._detailsContainer = this._element.querySelector(`.film-details__user-rating-score`);

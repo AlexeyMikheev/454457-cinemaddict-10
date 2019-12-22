@@ -1,4 +1,5 @@
 import Film from './models/film.js';
+import Comment from './models/comment.js';
 
 const Method = {
   GET: `GET`,
@@ -25,6 +26,12 @@ const API = class {
     return this._load({url: `movies`})
       .then((response) => response.json())
       .then((json) => Film.parseFilms(json));
+  }
+
+  getComments(movieId) {
+    return this._load({url: `comments/${movieId}`})
+    .then((response) => response.json())
+    .then((json) => Comment.parseComments(json));
   }
 
   createTask(task) {
