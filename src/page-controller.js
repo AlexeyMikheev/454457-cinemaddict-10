@@ -1,7 +1,7 @@
 import Profile from './components/profile.js';
 import Sort from './components/sort.js';
-import Films from './components/films';
-import FilmsContainer from './components/films-container';
+import Films from './components/films.js';
+import FilmsContainer from './components/films-container.js';
 import MoreButton from './components/more-button.js';
 import FooterStatistic from './components/footer-statistic.js';
 import Statistic from './components/statistic.js';
@@ -9,12 +9,13 @@ import NoFilms from './components/no-films.js';
 import MovieController from './movie-controller.js';
 import FilterController from './filter-controller.js';
 
-import { FIMLS_COMPONENT_TYPES, ESC_KEY, Filters } from './const.js';
+import {FIMLS_COMPONENT_TYPES, ESC_KEY, Filters} from './const.js';
 import Utils from './utils.js';
 
 export default class PageController {
-  constructor(headerContainer, mainContainer, footer, films) {
+  constructor(headerContainer, mainContainer, footer, films, api) {
     this._films = films;
+    this._api = api;
     this._filmsContainerComponent = null;
     this._filmsComponent = null;
     this._filmsComponentElement = null;

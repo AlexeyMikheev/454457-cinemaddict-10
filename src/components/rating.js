@@ -15,9 +15,9 @@ const getRatingValuesTemplate = (selectedValue) => {
 
 const getRatingTemplate = (film) => {
 
-  const {poster, title, rating} = film;
+  const {poster, title, personalRating} = film;
 
-  const ratingValuesTemplate = getRatingValuesTemplate(rating);
+  const ratingValuesTemplate = getRatingValuesTemplate(personalRating);
 
   return `<section class="film-details__user-rating-wrap">
   <div class="film-details__user-rating-controls">

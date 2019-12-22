@@ -25,7 +25,7 @@ const getFilmTemplate = (filmCard) => {
     <span class="film-card__duration">${formatedDuration}</span>
     <span class="film-card__genre">${formatedGenres}</span>
   </p>
-  <img src="./images/posters/${poster}" alt="" class="film-card__poster">
+  <img src="./${poster}" alt="" class="film-card__poster">
   <p class="film-card__description">${formatedDescription}</p>
   <a class="film-card__comments">${formatedCommentsTitle}</a>
   <form class="film-card__controls">

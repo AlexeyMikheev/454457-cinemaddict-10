@@ -230,4 +230,8 @@ export default class Utils {
       default: return null;
     }
   }
+
+  static paserDate(data) {
+    return new Date(data).valueOf();
+  }
 }
