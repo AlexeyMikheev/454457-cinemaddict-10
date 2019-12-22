@@ -4,6 +4,7 @@ import Comments from './comments.js';
 import AddNewCommentForm from './add-comment-form.js';
 import {FilmDetailType, RELEASE_DATE_FORMAT, DURATION_FORMAT} from '../const.js';
 import AbstractSmartComponent from './abstract-smart-component.js';
+import Film from '../models/film';
 
 const getGenresTemplate = (genres) => {
   return genres.map((genre) => {
@@ -134,21 +135,28 @@ export default class FilmDetail extends AbstractSmartComponent {
 
     this._onDetailCheckedChange = (evt) => {
       const target = evt.target;
+      const updatedFilm = new Film({});
 
       switch (target.dataset[`detailType`]) {
         case FilmDetailType.WATCHLIST:
           const isWaitingWatched = target.checked;
-          this._onDataChange(this._film, Object.assign({}, this._film, {isWaitingWatched}));
+          Object.assign(updatedFilm, this._film, {isWaitingWatched});
+
+          this._onDataChange(this._film, updatedFilm);
           break;
         case FilmDetailType.WATCHED:
           const isWatched = target.checked;
           const rating = isWatched ? this._film.rating : 0;
           const watchedDate = isWatched ? new Date().valueOf() : 0;
-          this._onDataChange(this._film, Object.assign({}, this._film, {rating, isWatched, watchedDate}));
+
+          Object.assign(updatedFilm, this._film, {rating, isWatched, watchedDate});
+          this._onDataChange(this._film, updatedFilm);
           break;
         case FilmDetailType.FAVORITE:
           const isFavorite = target.checked;
-          this._onDataChange(this._film, Object.assign({}, this._film, {isFavorite}));
+
+          Object.assign(updatedFilm, this._film, {isFavorite});
+          this._onDataChange(this._film, updatedFilm);
           break;
       }
     };

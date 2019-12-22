@@ -1,6 +1,7 @@
 
 import {MIN_RATING_VALUE, MAX_RATING_VALUE, RATING_RANGE} from '../const';
 import AbstractComponent from './abstract-component.js';
+import Film from '../models/film';
 
 const getRatingValuesTemplate = (selectedValue) => {
   let template = ``;
@@ -57,8 +58,10 @@ export default class Rating extends AbstractComponent {
   addRatingCheckedChange(cb) {
     this._onRatingCheckedChangeCb = (evt) => {
       const personalRating = parseInt(evt.target.value, 10);
+      const updatedFilm = new Film({});
+      Object.assign(updatedFilm, this._film, {personalRating});
 
-      cb(this._film, Object.assign({}, this._film, {personalRating}));
+      cb(this._film, updatedFilm);
     };
 
     this._detailsContainer = this._element.querySelector(`.film-details__user-rating-score`);

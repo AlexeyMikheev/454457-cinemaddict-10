@@ -23,31 +23,14 @@ const API = class {
   }
 
   getFilms() {
-    return this._load({url: `movies`})
+    return this._send({url: `movies`})
       .then((response) => response.json())
       .then((json) => Film.parseFilms(json));
   }
 
-  getComments(movieId) {
-    return this._load({url: `comments/${movieId}`})
-    .then((response) => response.json())
-    .then((json) => Comment.parseComments(json));
-  }
-
-  createTask(task) {
-    return this._load({
-      url: `tasks`,
-      method: Method.POST,
-      body: JSON.stringify(task.toRAW()),
-      headers: new Headers({'Content-Type': `application/json`})
-    })
-      .then((response) => response.json())
-      .then((json) => Film.parseFilms(json));
-  }
-
-  updateTask(id, data) {
-    return this._load({
-      url: `tasks/${id}`,
+  updateFilm(id, data) {
+    return this._send({
+      url: `movies/${id}`,
       method: Method.PUT,
       body: JSON.stringify(data.toRAW()),
       headers: new Headers({'Content-Type': `application/json`})
@@ -56,11 +39,38 @@ const API = class {
       .then((json) => Film.parseFilm(json));
   }
 
-  deleteTask(id) {
-    return this._load({url: `tasks/${id}`, method: Method.DELETE});
+  getComments(movieId) {
+    return this._send({url: `comments/${movieId}`})
+    .then((response) => response.json())
+    .then((json) => Comment.parseComments(json));
   }
 
-  _load({url, method = Method.GET, body = null, headers = new Headers()}) {
+  createComment(comment) {
+    return this._send({
+      url: `comments`,
+      method: Method.POST,
+      body: JSON.stringify(comment.toRAW()),
+      headers: new Headers({'Content-Type': `application/json`})
+    })
+      .then((response) => response.json())
+      .then((json) => Comment.parseComment(json));
+  }
+
+  updateComment(id, data) {
+    return this._send({
+      url: `comments/${id}`,
+      method: Method.PUT,
+      body: JSON.stringify(data.toRAW()),
+      headers: new Headers({'Content-Type': `application/json`})
+    }).then((response) => response.json())
+      .then((json) => Comment.parseComment(json));
+  }
+
+  deleteComment(id) {
+    return this._send({url: `comments/${id}`, method: Method.DELETE});
+  }
+
+  _send({url, method = Method.GET, body = null, headers = new Headers()}) {
     headers.append(`Authorization`, this._authorization);
 
     return fetch(`${this._endPoint}/${url}`, {method, body, headers})

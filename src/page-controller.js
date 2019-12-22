@@ -44,27 +44,42 @@ export default class PageController {
 
     this._onDataChange = (filmController, oldValue, newValue, parentValue = null) => {
       if (parentValue === null) {
-        const isSuccess = this._films.updateFilm(oldValue.id, newValue);
-        if (isSuccess) {
-          // filmController.defaultModeVisibility = this._films.isFilmAvaliableAtCurrentFilter(newValue); про это я просил у куратора
+        this._api.updateFilm(oldValue.id, newValue)
+          .then((filmModel) => {
+            const isSuccess = this._films.updateFilm(oldValue.id, filmModel);
+            if (isSuccess) {
+              // filmController.defaultModeVisibility = this._films.isFilmAvaliableAtCurrentFilter(newValue); про это я просил у куратора
 
-          filmController.render(newValue);
+              filmController.render(filmModel);
 
-          this._update();
-        }
+              this._update();
+            }
+          }).catch((err) => {
+            console.log(err);
+          });
       } else {
         if (newValue !== null) {
-          const isSuccess = this._films.addComment(newValue, parentValue.id);
-          if (isSuccess) {
-            const updatedFilm = this._films.getFilmById(parentValue.id);
-            filmController.render(updatedFilm);
-          }
+          this._api.createComment(newValue)
+            .then((commentModel) => {
+              const isSuccess = this._films.addComment(commentModel, parentValue.id);
+              if (isSuccess) {
+                const updatedFilm = this._films.getFilmById(parentValue.id);
+                filmController.render(updatedFilm);
+              }
+            }).catch((err) => {
+              console.log(err);
+            });
         } else if (oldValue !== null) {
-          const isSuccess = this._films.removeComment(oldValue.id, parentValue.id);
-          if (isSuccess) {
-            const updatedFilm = this._films.getFilmById(parentValue.id);
-            filmController.render(updatedFilm);
-          }
+          this._api.deleteComment(oldValue.id)
+            .then(() => {
+              const isSuccess = this._films.removeComment(oldValue.id, parentValue.id);
+              if (isSuccess) {
+                const updatedFilm = this._films.getFilmById(parentValue.id);
+                filmController.render(updatedFilm);
+              }
+            }).catch((err) => {
+              console.log(err);
+            });
         }
       }
     };
