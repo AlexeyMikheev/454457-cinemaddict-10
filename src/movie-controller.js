@@ -10,8 +10,8 @@ export default class MovieController {
     this._filmComponent = null;
     this._onDataChange = onDataChange;
 
-    this._onDataChangeCb = (oldValue, newValue) => {
-      this._onDataChange(this, oldValue, newValue);
+    this._onDataChangeCb = (oldValue, newValue, parentValue = null) => {
+      this._onDataChange(this, oldValue, newValue, parentValue);
     };
 
     this._onViewChange = onViewChange;

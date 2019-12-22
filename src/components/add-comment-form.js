@@ -80,8 +80,7 @@ export default class AddNewCommentForm extends AbstractComponent {
           author: `author`
         };
 
-        const changedComments = [].concat(this._comments, newComment);
-        this._onCommentsChanged(changedComments);
+        this._onCommentsChanged(null, newComment);
       }
     };
   }
