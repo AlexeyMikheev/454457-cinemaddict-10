@@ -30,7 +30,6 @@ export const ProfileRating = {
 export const ESC_KEY = 27;
 export const ENTER_KEY = 13;
 
-export const COUNT_FILMS = 15;
 export const ONE_TASKS_PAGE_COUNT = 5;
 
 export const RenderPosition = {
