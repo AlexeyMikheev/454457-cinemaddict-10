@@ -59,9 +59,9 @@ export default class PageController {
           });
       } else {
         if (newValue !== null) {
-          this._api.createComment(newValue)
-            .then((commentModel) => {
-              const isSuccess = this._films.addComment(commentModel, parentValue.id);
+          this._api.createComment(newValue, parentValue.id)
+            .then((commentsModel) => {
+              const isSuccess = this._films.setComments(commentsModel, parentValue.id);
               if (isSuccess) {
                 const updatedFilm = this._films.getFilmById(parentValue.id);
                 filmController.render(updatedFilm);

@@ -124,6 +124,7 @@ export default class FilmDetail extends AbstractSmartComponent {
     this._container = container;
     this._film = film;
     this._onCloseButtonClickCb = null;
+    this._onUndoButtonClickCb = null;
     this._closeBtn = null;
     this._detailsContainer = null;
     this._ratingContainer = null;
@@ -204,6 +205,7 @@ export default class FilmDetail extends AbstractSmartComponent {
   addRatingCheckedChangeEvent() {
     if (this._ratingComponent !== null) {
       this._ratingComponent.addRatingCheckedChange(this._onDataChange);
+      this._ratingComponent.addUndoButtonClickEvent(this._onDataChange);
     }
   }
 
@@ -251,7 +253,7 @@ export default class FilmDetail extends AbstractSmartComponent {
     }
 
     if (this._ratingComponent !== null) {
-      this._ratingComponent.removeRatingCheckedChange();
+      this._ratingComponent.removeRatingEvents();
     }
   }
 
@@ -265,11 +267,11 @@ export default class FilmDetail extends AbstractSmartComponent {
   _initRating() {
     if (this._film.isWatched) {
       this._ratingContainer = this._element.querySelector(`.form-details__middle-container`);
-      this._ratingComponent = new Rating(this._film);
+      this._ratingComponent = new Rating(this._film, this._onDataChange);
       this._ratingContainer.appendChild(this._ratingComponent.getElement());
 
     } else if (this._ratingComponent !== null) {
-      this._ratingComponent.removeRatingCheckedChange();
+      this._ratingComponent.removeRatingEvents();
       this._ratingComponent.removeElement();
       this._ratingComponent = null;
       this._ratingContainer = null;

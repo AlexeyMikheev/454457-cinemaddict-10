@@ -1,5 +1,5 @@
 import Utils from './utils.js';
-import Film from './components/film.js';
+import FilmComponent from './components/film.js';
 import FilmDetail from './components/film-detail.js';
 
 export default class MovieController {
@@ -100,11 +100,11 @@ export default class MovieController {
     const filmsListContainer = this._container.querySelector(`.films-list__container`);
 
     if (this._filmComponent === null) {
-      this._filmComponent = new Film(this._film);
+      this._filmComponent = new FilmComponent(this._film);
 
       filmsListContainer.appendChild(this._filmComponent.getElement());
     } else {
-      const newFilmComponent = new Film(this._film);
+      const newFilmComponent = new FilmComponent(this._film);
 
       filmsListContainer.replaceChild(newFilmComponent.getElement(), this._filmComponent.getElement());
 

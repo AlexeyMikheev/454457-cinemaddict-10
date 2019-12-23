@@ -45,36 +45,55 @@ const getRatingTemplate = (film) => {
 
 export default class Rating extends AbstractComponent {
 
-  constructor(film) {
+  constructor(film, onDataChange) {
     super();
     this._film = film;
-    this._onRatingCheckedChangeCb = null;
+    this._onDataChange = onDataChange;
+    this._detailsContainer = null;
+    this._undoButton = null;
+
+    this._onRatingCheckedChangeCb = (evt) => {
+      const personalRating = parseInt(evt.target.value, 10);
+      const updatedFilm = new Film({});
+      Object.assign(updatedFilm, this._film, {personalRating});
+
+      this._onDataChange(this._film, updatedFilm);
+    };
+
+    this._onUndoButtonClickCb = () => {
+      const updatedFilm = new Film({});
+      Object.assign(updatedFilm, this._film, {personalRating: 0});
+
+      this._onDataChange(this._film, updatedFilm);
+    };
   }
 
   getTemplate() {
     return getRatingTemplate(this._film);
   }
 
-  addRatingCheckedChange(cb) {
-    this._onRatingCheckedChangeCb = (evt) => {
-      const personalRating = parseInt(evt.target.value, 10);
-      const updatedFilm = new Film({});
-      Object.assign(updatedFilm, this._film, {personalRating});
-
-      cb(this._film, updatedFilm);
-    };
-
+  addRatingCheckedChange() {
     this._detailsContainer = this._element.querySelector(`.film-details__user-rating-score`);
     this._detailsContainer.addEventListener(`change`, this._onRatingCheckedChangeCb);
   }
 
-  removeRatingCheckedChange() {
+  addUndoButtonClickEvent() {
+    this._undoButton = this._element.querySelector(`.film-details__watched-reset`);
+    this._undoButton.addEventListener(`click`, this._onUndoButtonClickCb);
+  }
+
+  removeRatingEvents() {
     this._detailsContainer.removeEventListener(`change`, this._onRatingCheckedChangeCb);
+    this._detailsContainer = null;
     this._onRatingCheckedChangeCb = null;
+
+    this._undoButton.removeEventListener(`click`, this._onUndoButtonClickCb);
+    this._onUndoButtonClickCb = null;
+    this._undoButton = null;
   }
 
   recoveryListeners() {
-    this._detailsContainer = this._element.querySelector(`.film-details__user-rating-score`);
     this._detailsContainer.addEventListener(`change`, this._onRatingCheckedChangeCb);
+    this._undoButton.addEventListener(`click`, this._onUndoButtonClickCb);
   }
 }

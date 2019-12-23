@@ -150,19 +150,21 @@ export default class Films {
       return false;
     }
 
+    film.comments = this._films[index].comments.slice();
+
     this._films = [].concat(this._films.slice(0, index), film, this._films.slice(index + 1));
 
     return true;
   }
 
-  addComment(comment, filmId) {
+  setComments(comments, filmId) {
     const film = this.getFilmById(filmId);
 
     if (film === null) {
       return false;
     }
 
-    film.comments = [].concat(film.comments, comment);
+    film.comments = comments;
 
     return true;
   }
