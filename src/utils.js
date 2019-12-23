@@ -219,8 +219,6 @@ export default class Utils {
 
   static getEmoji(emoji) {
     switch (emoji) {
-      case Emoji.NEUTRAL.value:
-        return Emoji.NEUTRAL;
       case Emoji.SLEEPING.value:
         return Emoji.SLEEPING;
       case Emoji.GRINNING.value:
