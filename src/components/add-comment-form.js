@@ -1,5 +1,5 @@
 import AbstractComponent from './abstract-component.js';
-import { Emoji, ENTER_KEY } from '../const.js';
+import {Emoji, ENTER_KEY} from '../const.js';
 import Utils from '../utils.js';
 import Comment from '../models/comment';
 
