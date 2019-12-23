@@ -56,16 +56,6 @@ const API = class {
       .then((json) => Comment.parseComment(json));
   }
 
-  updateComment(id, data) {
-    return this._send({
-      url: `comments/${id}`,
-      method: Method.PUT,
-      body: JSON.stringify(data.toRAW()),
-      headers: new Headers({'Content-Type': `application/json`})
-    }).then((response) => response.json())
-      .then((json) => Comment.parseComment(json));
-  }
-
   deleteComment(id) {
     return this._send({url: `comments/${id}`, method: Method.DELETE});
   }
