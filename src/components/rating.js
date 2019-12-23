@@ -1,6 +1,7 @@
 
 import {MIN_RATING_VALUE, MAX_RATING_VALUE, RATING_RANGE} from '../const';
 import AbstractComponent from './abstract-component.js';
+import Film from '../models/film';
 
 const getRatingValuesTemplate = (selectedValue) => {
   let template = ``;
@@ -15,9 +16,9 @@ const getRatingValuesTemplate = (selectedValue) => {
 
 const getRatingTemplate = (film) => {
 
-  const {poster, title, rating} = film;
+  const {poster, title, personalRating} = film;
 
-  const ratingValuesTemplate = getRatingValuesTemplate(rating);
+  const ratingValuesTemplate = getRatingValuesTemplate(personalRating);
 
   return `<section class="film-details__user-rating-wrap">
   <div class="film-details__user-rating-controls">
@@ -26,7 +27,7 @@ const getRatingTemplate = (film) => {
 
   <div class="film-details__user-score">
     <div class="film-details__user-rating-poster">
-      <img src="./images/posters/${poster}" alt="film-poster" class="film-details__user-rating-img">
+      <img src="./${poster}" alt="film-poster" class="film-details__user-rating-img">
     </div>
 
     <section class="film-details__user-rating-inner">
@@ -56,9 +57,11 @@ export default class Rating extends AbstractComponent {
 
   addRatingCheckedChange(cb) {
     this._onRatingCheckedChangeCb = (evt) => {
-      const rating = parseInt(evt.target.value, 10);
+      const personalRating = parseInt(evt.target.value, 10);
+      const updatedFilm = new Film({});
+      Object.assign(updatedFilm, this._film, {personalRating});
 
-      cb(this._film, Object.assign({}, this._film, {rating}));
+      cb(this._film, updatedFilm);
     };
 
     this._detailsContainer = this._element.querySelector(`.film-details__user-rating-score`);

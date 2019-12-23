@@ -1,6 +1,7 @@
 import AbstractComponent from './abstract-component.js';
 import {Emoji, ENTER_KEY} from '../const.js';
 import Utils from '../utils.js';
+import Comment from '../models/comment';
 
 const getAddNewCommentTemplate = () => {
   return `<div class="film-details__new-comment">
@@ -57,31 +58,21 @@ export default class AddNewCommentForm extends AbstractComponent {
     this._commentInput = null;
     this._onCommentInputKeyDown = (evt) => {
       if (evt.ctrlKey && evt.keyCode === ENTER_KEY) {
-        if (this._selectedEmoji === null || !evt.target.value) {
+        if (!evt.target.value) {
           return;
         }
 
         const commentText = evt.target.value;
-        const commentsIds = this._comments.map((c) => {
-          return c.id;
-        });
 
-        let newCommentId = 0;
-        if (commentsIds.length > 0) {
-          newCommentId = Math.max(...commentsIds);
-          newCommentId++;
-        }
-
-        const newComment = {
-          id: newCommentId,
-          text: commentText,
+        const newComment = Comment.parseComment({
+          id: new Date().valueOf().toString(),
+          comment: commentText,
           emotion: this._selectedEmoji !== null ? this._selectedEmoji.value : null,
           commentDate: new Date().valueOf(),
           author: `author`
-        };
+        });
 
-        const changedComments = [].concat(this._comments, newComment);
-        this._onCommentsChanged(changedComments);
+        this._onCommentsChanged(null, newComment);
       }
     };
   }

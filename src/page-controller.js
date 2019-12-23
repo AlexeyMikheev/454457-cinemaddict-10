@@ -1,7 +1,7 @@
 import Profile from './components/profile.js';
 import Sort from './components/sort.js';
-import Films from './components/films';
-import FilmsContainer from './components/films-container';
+import Films from './components/films.js';
+import FilmsContainer from './components/films-container.js';
 import MoreButton from './components/more-button.js';
 import FooterStatistic from './components/footer-statistic.js';
 import Statistic from './components/statistic.js';
@@ -13,8 +13,9 @@ import {FIMLS_COMPONENT_TYPES, ESC_KEY, Filters} from './const.js';
 import Utils from './utils.js';
 
 export default class PageController {
-  constructor(headerContainer, mainContainer, footer, films) {
+  constructor(headerContainer, mainContainer, footer, films, api) {
     this._films = films;
+    this._api = api;
     this._filmsContainerComponent = null;
     this._filmsComponent = null;
     this._filmsComponentElement = null;
@@ -41,14 +42,45 @@ export default class PageController {
       }
     };
 
-    this._onDataChange = (filmController, oldValue, newValue) => {
-      const isSuccess = this._films.updateFilm(oldValue.id, newValue);
-      if (isSuccess) {
-        // filmController.defaultModeVisibility = this._films.isFilmAvaliableAtCurrentFilter(newValue); про это я просил у куратора
+    this._onDataChange = (filmController, oldValue, newValue, parentValue = null) => {
+      if (parentValue === null) {
+        this._api.updateFilm(oldValue.id, newValue)
+          .then((filmModel) => {
+            const isSuccess = this._films.updateFilm(oldValue.id, filmModel);
+            if (isSuccess) {
+              // filmController.defaultModeVisibility = this._films.isFilmAvaliableAtCurrentFilter(newValue); про это я просил у куратора
 
-        filmController.render(newValue);
+              filmController.render(filmModel);
 
-        this._update();
+              this._update();
+            }
+          }).catch((err) => {
+            console.log(err);
+          });
+      } else {
+        if (newValue !== null) {
+          this._api.createComment(newValue)
+            .then((commentModel) => {
+              const isSuccess = this._films.addComment(commentModel, parentValue.id);
+              if (isSuccess) {
+                const updatedFilm = this._films.getFilmById(parentValue.id);
+                filmController.render(updatedFilm);
+              }
+            }).catch((err) => {
+              console.log(err);
+            });
+        } else if (oldValue !== null) {
+          this._api.deleteComment(oldValue.id)
+            .then(() => {
+              const isSuccess = this._films.removeComment(oldValue.id, parentValue.id);
+              if (isSuccess) {
+                const updatedFilm = this._films.getFilmById(parentValue.id);
+                filmController.render(updatedFilm);
+              }
+            }).catch((err) => {
+              console.log(err);
+            });
+        }
       }
     };
 

@@ -20,14 +20,13 @@ export default class Comments extends AbstractComponent {
     this._onDeleteCb = (evt) => {
       evt.preventDefault();
 
-      const commentId = parseInt(evt.target.dataset[`id`], 10);
-      const deletedIndex = this._comments.findIndex((comment) => {
+      const commentId = evt.target.dataset[`id`];
+      const deletedComment = this._comments.find((comment) => {
         return comment.id === commentId;
       });
 
-      if (deletedIndex !== -1) {
-        const changedComments = [].concat(this._comments.slice(0, deletedIndex), this._comments.slice(deletedIndex + 1));
-        this._onCommentsChanged(changedComments);
+      if (deletedComment !== null) {
+        this._onCommentsChanged(deletedComment, null);
       }
     };
   }
