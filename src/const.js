@@ -73,3 +73,5 @@ export const RELEASE_DATE_FORMAT = `DD MMMM YYYY`;
 export const DURATION_FORMAT = `h[h] mm[m]`;
 
 export const DIFFERENCE_DATE_FORMAT = `YYYY/MM/DD HH:mm`;
+
+export const SHAKE_ANIMATION_TIMEOUT = 600;

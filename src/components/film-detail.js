@@ -163,7 +163,13 @@ export default class FilmDetail extends AbstractSmartComponent {
     };
 
     this._onCommentsChanged = (newValue, oldValue) => {
+      this._addCommentComponent.enabled = true;
       this._onDataChange(newValue, oldValue, this._film);
+    };
+
+    this._onRatingChanged = (newValue, oldValue) => {
+      this._ratingComponent.enabled = true;
+      this._onDataChange(newValue, oldValue);
     };
   }
 
@@ -198,14 +204,23 @@ export default class FilmDetail extends AbstractSmartComponent {
     this._updateRating();
   }
 
-  _updateRating() {
-    this._element.querySelector(`.film-details__total-rating`).innerText = this._film.rating;
+  changeAddCommentBorderStyle(borderStyle = false) {
+    this._addCommentComponent.formStyle = borderStyle;
+  }
+
+  changeSelectedRatingBackgroundStyle(backgroundStyle) {
+    this._ratingComponent.selectedRatingStyle = backgroundStyle;
+  }
+
+  enableDetailComponents() {
+    this._addCommentComponent.enabled = true;
+    this._ratingComponent.enabled = true;
   }
 
   addRatingCheckedChangeEvent() {
     if (this._ratingComponent !== null) {
-      this._ratingComponent.addRatingCheckedChange(this._onDataChange);
-      this._ratingComponent.addUndoButtonClickEvent(this._onDataChange);
+      this._ratingComponent.addRatingCheckedChange(this._onRatingChanged);
+      this._ratingComponent.addUndoButtonClickEvent(this._onRatingChanged);
     }
   }
 
@@ -255,6 +270,10 @@ export default class FilmDetail extends AbstractSmartComponent {
     if (this._ratingComponent !== null) {
       this._ratingComponent.removeRatingEvents();
     }
+  }
+
+  _updateRating() {
+    this._element.querySelector(`.film-details__total-rating`).innerText = this._film.rating;
   }
 
   _getCommentWrapper() {

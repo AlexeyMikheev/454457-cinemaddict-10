@@ -54,8 +54,8 @@ export default class PageController {
 
               this._update();
             }
-          }).catch((err) => {
-            console.log(err);
+          }).catch(() => {
+            filmController.shake();
           });
       } else {
         if (newValue !== null) {
@@ -66,8 +66,8 @@ export default class PageController {
                 const updatedFilm = this._films.getFilmById(parentValue.id);
                 filmController.render(updatedFilm);
               }
-            }).catch((err) => {
-              console.log(err);
+            }).catch(() => {
+              filmController.shake();
             });
         } else if (oldValue !== null) {
           this._api.deleteComment(oldValue.id)
@@ -77,8 +77,8 @@ export default class PageController {
                 const updatedFilm = this._films.getFilmById(parentValue.id);
                 filmController.render(updatedFilm);
               }
-            }).catch((err) => {
-              console.log(err);
+            }).catch(() => {
+              filmController.shake();
             });
         }
       }

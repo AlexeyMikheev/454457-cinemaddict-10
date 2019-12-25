@@ -1,6 +1,7 @@
 import Utils from './utils.js';
 import FilmComponent from './components/film.js';
 import FilmDetail from './components/film-detail.js';
+import { SHAKE_ANIMATION_TIMEOUT } from './const.js';
 
 export default class MovieController {
   constructor(container, onDataChange, onViewChange, api) {
@@ -27,7 +28,7 @@ export default class MovieController {
       this._onViewChange(this);
     };
 
-    this._onShowFilmDetail = (evt) => { 
+    this._onShowFilmDetail = (evt) => {
       const classList = evt.target.classList;
 
       const isClickAvaliable = classList.contains(`film-card__poster`) ||
@@ -81,7 +82,22 @@ export default class MovieController {
     this._filmDetailComponent.addCloseButtonClickEvent(this._onCloseFilmDetail);
     this._filmDetailComponent.addDetailCheckedChangeEvent();
     this._filmDetailComponent.addRatingCheckedChangeEvent();
+  }
 
+  shake() {
+    if (this.__filmDetailComponent !== null) {
+      this._filmDetailComponent.getElement().style.animation = `shake ${SHAKE_ANIMATION_TIMEOUT / 1000}s`;
+      this._filmDetailComponent.changeAddCommentBorderStyle(`2px solid red`);
+      this._filmDetailComponent.changeSelectedRatingBackgroundStyle(`red`);
+
+      setTimeout(() => {
+        this._filmDetailComponent.getElement().style.animation = `bounceInRight`;
+        this._filmDetailComponent.changeAddCommentBorderStyle(null);
+        this._filmDetailComponent.changeSelectedRatingBackgroundStyle(null);
+        this._filmDetailComponent.enableDetailComponents();
+
+      }, SHAKE_ANIMATION_TIMEOUT);
+    }
   }
 
   removeComponents() {

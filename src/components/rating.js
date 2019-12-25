@@ -9,7 +9,7 @@ const getRatingValuesTemplate = (selectedValue) => {
   for (let rating = MIN_RATING_VALUE; rating <= MAX_RATING_VALUE; rating += RATING_RANGE) {
     const isChecked = rating === selectedValue ? `checked` : ``;
     template += `<input type="radio" name="score" class="film-details__user-rating-input visually-hidden" value="${rating}" id="rating-${rating}" ${isChecked}>
-    <label class="film-details__user-rating-label" for="rating-${rating}">${rating}</label>`;
+    <label id="label-rating-${rating}" class="film-details__user-rating-label" for="rating-${rating}">${rating}</label>`;
   }
   return template;
 };
@@ -51,8 +51,13 @@ export default class Rating extends AbstractComponent {
     this._onDataChange = onDataChange;
     this._detailsContainer = null;
     this._undoButton = null;
+    this._enabled = true;
 
     this._onRatingCheckedChangeCb = (evt) => {
+      if (!this._enabled) {
+        return;
+      }
+
       const personalRating = parseInt(evt.target.value, 10);
       const updatedFilm = new Film({});
       Object.assign(updatedFilm, this._film, {personalRating});
@@ -61,11 +66,26 @@ export default class Rating extends AbstractComponent {
     };
 
     this._onUndoButtonClickCb = () => {
+      if (!this._enabled) {
+        return;
+      }
+
       const updatedFilm = new Film({});
       Object.assign(updatedFilm, this._film, {personalRating: 0});
 
       this._onDataChange(this._film, updatedFilm);
     };
+  }
+
+  set enabled(value) {
+    this._enabled = value;
+  }
+
+  set selectedRatingStyle(value) {
+    const selectedRating = this._element.querySelector(`#label-rating-${this._film.personalRating}`);
+    if (selectedRating !== null) {
+      selectedRating.style.backgroundColor = value;
+    }
   }
 
   getTemplate() {

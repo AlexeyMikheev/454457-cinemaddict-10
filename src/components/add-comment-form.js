@@ -1,5 +1,5 @@
 import AbstractComponent from './abstract-component.js';
-import {Emoji, ENTER_KEY} from '../const.js';
+import { Emoji, ENTER_KEY } from '../const.js';
 import Utils from '../utils.js';
 import Comment from '../models/comment';
 
@@ -41,9 +41,14 @@ export default class AddNewCommentForm extends AbstractComponent {
     this._onCommentsChanged = onCommentsChanged;
     this._selectedEmojiElement = null;
     this._selectedEmoji = null;
+    this._enabled = true;
 
     this._emojiList = null;
     this._onEmojiListChange = (evt) => {
+      if (!this._enabled) {
+        return;
+      }
+
       this._selectedEmoji = Utils.getEmoji(evt.target.value);
       if (this._selectedEmoji !== null) {
         this._refreshSelectedEmoji();
@@ -53,7 +58,7 @@ export default class AddNewCommentForm extends AbstractComponent {
     this._commentInput = null;
     this._onCommentInputKeyDown = (evt) => {
       if (evt.ctrlKey && evt.keyCode === ENTER_KEY) {
-        if (this._selectedEmoji === null || !evt.target.value) {
+        if (this._selectedEmoji === null || !evt.target.value || !this._enabled) {
           return;
         }
 
@@ -71,6 +76,14 @@ export default class AddNewCommentForm extends AbstractComponent {
         this._onCommentsChanged(null, newComment);
       }
     };
+  }
+
+  set enabled(value) {
+    this._enabled = value;
+  }
+
+  set formStyle(value) {
+    this._commentInput.style.border = value;
   }
 
   getTemplate() {
