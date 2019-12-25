@@ -1,7 +1,7 @@
 import Utils from './utils.js';
 import FilmComponent from './components/film.js';
 import FilmDetail from './components/film-detail.js';
-import {SHAKE_ANIMATION_TIMEOUT} from './const.js';
+import { SHAKE_ANIMATION_TIMEOUT } from './const.js';
 
 export default class MovieController {
   constructor(container, onDataChange, onViewChange, api) {
@@ -85,7 +85,14 @@ export default class MovieController {
   }
 
   shake() {
-    if (this.__filmDetailComponent !== null) {
+    if (this._filmComponent !== null) {
+      this._filmComponent.getElement().style.animation = `shake ${SHAKE_ANIMATION_TIMEOUT / 1000}s`;
+      setTimeout(() => {
+        this._filmComponent.getElement().style.animation = ``;
+      }, SHAKE_ANIMATION_TIMEOUT);
+    }
+
+    if (this._filmDetailComponent !== null) {
       this._filmDetailComponent.getElement().style.animation = `shake ${SHAKE_ANIMATION_TIMEOUT / 1000}s`;
       this._filmDetailComponent.changeAddCommentBorderStyle(`2px solid red`);
       this._filmDetailComponent.changeSelectedRatingBackgroundStyle(`red`);

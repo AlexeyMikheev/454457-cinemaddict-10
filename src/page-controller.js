@@ -57,7 +57,8 @@ export default class PageController {
               this._updateContainerControllers(filmController);
               this._refreshMoreButton();
             }
-          }).catch(() => {
+          }).catch((err) => {
+            console.log(err);
             filmController.shake();
           });
       } else {
@@ -73,7 +74,8 @@ export default class PageController {
                 this._updateContainerControllers(filmController);
                 this._refreshMoreButton();
               }
-            }).catch(() => {
+            }).catch((err) => {
+              console.log(err);
               filmController.shake();
             });
         } else if (oldValue !== null) {
@@ -88,7 +90,8 @@ export default class PageController {
                 this._updateContainerControllers(filmController);
                 this._refreshMoreButton();
               }
-            }).catch(() => {
+            }).catch((err) => {
+              console.log(err);
               filmController.shake();
             });
         }
