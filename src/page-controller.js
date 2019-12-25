@@ -54,7 +54,7 @@ export default class PageController {
               filmController.render(filmModel);
 
               this._update();
-              this._updateControllers(filmController);
+              this._updateContainerControllers(filmController);
             }
           }).catch((err) => {
             console.log(err);
@@ -70,7 +70,7 @@ export default class PageController {
 
                 filmController.render(updatedFilm);
 
-                this._updateControllers(filmController);
+                this._updateContainerControllers(filmController);
                 this._updateMostCommentFilms();
               }
             }).catch(() => {
@@ -85,7 +85,7 @@ export default class PageController {
 
                 filmController.render(updatedFilm);
 
-                this._updateControllers(filmController);
+                this._updateContainerControllers(filmController);
                 this._updateMostCommentFilms();
               }
             }).catch(() => {
@@ -186,11 +186,54 @@ export default class PageController {
     this._renderFilms(container, films, this._filmsControllers);
   }
 
-  _updateControllers(filmController) {
-    const controllers = this._getFilmsControlles();
-    controllers.forEach((controller) => {
-      if (controller.film.id === filmController.film.id && controller !== filmController) {
-        controller.render(filmController.film);
+  _updateContainerControllers(filmController) {
+    debugger;
+    const oldFilmsControllers = this._filmsControllers.slice();
+    this._filmsControllers = [];
+    this._updateControllers(filmController, oldFilmsControllers, this._filmsControllers, this._films.getPreparedFilms(), this._filmsComponentElement);
+
+    const oldTopRatedFilmsControllers = this._topRatedFilmsControllers.slice();
+    this._topRatedFilmsControllers = [];
+    this._updateControllers(filmController, oldTopRatedFilmsControllers, this._topRatedFilmsControllers, this._films.topRatedFilms, this._topRatedFilmsComponentElement);
+
+    const oldMostCommentFilmsControllers = this._mostCommentFilmsControllers.slice();
+    this._mostCommentFilmsControllers = [];
+
+    this._updateControllers(filmController, oldMostCommentFilmsControllers, this._mostCommentFilmsControllers, this._films.mostCommentFilms, this._mostCommentFilmsComponentElement);
+  }
+
+  _updateControllers(filmController, oldFilmsControllers, filmsControllers, currentPageFilms, container) {
+    currentPageFilms.forEach((film, index) => {
+      if (index < oldFilmsControllers.length) {
+        let controller = oldFilmsControllers[index];
+
+        if (controller.film.id === film.id) {
+          if (controller.film.id === filmController.film.id) {
+            controller.render(film);
+          }
+        } else {
+          controller.render(film);
+        }
+
+        filmsControllers.push(controller);
+      } else {
+        const controller = new MovieController(container, this._onDataChange, this._onViewChange);
+        controller.render(film);
+
+        filmsControllers.push(controller);
+      }
+    });
+
+    oldFilmsControllers.forEach((controller, index) => {
+      if (index < currentPageFilms.length) {
+        const film = currentPageFilms[index];
+        if (controller.film.id !== film.id) {
+          controller.removeComponents();
+          controller = null;
+        }
+      } else {
+        controller.removeComponents();
+        controller = null;
       }
     });
   }
