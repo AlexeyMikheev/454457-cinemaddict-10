@@ -9,7 +9,7 @@ import NoFilms from './components/no-films.js';
 import MovieController from './movie-controller.js';
 import FilterController from './filter-controller.js';
 
-import { FIMLS_COMPONENT_TYPES, ESC_KEY, Filters } from './const.js';
+import {FIMLS_COMPONENT_TYPES, ESC_KEY, Filters} from './const.js';
 import Utils from './utils.js';
 
 export default class PageController {
@@ -55,9 +55,9 @@ export default class PageController {
 
               this._update();
               this._updateContainerControllers(filmController);
+              this._refreshMoreButton();
             }
-          }).catch((err) => {
-            console.log(err);
+          }).catch(() => {
             filmController.shake();
           });
       } else {
@@ -71,7 +71,7 @@ export default class PageController {
                 filmController.render(updatedFilm);
 
                 this._updateContainerControllers(filmController);
-                this._updateMostCommentFilms();
+                this._refreshMoreButton();
               }
             }).catch(() => {
               filmController.shake();
@@ -86,7 +86,7 @@ export default class PageController {
                 filmController.render(updatedFilm);
 
                 this._updateContainerControllers(filmController);
-                this._updateMostCommentFilms();
+                this._refreshMoreButton();
               }
             }).catch(() => {
               filmController.shake();
@@ -187,7 +187,6 @@ export default class PageController {
   }
 
   _updateContainerControllers(updatedFilmController) {
-    debugger;
     const oldFilmsControllers = this._filmsControllers.slice();
     this._filmsControllers = [];
     this._updateControllers(updatedFilmController, oldFilmsControllers, this._filmsControllers, this._films.getPreparedFilms(), this._filmsComponentElement);
@@ -239,24 +238,8 @@ export default class PageController {
   }
 
   _renderTopRatedFilms(container, films) {
-    // this._clearFilms(this._topRatedFilmsControllers);
     this._topRatedFilmsControllers = [];
     this._renderFilms(container, films, this._topRatedFilmsControllers);
-  }
-
-  _updateMostCommentFilms() {
-    const mostCommentFilms = this._films.mostCommentFilms;
-
-    this._mostCommentFilmsControllers.forEach((mostCommentFilmController) => {
-      if (mostCommentFilmController.detailsModeVisibility && this._hiddentComponentsController === null) {
-        this._hiddentComponentsController = mostCommentFilmController;
-        this._hiddentComponentsController.removeFilmComponent();
-      } else {
-        mostCommentFilmController.removeComponents();
-        mostCommentFilmController = null;
-      }
-    });
-    this._renderMostCommentFilms(this._mostCommentFilmsComponentElement, mostCommentFilms);
   }
 
   _renderMostCommentFilms(container, films) {

@@ -12,7 +12,6 @@ export default class Films {
     this._sortTypeChangeCb = null;
     this._filterTypeChangeCb = null;
     this._moreButtonClickCb = null;
-    this._datachangeCb = null;
   }
 
   set films(value) {
@@ -92,10 +91,6 @@ export default class Films {
 
   set filterTypeChangeCb(cb) {
     this._filterTypeChangeCb = cb;
-  }
-
-  set dataChangeCb(cb) {
-    this._datachangeCb = cb;
   }
 
   isFilmAvaliableAtCurrentFilter(film) {
