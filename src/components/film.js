@@ -89,4 +89,8 @@ export default class FilmComponent extends AbstractComponent {
     this._detailsContainer = this._element.querySelector(`.film-card__controls`);
     this._detailsContainer.addEventListener(`click`, this._onDetailButtonClick);
   }
+
+  removeEvents() {
+    this._detailsContainer.removeEventListener(`click`, this._onDetailButtonClick);
+  }
 }

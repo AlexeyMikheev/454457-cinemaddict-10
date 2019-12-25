@@ -9,7 +9,7 @@ import NoFilms from './components/no-films.js';
 import MovieController from './movie-controller.js';
 import FilterController from './filter-controller.js';
 
-import {FIMLS_COMPONENT_TYPES, ESC_KEY, Filters} from './const.js';
+import { FIMLS_COMPONENT_TYPES, ESC_KEY, Filters } from './const.js';
 import Utils from './utils.js';
 
 export default class PageController {
@@ -27,6 +27,7 @@ export default class PageController {
     this._footer = footer;
     this._topRatedFilmsComponentElement = null;
     this._mostCommentFilmsComponentElement = null;
+    this._hiddentComponentsController = null;
 
     this._profileComponent = null;
     this._filterController = null;
@@ -39,6 +40,7 @@ export default class PageController {
       if (evt.keyCode === ESC_KEY) {
         this._setDefaultView();
         this._removeDocumentEvents();
+        this._clearHiddenController();
       }
     };
 
@@ -48,13 +50,14 @@ export default class PageController {
           .then((filmModel) => {
             const isSuccess = this._films.updateFilm(oldValue.id, filmModel);
             if (isSuccess) {
-              // filmController.defaultModeVisibility = this._films.isFilmAvaliableAtCurrentFilter(newValue); про это я просил у куратора
 
               filmController.render(filmModel);
 
               this._update();
+              this._updateControllers(filmController);
             }
-          }).catch(() => {
+          }).catch((err) => {
+            console.log(err);
             filmController.shake();
           });
       } else {
@@ -64,7 +67,11 @@ export default class PageController {
               const isSuccess = this._films.setComments(commentsModel, parentValue.id);
               if (isSuccess) {
                 const updatedFilm = this._films.getFilmById(parentValue.id);
+
                 filmController.render(updatedFilm);
+
+                this._updateControllers(filmController);
+                this._updateMostCommentFilms();
               }
             }).catch(() => {
               filmController.shake();
@@ -75,7 +82,11 @@ export default class PageController {
               const isSuccess = this._films.removeComment(oldValue.id, parentValue.id);
               if (isSuccess) {
                 const updatedFilm = this._films.getFilmById(parentValue.id);
+
                 filmController.render(updatedFilm);
+
+                this._updateControllers(filmController);
+                this._updateMostCommentFilms();
               }
             }).catch(() => {
               filmController.shake();
@@ -163,8 +174,6 @@ export default class PageController {
   _update() {
     this._initFilters();
     this._initProfile();
-    this._updateTopRatedFilms();
-    this._updateMostCommentFilms();
   }
 
   _getFilmsControlles() {
@@ -177,22 +186,37 @@ export default class PageController {
     this._renderFilms(container, films, this._filmsControllers);
   }
 
-  _updateTopRatedFilms() {
-    this._renderTopRatedFilms(this._topRatedFilmsComponentElement, this._films.topRatedFilms);
+  _updateControllers(filmController) {
+    const controllers = this._getFilmsControlles();
+    controllers.forEach((controller) => {
+      if (controller.film.id === filmController.film.id && controller !== filmController) {
+        controller.render(filmController.film);
+      }
+    });
   }
 
   _renderTopRatedFilms(container, films) {
-    this._clearFilms(this._topRatedFilmsControllers);
+    // this._clearFilms(this._topRatedFilmsControllers);
     this._topRatedFilmsControllers = [];
     this._renderFilms(container, films, this._topRatedFilmsControllers);
   }
 
   _updateMostCommentFilms() {
-    this._renderMostCommentFilms(this._mostCommentFilmsComponentElement, this._films.mostCommentFilms);
+    const mostCommentFilms = this._films.mostCommentFilms;
+
+    this._mostCommentFilmsControllers.forEach((mostCommentFilmController) => {
+      if (mostCommentFilmController.detailsModeVisibility && this._hiddentComponentsController === null) {
+        this._hiddentComponentsController = mostCommentFilmController;
+        this._hiddentComponentsController.removeFilmComponent();
+      } else {
+        mostCommentFilmController.removeComponents();
+        mostCommentFilmController = null;
+      }
+    });
+    this._renderMostCommentFilms(this._mostCommentFilmsComponentElement, mostCommentFilms);
   }
 
   _renderMostCommentFilms(container, films) {
-    this._clearFilms(this._mostCommentFilmsControllers);
     this._mostCommentFilmsControllers = [];
     this._renderFilms(container, films, this._mostCommentFilmsControllers);
   }
@@ -315,5 +339,12 @@ export default class PageController {
 
   _removeDocumentEvents() {
     document.removeEventListener(`keydown`, this._onDocumentKeyDown);
+  }
+
+  _clearHiddenController() {
+    if (this._hiddentComponentsController !== null) {
+      this._hiddentComponentsController.removeComponents();
+      this._hiddentComponentsController = null;
+    }
   }
 }

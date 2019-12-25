@@ -1,7 +1,7 @@
 import Utils from './utils.js';
 import FilmComponent from './components/film.js';
 import FilmDetail from './components/film-detail.js';
-import { SHAKE_ANIMATION_TIMEOUT } from './const.js';
+import {SHAKE_ANIMATION_TIMEOUT} from './const.js';
 
 export default class MovieController {
   constructor(container, onDataChange, onViewChange, api) {
@@ -102,7 +102,15 @@ export default class MovieController {
 
   removeComponents() {
     this._removeDetailComponent();
-    this._removeFilmComponent();
+    this.removeFilmComponent();
+  }
+
+  removeFilmComponent() {
+    if (this._filmComponent !== null) {
+      this._filmComponent.removeEvents();
+      this._filmComponent.removeElement();
+      this._filmComponent = null;
+    }
   }
 
   _closeDetail() {
@@ -138,13 +146,6 @@ export default class MovieController {
     if (this._filmDetailComponent !== null) {
       this._filmDetailComponent.film = this._film;
       this._filmDetailComponent.rerender();
-    }
-  }
-
-  _removeFilmComponent() {
-    if (this._filmComponent !== null) {
-      this._filmComponent.removeElement();
-      this._filmComponent = null;
     }
   }
 

@@ -45,7 +45,7 @@ export default class Films {
       return f.comments !== null && f.comments.length > 0;
     });
 
-    return Utils.getTopFilmsByProperty(hasCommentsFilms, `comments`);
+    return Utils.getTopFilmsByProperty(hasCommentsFilms, `comments`, false);
   }
 
   get isAvaliableLoad() {

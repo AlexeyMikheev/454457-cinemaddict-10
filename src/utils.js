@@ -69,8 +69,8 @@ export default class Utils {
     return films.slice(0, endIndex);
   }
 
-  static getTopFilmsByProperty(films, propertyName) {
-    const [first = null, second = null] = this.getSortedFilmsByProperty(films, propertyName);
+  static getTopFilmsByProperty(films, propertyName, isSimpleProperty = true) {
+    const [first = null, second = null] = this.getSortedFilmsByProperty(films, propertyName, isSimpleProperty);
     return [first, second];
   }
 
@@ -191,12 +191,15 @@ export default class Utils {
     return moment(date).add(count, unit).valueOf();
   }
 
-  static getSortedFilmsByProperty(films, propertyName) {
+  static getSortedFilmsByProperty(films, propertyName, isSimpleProperty = true) {
     return films.slice().sort((prevFilm, nextFilm) => {
-      if (prevFilm[propertyName] > nextFilm[propertyName]) {
+      const prevValue = isSimpleProperty ? prevFilm[propertyName] : prevFilm[propertyName].length;
+      const nextValue = isSimpleProperty ? nextFilm[propertyName] : nextFilm[propertyName].length;
+
+      if (prevValue > nextValue) {
         return -1;
       }
-      if (prevFilm[propertyName] < nextFilm[propertyName]) {
+      if (prevValue < nextValue) {
         return 1;
       }
       return 0;
