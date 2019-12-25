@@ -86,7 +86,11 @@ export default class PageController {
 
     this._onViewChange = (movieController) => {
       if (movieController.detailsModeVisibility) {
-        this._initDocumentEvents();
+        this._api.getComments(movieController._film.id).then((comments) => {
+          movieController._film.comments = comments;
+          movieController.showFilmDetail();
+          this._initDocumentEvents();
+        });
       } else {
         this._removeDocumentEvents();
       }

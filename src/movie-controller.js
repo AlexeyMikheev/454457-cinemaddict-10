@@ -3,11 +3,12 @@ import FilmComponent from './components/film.js';
 import FilmDetail from './components/film-detail.js';
 
 export default class MovieController {
-  constructor(container, onDataChange, onViewChange) {
+  constructor(container, onDataChange, onViewChange, api) {
     this._container = container;
     this._film = null;
     this._filmDetailComponent = null;
     this._filmComponent = null;
+    this._api = api;
     this._onDataChange = onDataChange;
 
     this._onDataChangeCb = (oldValue, newValue, parentValue = null) => {
@@ -26,10 +27,7 @@ export default class MovieController {
       this._onViewChange(this);
     };
 
-    this._onShowFilmDetail = (evt) => {
-      this._renderMode.details = true;
-      this._onViewChange(this);
-
+    this._onShowFilmDetail = (evt) => { 
       const classList = evt.target.classList;
 
       const isClickAvaliable = classList.contains(`film-card__poster`) ||
@@ -37,14 +35,8 @@ export default class MovieController {
         classList.contains(`film-card__title`);
 
       if (isClickAvaliable) {
-
-        this._filmDetailComponent = new FilmDetail(this._film, document.body, this._onDataChangeCb);
-        Utils.render(this._filmDetailComponent.container, this._filmDetailComponent.getElement());
-
-        this._filmDetailComponent.initComponents();
-        this._filmDetailComponent.addCloseButtonClickEvent(this._onCloseFilmDetail);
-        this._filmDetailComponent.addDetailCheckedChangeEvent();
-        this._filmDetailComponent.addRatingCheckedChangeEvent();
+        this._renderMode.details = true;
+        this._onViewChange(this);
       }
     };
   }
@@ -79,6 +71,17 @@ export default class MovieController {
     if (this._renderMode.details) {
       this._closeDetail();
     }
+  }
+
+  showFilmDetail() {
+    this._filmDetailComponent = new FilmDetail(this._film, document.body, this._onDataChangeCb);
+    Utils.render(this._filmDetailComponent.container, this._filmDetailComponent.getElement());
+
+    this._filmDetailComponent.initComponents();
+    this._filmDetailComponent.addCloseButtonClickEvent(this._onCloseFilmDetail);
+    this._filmDetailComponent.addDetailCheckedChangeEvent();
+    this._filmDetailComponent.addRatingCheckedChangeEvent();
+
   }
 
   removeComponents() {
