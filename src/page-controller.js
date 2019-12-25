@@ -186,20 +186,20 @@ export default class PageController {
     this._renderFilms(container, films, this._filmsControllers);
   }
 
-  _updateContainerControllers(filmController) {
+  _updateContainerControllers(updatedFilmController) {
     debugger;
     const oldFilmsControllers = this._filmsControllers.slice();
     this._filmsControllers = [];
-    this._updateControllers(filmController, oldFilmsControllers, this._filmsControllers, this._films.getPreparedFilms(), this._filmsComponentElement);
+    this._updateControllers(updatedFilmController, oldFilmsControllers, this._filmsControllers, this._films.getPreparedFilms(), this._filmsComponentElement);
 
     const oldTopRatedFilmsControllers = this._topRatedFilmsControllers.slice();
     this._topRatedFilmsControllers = [];
-    this._updateControllers(filmController, oldTopRatedFilmsControllers, this._topRatedFilmsControllers, this._films.topRatedFilms, this._topRatedFilmsComponentElement);
+    this._updateControllers(updatedFilmController, oldTopRatedFilmsControllers, this._topRatedFilmsControllers, this._films.topRatedFilms, this._topRatedFilmsComponentElement);
 
     const oldMostCommentFilmsControllers = this._mostCommentFilmsControllers.slice();
     this._mostCommentFilmsControllers = [];
 
-    this._updateControllers(filmController, oldMostCommentFilmsControllers, this._mostCommentFilmsControllers, this._films.mostCommentFilms, this._mostCommentFilmsComponentElement);
+    this._updateControllers(updatedFilmController, oldMostCommentFilmsControllers, this._mostCommentFilmsControllers, this._films.mostCommentFilms, this._mostCommentFilmsComponentElement);
   }
 
   _updateControllers(filmController, oldFilmsControllers, filmsControllers, currentPageFilms, container) {
