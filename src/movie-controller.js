@@ -93,15 +93,13 @@ export default class MovieController {
     }
 
     if (this._filmDetailComponent !== null) {
+      this._filmDetailComponent.setWarningsComponents();
       this._filmDetailComponent.getElement().style.animation = `shake ${SHAKE_ANIMATION_TIMEOUT / 1000}s`;
-      this._filmDetailComponent.changeAddCommentBorderStyle(`2px solid red`);
-      this._filmDetailComponent.changeSelectedRatingBackgroundStyle(`red`);
 
       setTimeout(() => {
-        this._filmDetailComponent.getElement().style.animation = `bounceInRight`;
-        this._filmDetailComponent.changeAddCommentBorderStyle(null);
-        this._filmDetailComponent.changeSelectedRatingBackgroundStyle(null);
+        this._filmDetailComponent.resetWarningsComponents();
         this._filmDetailComponent.enableDetailComponents();
+        this._filmDetailComponent.getElement().style.animation = `bounceInRight`;
 
       }, SHAKE_ANIMATION_TIMEOUT);
     }

@@ -52,6 +52,7 @@ export default class Rating extends AbstractComponent {
     this._detailsContainer = null;
     this._undoButton = null;
     this._enabled = true;
+    this._selectedPersonalRating = null;
 
     this._onRatingCheckedChangeCb = (evt) => {
       if (!this._enabled) {
@@ -59,6 +60,9 @@ export default class Rating extends AbstractComponent {
       }
 
       const personalRating = parseInt(evt.target.value, 10);
+
+      this._selectedPersonalRating = personalRating;
+
       const updatedFilm = new Film({});
       Object.assign(updatedFilm, this._film, {personalRating});
 
@@ -82,7 +86,7 @@ export default class Rating extends AbstractComponent {
   }
 
   set selectedRatingStyle(value) {
-    const selectedRating = this._element.querySelector(`#label-rating-${this._film.personalRating}`);
+    const selectedRating = this._element.querySelector(`#label-rating-${this._selectedPersonalRating}`);
     if (selectedRating !== null) {
       selectedRating.style.backgroundColor = value;
     }
@@ -90,6 +94,21 @@ export default class Rating extends AbstractComponent {
 
   getTemplate() {
     return getRatingTemplate(this._film);
+  }
+
+  showWarning() {
+    this._setBackgroundColor(`#label-rating-${this._selectedPersonalRating}`, `red`);
+  }
+
+  resetWarning() {
+    this._setBackgroundColor(`#label-rating-${this._selectedPersonalRating}`, null);
+  }
+
+  selectCurrentRating() {
+    const selectedRating = this._element.querySelector(`#rating-${this._film.personalRating}`);
+    if (selectedRating !== null) {
+      selectedRating.checked = true;
+    }
   }
 
   addRatingCheckedChange() {
@@ -115,5 +134,12 @@ export default class Rating extends AbstractComponent {
   recoveryListeners() {
     this._detailsContainer.addEventListener(`change`, this._onRatingCheckedChangeCb);
     this._undoButton.addEventListener(`click`, this._onUndoButtonClickCb);
+  }
+
+  _setBackgroundColor(selector, color = null) {
+    const selectedRating = this._element.querySelector(selector);
+    if (selectedRating !== null) {
+      selectedRating.style.backgroundColor = color;
+    }
   }
 }

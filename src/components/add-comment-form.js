@@ -1,5 +1,5 @@
 import AbstractComponent from './abstract-component.js';
-import { Emoji, ENTER_KEY } from '../const.js';
+import {Emoji, ENTER_KEY} from '../const.js';
 import Utils from '../utils.js';
 import Comment from '../models/comment';
 
@@ -80,6 +80,7 @@ export default class AddNewCommentForm extends AbstractComponent {
 
   set enabled(value) {
     this._enabled = value;
+    this._commentInput.disabled = !this._enabled;
   }
 
   set formStyle(value) {
@@ -88,6 +89,14 @@ export default class AddNewCommentForm extends AbstractComponent {
 
   getTemplate() {
     return getAddNewCommentTemplate();
+  }
+
+  showWarning() {
+    this._commentInput.style.border = `2px solid red`;
+  }
+
+  resetWarning() {
+    this._commentInput.style.border = ``;
   }
 
   initEvents() {
