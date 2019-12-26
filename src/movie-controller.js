@@ -54,6 +54,10 @@ export default class MovieController {
     return this._renderMode.details;
   }
 
+  get filmDetailComponent() {
+    return this._filmDetailComponent;
+  }
+
   render(film) {
     this._film = film;
 
@@ -84,7 +88,7 @@ export default class MovieController {
     this._filmDetailComponent.addRatingCheckedChangeEvent();
   }
 
-  shake() {
+  shake(onStartAnimationCb = null, onEndAnimationCb = null) {
     if (this._filmComponent !== null) {
       this._filmComponent.getElement().style.animation = `shake ${SHAKE_ANIMATION_TIMEOUT / 1000}s`;
       setTimeout(() => {
@@ -93,14 +97,19 @@ export default class MovieController {
     }
 
     if (this._filmDetailComponent !== null) {
-      this._filmDetailComponent.setWarningsComponents();
+      if (onStartAnimationCb !== null) {
+        onStartAnimationCb();
+      }
+      // this._filmDetailComponent.setWarningsComponents();
       this._filmDetailComponent.getElement().style.animation = `shake ${SHAKE_ANIMATION_TIMEOUT / 1000}s`;
 
       setTimeout(() => {
-        this._filmDetailComponent.resetWarningsComponents();
-        this._filmDetailComponent.enableDetailComponents();
+        // this._filmDetailComponent.resetWarningsComponents();
+        // this._filmDetailComponent.enableDetailComponents();
         this._filmDetailComponent.getElement().style.animation = `bounceInRight`;
-
+        if (onEndAnimationCb !== null) {
+          onEndAnimationCb();
+        }
       }, SHAKE_ANIMATION_TIMEOUT);
     }
   }

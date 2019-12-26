@@ -18,8 +18,14 @@ export default class Comments extends AbstractComponent {
     this._comments = comments;
     this._onCommentsChanged = onCommentsChanged;
     this._deletingCommentComponent = null;
+    this._enabled = true;
     this._onDeleteCb = (evt, commentComponent) => {
       evt.preventDefault();
+      if (!this._enabled) {
+        return;
+      }
+
+      this._enabled = false;
 
       const commentId = evt.target.dataset[`id`];
       const deletedComment = this._comments.find((comment) => {
@@ -41,6 +47,10 @@ export default class Comments extends AbstractComponent {
     if (this._deletingCommentComponent !== null) {
       this._deletingCommentComponent.deleteButtonText = value;
     }
+  }
+
+  set enabled(value) {
+    this._enabled = value;
   }
 
   getTitleElement() {

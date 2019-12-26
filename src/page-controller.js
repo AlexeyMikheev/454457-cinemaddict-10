@@ -9,7 +9,7 @@ import NoFilms from './components/no-films.js';
 import MovieController from './movie-controller.js';
 import FilterController from './filter-controller.js';
 
-import {FIMLS_COMPONENT_TYPES, ESC_KEY, Filters} from './const.js';
+import { FIMLS_COMPONENT_TYPES, ESC_KEY, Filters } from './const.js';
 import Utils from './utils.js';
 
 export default class PageController {
@@ -59,7 +59,13 @@ export default class PageController {
             }
           }).catch((err) => {
             console.log(err);
-            filmController.shake();
+            filmController.shake(() => {
+              filmController.filmDetailComponent.setRatingWarning();
+            }, () => {
+              filmController.filmDetailComponent.resetRatingWarning();
+              filmController.filmDetailComponent.selectCurrentRating();
+              filmController.filmDetailComponent.enableRatingComponent();
+            });
           });
       } else {
         if (newValue !== null) {
@@ -76,7 +82,12 @@ export default class PageController {
               }
             }).catch((err) => {
               console.log(err);
-              filmController.shake();
+              filmController.shake(() => {
+                filmController.filmDetailComponent.setAddCommentWarning();
+              }, () => {
+                filmController.filmDetailComponent.resetAddCommentWarning();
+                filmController.filmDetailComponent.enableAddComponent();
+              });
             });
         } else if (oldValue !== null) {
           this._api.deleteComment(oldValue.id)
@@ -92,7 +103,10 @@ export default class PageController {
               }
             }).catch((err) => {
               console.log(err);
-              filmController.shake();
+              filmController.shake(null, () => {
+                filmController.filmDetailComponent.enableCommentsComponent();
+                filmController.filmDetailComponent.setCommentsDeleteButtonDefaultValue();
+              });
             });
         }
       }
