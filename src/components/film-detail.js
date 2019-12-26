@@ -2,7 +2,7 @@ import Utils from '../utils.js';
 import Rating from './rating.js';
 import Comments from './comments.js';
 import AddNewCommentForm from './add-comment-form.js';
-import {FilmDetailType, RELEASE_DATE_FORMAT, DURATION_FORMAT} from '../const.js';
+import { FilmDetailType, RELEASE_DATE_FORMAT, DURATION_FORMAT } from '../const.js';
 import AbstractSmartComponent from './abstract-smart-component.js';
 import Film from '../models/film';
 
@@ -14,7 +14,7 @@ const getGenresTemplate = (genres) => {
 
 const getFilmDetailTemplate = (filmCard) => {
 
-  const {poster, age, title, originalTitle, rating, producer, writers, actors, duration, country, releaseDate, description, genres, isFavorite, isWaitingWatched, isWatched} = filmCard;
+  const { poster, age, title, originalTitle, rating, producer, writers, actors, duration, country, releaseDate, description, genres, isFavorite, isWaitingWatched, isWatched } = filmCard;
 
   const formatedWriters = writers.join(`, `);
   const formatedActors = actors.join(`, `);
@@ -141,7 +141,7 @@ export default class FilmDetail extends AbstractSmartComponent {
       switch (target.dataset[`detailType`]) {
         case FilmDetailType.WATCHLIST:
           const isWaitingWatched = target.checked;
-          Object.assign(updatedFilm, this._film, {isWaitingWatched});
+          Object.assign(updatedFilm, this._film, { isWaitingWatched });
 
           this._onDataChange(this._film, updatedFilm);
           break;
@@ -150,27 +150,32 @@ export default class FilmDetail extends AbstractSmartComponent {
           const personalRating = isWatched ? this._film.personalRating : 0;
           const watchedDate = isWatched ? new Date().valueOf() : 0;
 
-          Object.assign(updatedFilm, this._film, {personalRating, isWatched, watchedDate});
+          Object.assign(updatedFilm, this._film, { personalRating, isWatched, watchedDate });
           this._onDataChange(this._film, updatedFilm);
           break;
         case FilmDetailType.FAVORITE:
           const isFavorite = target.checked;
 
-          Object.assign(updatedFilm, this._film, {isFavorite});
+          Object.assign(updatedFilm, this._film, { isFavorite });
           this._onDataChange(this._film, updatedFilm);
           break;
       }
     };
 
-    this._onCommentsChanged = (newValue, oldValue) => {
-      this._addCommentComponent.enabled = false;
-      this._commentsComponent.deleteButtonText = `Deleting...`;
-      this._onDataChange(newValue, oldValue, this._film);
+    this._onCommentsChanged = (oldValue, newValue) => {
+      if (newValue !== null) {
+        this._addCommentComponent.enabled = false;
+      }
+
+      if (oldValue !== null) {
+        this._commentsComponent.deleteButtonText = `Deleting...`;
+      }
+
+      this._onDataChange(oldValue, newValue, this._film);
     };
 
-    this._onRatingChanged = (newValue, oldValue) => {
-      this._ratingComponent.showWarning();
-      this._onDataChange(newValue, oldValue);
+    this._onRatingChanged = (oldValue, newValue) => {
+      this._onDataChange(oldValue, newValue);
     };
   }
 
@@ -316,7 +321,7 @@ export default class FilmDetail extends AbstractSmartComponent {
   }
 
   _initComments() {
-    const {comments} = this._film;
+    const { comments } = this._film;
 
     if (comments !== null && comments.length > 0) {
       this._commentsComponent = new Comments(comments, this._onCommentsChanged);
@@ -333,7 +338,7 @@ export default class FilmDetail extends AbstractSmartComponent {
   _initAddCommentForm() {
     const commentWrapper = this._getCommentWrapper();
     if (commentWrapper !== null) {
-      const {comments} = this._film;
+      const { comments } = this._film;
 
       this._addCommentComponent = new AddNewCommentForm(comments, this._onCommentsChanged);
       commentWrapper.appendChild(this._addCommentComponent.getElement());
