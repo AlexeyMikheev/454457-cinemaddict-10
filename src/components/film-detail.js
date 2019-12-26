@@ -175,6 +175,7 @@ export default class FilmDetail extends AbstractSmartComponent {
     };
 
     this._onRatingChanged = (oldValue, newValue) => {
+      this._ratingComponent.enabled = false;
       this._onDataChange(oldValue, newValue);
     };
   }
@@ -330,7 +331,7 @@ export default class FilmDetail extends AbstractSmartComponent {
   _initRating() {
     if (this._film.isWatched) {
       this._ratingContainer = this._element.querySelector(`.form-details__middle-container`);
-      this._ratingComponent = new Rating(this._film, this._onDataChange);
+      this._ratingComponent = new Rating(this._film);
       this._ratingContainer.appendChild(this._ratingComponent.getElement());
 
     } else if (this._ratingComponent !== null) {

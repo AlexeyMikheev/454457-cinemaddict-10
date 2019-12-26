@@ -45,44 +45,20 @@ const getRatingTemplate = (film) => {
 
 export default class Rating extends AbstractComponent {
 
-  constructor(film, onDataChange) {
+  constructor(film) {
     super();
     this._film = film;
-    this._onDataChange = onDataChange;
     this._detailsContainer = null;
     this._undoButton = null;
     this._enabled = true;
     this._selectedPersonalRating = null;
-
-    this._onRatingCheckedChangeCb = (evt) => {
-      if (!this._enabled) {
-        return;
-      }
-
-      const personalRating = parseInt(evt.target.value, 10);
-
-      this._selectedPersonalRating = personalRating;
-
-      const updatedFilm = new Film({});
-      Object.assign(updatedFilm, this._film, {personalRating});
-
-      this._onDataChange(this._film, updatedFilm);
-    };
-
-    this._onUndoButtonClickCb = () => {
-      if (!this._enabled) {
-        return;
-      }
-
-      const updatedFilm = new Film({});
-      Object.assign(updatedFilm, this._film, {personalRating: 0});
-
-      this._onDataChange(this._film, updatedFilm);
-    };
   }
 
   set enabled(value) {
     this._enabled = value;
+    Array.from(this._element.querySelector(`.film-details__user-rating-input `)).forEach((element) => {
+      element.disabled = !this._enabled;
+    });
   }
 
   set selectedRatingStyle(value) {
@@ -111,12 +87,36 @@ export default class Rating extends AbstractComponent {
     }
   }
 
-  addRatingCheckedChange() {
+  addRatingCheckedChange(cb) {
+    this._onRatingCheckedChangeCb = (evt) => {
+      if (!this._enabled) {
+        return;
+      }
+
+      const personalRating = parseInt(evt.target.value, 10);
+
+      this._selectedPersonalRating = personalRating;
+
+      const updatedFilm = new Film({});
+      Object.assign(updatedFilm, this._film, {personalRating});
+
+      cb(this._film, updatedFilm);
+    };
     this._detailsContainer = this._element.querySelector(`.film-details__user-rating-score`);
     this._detailsContainer.addEventListener(`change`, this._onRatingCheckedChangeCb);
   }
 
-  addUndoButtonClickEvent() {
+  addUndoButtonClickEvent(cb) {
+    this._onUndoButtonClickCb = () => {
+      if (!this._enabled) {
+        return;
+      }
+
+      const updatedFilm = new Film({});
+      Object.assign(updatedFilm, this._film, {personalRating: 0});
+
+      cb(this._film, updatedFilm);
+    };
     this._undoButton = this._element.querySelector(`.film-details__watched-reset`);
     this._undoButton.addEventListener(`click`, this._onUndoButtonClickCb);
   }
