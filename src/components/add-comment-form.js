@@ -12,8 +12,8 @@ const getAddNewCommentTemplate = () => {
       </label>
 
       <div class="film-details__emoji-list">
-      <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-sleeping" value="${Emoji.SMILE.value}">
-      <label class="film-details__emoji-label" for="emoji-sleeping">
+      <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-smile" value="${Emoji.SMILE.value}">
+      <label class="film-details__emoji-label" for="emoji-smile">
         <img src="./images/emoji/${Emoji.SMILE.img}.png" width="30" height="30" alt="emoji">
       </label>
 
