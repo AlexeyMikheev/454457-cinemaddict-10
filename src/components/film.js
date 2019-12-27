@@ -2,6 +2,7 @@
 import Utils from '../utils.js';
 import {FilmDetailType, DURATION_FORMAT} from '../const.js';
 import AbstractComponent from './abstract-component.js';
+import Film from '../models/film';
 
 const getFilmTemplate = (filmCard) => {
 
@@ -36,7 +37,7 @@ const getFilmTemplate = (filmCard) => {
 </article>`;
 };
 
-export default class Film extends AbstractComponent {
+export default class FilmComponent extends AbstractComponent {
 
   constructor(film) {
     super();
@@ -59,27 +60,37 @@ export default class Film extends AbstractComponent {
 
   addDetailButtonClickEvent(cb) {
     this._onDetailButtonClick = (evt) => {
+      evt.preventDefault();
       const target = evt.target;
+      const updatedFilm = new Film({});
 
       switch (target.dataset[`detailType`]) {
         case FilmDetailType.WATCHLIST:
           const isWaitingWatched = !target.classList.contains(`film-card__controls-item--active`);
 
-          cb(this._film, Object.assign({}, this._film, {isWaitingWatched}));
+          Object.assign(updatedFilm, this._film, {isWaitingWatched});
+          cb(this._film, updatedFilm);
           break;
         case FilmDetailType.WATCHED:
           const isWatched = !target.classList.contains(`film-card__controls-item--active`);
           const watchedDate = isWatched ? new Date().valueOf() : 0;
-          cb(this._film, Object.assign({}, this._film, {isWatched, watchedDate}));
+
+          Object.assign(updatedFilm, this._film, {isWatched, watchedDate});
+          cb(this._film, updatedFilm);
           break;
         case FilmDetailType.FAVORITE:
           const isFavorite = !target.classList.contains(`film-card__controls-item--active`);
 
-          cb(this._film, Object.assign({}, this._film, {isFavorite}));
+          Object.assign(updatedFilm, this._film, {isFavorite});
+          cb(this._film, updatedFilm);
           break;
       }
     };
     this._detailsContainer = this._element.querySelector(`.film-card__controls`);
     this._detailsContainer.addEventListener(`click`, this._onDetailButtonClick);
+  }
+
+  removeEvents() {
+    this._detailsContainer.removeEventListener(`click`, this._onDetailButtonClick);
   }
 }

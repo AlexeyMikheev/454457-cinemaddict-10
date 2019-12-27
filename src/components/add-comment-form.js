@@ -12,14 +12,14 @@ const getAddNewCommentTemplate = () => {
       </label>
 
       <div class="film-details__emoji-list">
-        <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-smile" value="${Emoji.SMILE.value}">
-        <label class="film-details__emoji-label" for="emoji-smile">
-          <img src="./images/emoji/${Emoji.SMILE.img}.png" width="30" height="30" alt="emoji">
-        </label>
+      <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-smile" value="${Emoji.SMILE.value}">
+      <label class="film-details__emoji-label" for="emoji-smile">
+        <img src="./images/emoji/${Emoji.SMILE.img}.png" width="30" height="30" alt="emoji">
+      </label>
 
-        <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-sleeping" value="${Emoji.NEUTRAL.value}">
+        <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-sleeping" value="${Emoji.SLEEPING.value}">
         <label class="film-details__emoji-label" for="emoji-sleeping">
-          <img src="./images/emoji/${Emoji.NEUTRAL.img}.png" width="30" height="30" alt="emoji">
+          <img src="./images/emoji/${Emoji.SLEEPING.img}.png" width="30" height="30" alt="emoji">
         </label>
 
         <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-gpuke" value="${Emoji.GRINNING.value}">
@@ -46,9 +46,14 @@ export default class AddNewCommentForm extends AbstractComponent {
     this._onCommentsChanged = onCommentsChanged;
     this._selectedEmojiElement = null;
     this._selectedEmoji = null;
+    this._enabled = true;
 
     this._emojiList = null;
     this._onEmojiListChange = (evt) => {
+      if (!this._enabled) {
+        return;
+      }
+
       this._selectedEmoji = Utils.getEmoji(evt.target.value);
       if (this._selectedEmoji !== null) {
         this._refreshSelectedEmoji();
@@ -58,15 +63,16 @@ export default class AddNewCommentForm extends AbstractComponent {
     this._commentInput = null;
     this._onCommentInputKeyDown = (evt) => {
       if (evt.ctrlKey && evt.keyCode === ENTER_KEY) {
-        if (!evt.target.value) {
+        if (this._selectedEmoji === null || !evt.target.value || !this._enabled) {
           return;
         }
 
         const commentText = evt.target.value;
+        const newComment = new Comment({});
 
-        const newComment = Comment.parseComment({
+        Object.assign(newComment, {
           id: new Date().valueOf().toString(),
-          comment: commentText,
+          text: commentText,
           emotion: this._selectedEmoji !== null ? this._selectedEmoji.value : null,
           commentDate: new Date().valueOf(),
           author: `author`
@@ -77,8 +83,25 @@ export default class AddNewCommentForm extends AbstractComponent {
     };
   }
 
+  set enabled(value) {
+    this._enabled = value;
+    this._commentInput.disabled = !this._enabled;
+  }
+
+  set formStyle(value) {
+    this._commentInput.style.border = value;
+  }
+
   getTemplate() {
     return getAddNewCommentTemplate();
+  }
+
+  showWarning() {
+    this._commentInput.style.border = `2px solid red`;
+  }
+
+  resetWarning() {
+    this._commentInput.style.border = ``;
   }
 
   initEvents() {

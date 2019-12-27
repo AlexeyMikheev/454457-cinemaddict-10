@@ -17,8 +17,15 @@ export default class Comments extends AbstractComponent {
     super();
     this._comments = comments;
     this._onCommentsChanged = onCommentsChanged;
-    this._onDeleteCb = (evt) => {
+    this._deletingCommentComponent = null;
+    this._enabled = true;
+    this._onDeleteCb = (evt, commentComponent) => {
       evt.preventDefault();
+      if (!this._enabled) {
+        return;
+      }
+
+      this._enabled = false;
 
       const commentId = evt.target.dataset[`id`];
       const deletedComment = this._comments.find((comment) => {
@@ -26,6 +33,7 @@ export default class Comments extends AbstractComponent {
       });
 
       if (deletedComment !== null) {
+        this._deletingCommentComponent = commentComponent;
         this._onCommentsChanged(deletedComment, null);
       }
     };
@@ -33,6 +41,16 @@ export default class Comments extends AbstractComponent {
 
   getTemplate() {
     return getCommentsTemplate(this._comment);
+  }
+
+  set deleteButtonText(value) {
+    if (this._deletingCommentComponent !== null) {
+      this._deletingCommentComponent.deleteButtonText = value;
+    }
+  }
+
+  set enabled(value) {
+    this._enabled = value;
   }
 
   getTitleElement() {
