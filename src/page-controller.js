@@ -9,7 +9,7 @@ import NoFilms from './components/no-films.js';
 import MovieController from './movie-controller.js';
 import FilterController from './filter-controller.js';
 
-import { FIMLS_COMPONENT_TYPES, ESC_KEY, Filters } from './const.js';
+import {FIMLS_COMPONENT_TYPES, ESC_KEY, Filters} from './const.js';
 import Utils from './utils.js';
 
 export default class PageController {
@@ -53,18 +53,16 @@ export default class PageController {
 
               filmController.render(filmModel);
 
-              this._update();
-              this._updateContainerControllers(filmController);
+              this._initFilters();
+              this._initProfile();
+              this._updateAllControllers(filmController);
               this._refreshMoreButton();
             }
-          }).catch((err) => {
-            console.log(err);
+          }).catch(() => {
             filmController.shake(() => {
               filmController.filmDetailComponent.setRatingWarning();
             }, () => {
-              filmController.filmDetailComponent.resetRatingWarning();
-              filmController.filmDetailComponent.selectCurrentRating();
-              filmController.filmDetailComponent.enableRatingComponent();
+              filmController.render(oldValue);
             });
           });
       } else {
@@ -77,16 +75,14 @@ export default class PageController {
 
                 filmController.render(updatedFilm);
 
-                this._updateContainerControllers(filmController);
+                this._updateAllControllers(filmController);
                 this._refreshMoreButton();
               }
-            }).catch((err) => {
-              console.log(err);
+            }).catch(() => {
               filmController.shake(() => {
                 filmController.filmDetailComponent.setAddCommentWarning();
               }, () => {
-                filmController.filmDetailComponent.resetAddCommentWarning();
-                filmController.filmDetailComponent.enableAddComponent();
+                filmController.render(parentValue);
               });
             });
         } else if (oldValue !== null) {
@@ -98,14 +94,12 @@ export default class PageController {
 
                 filmController.render(updatedFilm);
 
-                this._updateContainerControllers(filmController);
+                this._updateAllControllers(filmController);
                 this._refreshMoreButton();
               }
-            }).catch((err) => {
-              console.log(err);
+            }).catch(() => {
               filmController.shake(null, () => {
-                filmController.filmDetailComponent.enableCommentsComponent();
-                filmController.filmDetailComponent.setCommentsDeleteButtonDefaultValue();
+                filmController.render(parentValue);
               });
             });
         }
@@ -188,11 +182,6 @@ export default class PageController {
     this._initFooterStatistic();
   }
 
-  _update() {
-    this._initFilters();
-    this._initProfile();
-  }
-
   _getFilmsControlles() {
     return [...this._filmsControllers, ...this._topRatedFilmsControllers, ...this._mostCommentFilmsControllers];
   }
@@ -203,7 +192,7 @@ export default class PageController {
     this._renderFilms(container, films, this._filmsControllers);
   }
 
-  _updateContainerControllers(updatedFilmController) {
+  _updateAllControllers(updatedFilmController) {
     const oldFilmsControllers = this._filmsControllers.slice();
     this._filmsControllers = [];
     this._updateControllers(updatedFilmController, oldFilmsControllers, this._filmsControllers, this._films.getPreparedFilms(), this._filmsComponentElement);

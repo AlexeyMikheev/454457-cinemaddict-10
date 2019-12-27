@@ -12,9 +12,27 @@ const getGenresTemplate = (genres) => {
   }).join(`\n`);
 };
 
+const getDetailsTemplate = (filmCard) => {
+
+  const {isFavorite, isWaitingWatched, isWatched} = filmCard;
+
+  const isWaitingWatchedChecked = isWaitingWatched ? `checked` : ``;
+  const isWatchedChecked = isWatched ? `checked` : ``;
+  const isFavoriteChecked = isFavorite ? `checked` : ``;
+
+  return `<input type="checkbox" class="film-details__control-input visually-hidden" id="watchlist" name="watchlist" ${isWaitingWatchedChecked} data-detail-type="${FilmDetailType.WATCHLIST}">
+  <label for="watchlist" class="film-details__control-label film-details__control-label--watchlist">Add to watchlist</label>
+
+  <input type="checkbox" class="film-details__control-input visually-hidden" id="watched" name="watched" ${isWatchedChecked} data-detail-type="${FilmDetailType.WATCHED}">
+  <label for="watched" class="film-details__control-label film-details__control-label--watched">Already watched</label>
+
+  <input type="checkbox" class="film-details__control-input visually-hidden" id="favorite" name="favorite" ${isFavoriteChecked} data-detail-type="${FilmDetailType.FAVORITE}">
+  <label for="favorite" class="film-details__control-label film-details__control-label--favorite">Add to favorites</label>`;
+};
+
 const getFilmDetailTemplate = (filmCard) => {
 
-  const {poster, age, title, originalTitle, rating, producer, writers, actors, duration, country, releaseDate, description, genres, isFavorite, isWaitingWatched, isWatched} = filmCard;
+  const {poster, age, title, originalTitle, rating, producer, writers, actors, duration, country, releaseDate, description, genres} = filmCard;
 
   const formatedWriters = writers.join(`, `);
   const formatedActors = actors.join(`, `);
@@ -23,9 +41,7 @@ const getFilmDetailTemplate = (filmCard) => {
   const genresTitle = genres.length > 1 ? `genres` : `genre`;
   const genresTemplate = getGenresTemplate(genres);
 
-  const isWaitingWatchedChecked = isWaitingWatched ? `checked` : ``;
-  const isWatchedChecked = isWatched ? `checked` : ``;
-  const isFavoriteChecked = isFavorite ? `checked` : ``;
+  const detailsTemplate = getDetailsTemplate(filmCard);
 
   return `<section class="film-details">
   <form class="film-details__inner" action="" method="get">
@@ -94,14 +110,7 @@ const getFilmDetailTemplate = (filmCard) => {
       </div>
 
       <section class="film-details__controls">
-        <input type="checkbox" class="film-details__control-input visually-hidden" id="watchlist" name="watchlist" ${isWaitingWatchedChecked} data-detail-type="${FilmDetailType.WATCHLIST}">
-        <label for="watchlist" class="film-details__control-label film-details__control-label--watchlist">Add to watchlist</label>
-
-        <input type="checkbox" class="film-details__control-input visually-hidden" id="watched" name="watched" ${isWatchedChecked} data-detail-type="${FilmDetailType.WATCHED}">
-        <label for="watched" class="film-details__control-label film-details__control-label--watched">Already watched</label>
-
-        <input type="checkbox" class="film-details__control-input visually-hidden" id="favorite" name="favorite" ${isFavoriteChecked} data-detail-type="${FilmDetailType.FAVORITE}">
-        <label for="favorite" class="film-details__control-label film-details__control-label--favorite">Add to favorites</label>
+       ${detailsTemplate}
       </section>
     </div>
 
@@ -214,6 +223,7 @@ export default class FilmDetail extends AbstractSmartComponent {
 
     this._initComments();
     this._initAddCommentForm();
+    this._initDetails();
     this._initRating();
     this._updateRating();
   }
@@ -222,43 +232,9 @@ export default class FilmDetail extends AbstractSmartComponent {
     this._addCommentComponent.showWarning();
   }
 
-  resetAddCommentWarning() {
-    this._addCommentComponent.resetWarning();
-  }
-
-  enableAddComponent() {
-    this._addCommentComponent.enabled = true;
-  }
-
-  setCommentsDeleteButtonDefaultValue() {
-    this._commentsComponent.deleteButtonText = `Delete`;
-  }
-
-  enableCommentsComponent() {
-    this._commentsComponent.enabled = true;
-  }
-
   setRatingWarning() {
     if (this._ratingComponent !== null) {
       this._ratingComponent.showWarning();
-    }
-  }
-
-  resetRatingWarning() {
-    if (this._ratingComponent !== null) {
-      this._ratingComponent.resetWarning();
-    }
-  }
-
-  selectCurrentRating() {
-    if (this._ratingComponent !== null) {
-      this._ratingComponent.selectCurrentRating();
-    }
-  }
-
-  enableRatingComponent() {
-    if (this._ratingComponent !== null) {
-      this._ratingComponent.enabled = true;
     }
   }
 
@@ -298,6 +274,10 @@ export default class FilmDetail extends AbstractSmartComponent {
       this._ratingComponent.removeElement();
     }
 
+    if (this._detailsContainer !== null) {
+      this._detailsContainer.innerText = ``;
+    }
+
     this._commentWrapper = null;
   }
 
@@ -328,6 +308,12 @@ export default class FilmDetail extends AbstractSmartComponent {
     return this._commentWrapper;
   }
 
+  _initDetails() {
+    if (this._detailsContainer !== null) {
+      Utils.insertHtml(this._detailsContainer, getDetailsTemplate(this._film));
+    }
+  }
+
   _initRating() {
     if (this._film.isWatched) {
       this._ratingContainer = this._element.querySelector(`.form-details__middle-container`);
@@ -343,7 +329,7 @@ export default class FilmDetail extends AbstractSmartComponent {
   }
 
   _initComments() {
-    const { comments } = this._film;
+    const {comments} = this._film;
 
     if (comments !== null && comments.length > 0) {
       this._commentsComponent = new Comments(comments, this._onCommentsChanged);
@@ -360,7 +346,7 @@ export default class FilmDetail extends AbstractSmartComponent {
   _initAddCommentForm() {
     const commentWrapper = this._getCommentWrapper();
     if (commentWrapper !== null) {
-      const { comments } = this._film;
+      const {comments} = this._film;
 
       this._addCommentComponent = new AddNewCommentForm(comments, this._onCommentsChanged);
       commentWrapper.appendChild(this._addCommentComponent.getElement());

@@ -88,5 +88,5 @@ export default class Comments extends AbstractComponent {
     if (this._titleElement !== null) {
       this._titleElement.remove();
     }
-  }  
+  }
 }

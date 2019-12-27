@@ -15,6 +15,7 @@ export const Period = {
 };
 
 export const Emoji = {
+  SMILE: {value: `smile`, img: `smile`},
   SLEEPING: {value: `sleeping`, img: `sleeping`},
   GRINNING: {value: `grinning`, img: `puke`},
   ANGRY: {value: `angry`, img: `angry`}

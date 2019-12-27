@@ -1,7 +1,7 @@
 import Utils from './utils.js';
 import FilmComponent from './components/film.js';
 import FilmDetail from './components/film-detail.js';
-import { SHAKE_ANIMATION_TIMEOUT } from './const.js';
+import {SHAKE_ANIMATION_TIMEOUT} from './const.js';
 
 export default class MovieController {
   constructor(container, onDataChange, onViewChange, api) {
@@ -100,12 +100,9 @@ export default class MovieController {
       if (onStartAnimationCb !== null) {
         onStartAnimationCb();
       }
-      // this._filmDetailComponent.setWarningsComponents();
       this._filmDetailComponent.getElement().style.animation = `shake ${SHAKE_ANIMATION_TIMEOUT / 1000}s`;
 
       setTimeout(() => {
-        // this._filmDetailComponent.resetWarningsComponents();
-        // this._filmDetailComponent.enableDetailComponents();
         this._filmDetailComponent.getElement().style.animation = `bounceInRight`;
         if (onEndAnimationCb !== null) {
           onEndAnimationCb();

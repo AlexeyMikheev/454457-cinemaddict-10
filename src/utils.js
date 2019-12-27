@@ -21,6 +21,10 @@ export default class Utils {
     }
   }
 
+  static insertHtml(container, template) {
+    container.insertAdjacentHTML(`afterBegin`, template);
+  }
+
   static getEllipsisDescription(description) {
     return (description.length > MAX_DESCRIPTION_LENGTH) ? `${description.substring(MIN_DESCRIPTION_LENGTH, (MAX_DESCRIPTION_LENGTH - DESCRIPTION_SPACE))}...` : description;
   }
@@ -142,22 +146,6 @@ export default class Utils {
     return value < 10 ? `0${value}` : value.toString();
   }
 
-  static getDateValues(date) {
-    const year = date.getFullYear();
-    const month = date.getMonth();
-    const day = date.getDate();
-    const hours = this.getFormatedValue(date.getHours());
-    const minutes = this.getFormatedValue(date.getMinutes());
-
-    return {year, month, day, hours, minutes};
-  }
-
-  static getFormatedCommentDate(date) {
-    const {year, month, day, hours, minutes} = this.getDateValues(date);
-
-    return `${year}/${month}/${day} ${hours}:${minutes}`;
-  }
-
   static formatTimeStamp(date, format) {
     return moment(date).format(format);
   }
@@ -177,10 +165,6 @@ export default class Utils {
       return minutes - (hours * MINUTE_IN_HOUR);
     }
     return minutes;
-  }
-
-  static getDifferentDates(startDate, endDate, unit) {
-    return moment(startDate).diff(moment(endDate), unit);
   }
 
   static isDateInRange(date, startDate, entDate) {
@@ -206,12 +190,6 @@ export default class Utils {
     });
   }
 
-  static getFilmByid(films, id) {
-    return films.find((film) => {
-      return film.id === id;
-    });
-  }
-
   static getDefaultSelectedFilter() {
     return Filters.ALL;
   }
@@ -222,6 +200,8 @@ export default class Utils {
 
   static getEmoji(emoji) {
     switch (emoji) {
+      case Emoji.SMILE.value:
+        return Emoji.SMILE;
       case Emoji.SLEEPING.value:
         return Emoji.SLEEPING;
       case Emoji.GRINNING.value:

@@ -93,10 +93,6 @@ export default class Films {
     this._filterTypeChangeCb = cb;
   }
 
-  isFilmAvaliableAtCurrentFilter(film) {
-    return Utils.isFilmAvaliableAtFilter(this._filterType, film);
-  }
-
   getWathedFilmsByPeriod(period = Period.ALL) {
     const watchedfilms = Utils.getFiltredFilms(Filters.HISTORY.title, this._films);
     const today = new Date().valueOf();
@@ -128,7 +124,9 @@ export default class Films {
   }
 
   getFilmById(id) {
-    return Utils.getFilmByid(this._films, id);
+    return this._films.find((film) => {
+      return film.id === id;
+    });
   }
 
   getPreparedFilms() {
