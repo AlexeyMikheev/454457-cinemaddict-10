@@ -15,8 +15,8 @@ export const Period = {
 };
 
 export const Emoji = {
-  SMILE: {value: `sleeping`, img: `smile`},
-  NEUTRAL: {value: `neutral-face`, img: `sleeping`},
+  SMILE: {value: `smile`, img: `smile`},
+  SLEEPING: {value: `sleeping`, img: `sleeping`},
   GRINNING: {value: `grinning`, img: `puke`},
   ANGRY: {value: `angry`, img: `angry`}
 };
@@ -74,3 +74,5 @@ export const RELEASE_DATE_FORMAT = `DD MMMM YYYY`;
 export const DURATION_FORMAT = `h[h] mm[m]`;
 
 export const DIFFERENCE_DATE_FORMAT = `YYYY/MM/DD HH:mm`;
+
+export const SHAKE_ANIMATION_TIMEOUT = 600;

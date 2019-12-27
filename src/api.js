@@ -45,15 +45,15 @@ const API = class {
     .then((json) => Comment.parseComments(json));
   }
 
-  createComment(comment) {
+  createComment(comment, movieId) {
     return this._send({
-      url: `comments`,
+      url: `comments/${movieId}`,
       method: Method.POST,
       body: JSON.stringify(comment.toRAW()),
       headers: new Headers({'Content-Type': `application/json`})
     })
       .then((response) => response.json())
-      .then((json) => Comment.parseComment(json));
+      .then((json) => Comment.parseComments(json.comments));
   }
 
   deleteComment(id) {

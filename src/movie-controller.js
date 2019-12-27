@@ -1,13 +1,15 @@
 import Utils from './utils.js';
-import Film from './components/film.js';
+import FilmComponent from './components/film.js';
 import FilmDetail from './components/film-detail.js';
+import {SHAKE_ANIMATION_TIMEOUT} from './const.js';
 
 export default class MovieController {
-  constructor(container, onDataChange, onViewChange) {
+  constructor(container, onDataChange, onViewChange, api) {
     this._container = container;
     this._film = null;
     this._filmDetailComponent = null;
     this._filmComponent = null;
+    this._api = api;
     this._onDataChange = onDataChange;
 
     this._onDataChangeCb = (oldValue, newValue, parentValue = null) => {
@@ -27,9 +29,6 @@ export default class MovieController {
     };
 
     this._onShowFilmDetail = (evt) => {
-      this._renderMode.details = true;
-      this._onViewChange(this);
-
       const classList = evt.target.classList;
 
       const isClickAvaliable = classList.contains(`film-card__poster`) ||
@@ -37,14 +36,8 @@ export default class MovieController {
         classList.contains(`film-card__title`);
 
       if (isClickAvaliable) {
-
-        this._filmDetailComponent = new FilmDetail(this._film, document.body, this._onDataChangeCb);
-        Utils.render(this._filmDetailComponent.container, this._filmDetailComponent.getElement());
-
-        this._filmDetailComponent.initComponents();
-        this._filmDetailComponent.addCloseButtonClickEvent(this._onCloseFilmDetail);
-        this._filmDetailComponent.addDetailCheckedChangeEvent();
-        this._filmDetailComponent.addRatingCheckedChangeEvent();
+        this._renderMode.details = true;
+        this._onViewChange(this);
       }
     };
   }
@@ -59,6 +52,10 @@ export default class MovieController {
 
   get detailsModeVisibility() {
     return this._renderMode.details;
+  }
+
+  get filmDetailComponent() {
+    return this._filmDetailComponent;
   }
 
   render(film) {
@@ -81,9 +78,50 @@ export default class MovieController {
     }
   }
 
+  showFilmDetail() {
+    this._filmDetailComponent = new FilmDetail(this._film, document.body, this._onDataChangeCb);
+    Utils.render(this._filmDetailComponent.container, this._filmDetailComponent.getElement());
+
+    this._filmDetailComponent.initComponents();
+    this._filmDetailComponent.addCloseButtonClickEvent(this._onCloseFilmDetail);
+    this._filmDetailComponent.addDetailCheckedChangeEvent();
+    this._filmDetailComponent.addRatingCheckedChangeEvent();
+  }
+
+  shake(onStartAnimationCb = null, onEndAnimationCb = null) {
+    if (this._filmComponent !== null) {
+      this._filmComponent.getElement().style.animation = `shake ${SHAKE_ANIMATION_TIMEOUT / 1000}s`;
+      setTimeout(() => {
+        this._filmComponent.getElement().style.animation = ``;
+      }, SHAKE_ANIMATION_TIMEOUT);
+    }
+
+    if (this._filmDetailComponent !== null) {
+      if (onStartAnimationCb !== null) {
+        onStartAnimationCb();
+      }
+      this._filmDetailComponent.getElement().style.animation = `shake ${SHAKE_ANIMATION_TIMEOUT / 1000}s`;
+
+      setTimeout(() => {
+        this._filmDetailComponent.getElement().style.animation = `bounceInRight`;
+        if (onEndAnimationCb !== null) {
+          onEndAnimationCb();
+        }
+      }, SHAKE_ANIMATION_TIMEOUT);
+    }
+  }
+
   removeComponents() {
     this._removeDetailComponent();
-    this._removeFilmComponent();
+    this.removeFilmComponent();
+  }
+
+  removeFilmComponent() {
+    if (this._filmComponent !== null) {
+      this._filmComponent.removeEvents();
+      this._filmComponent.removeElement();
+      this._filmComponent = null;
+    }
   }
 
   _closeDetail() {
@@ -100,11 +138,11 @@ export default class MovieController {
     const filmsListContainer = this._container.querySelector(`.films-list__container`);
 
     if (this._filmComponent === null) {
-      this._filmComponent = new Film(this._film);
+      this._filmComponent = new FilmComponent(this._film);
 
       filmsListContainer.appendChild(this._filmComponent.getElement());
     } else {
-      const newFilmComponent = new Film(this._film);
+      const newFilmComponent = new FilmComponent(this._film);
 
       filmsListContainer.replaceChild(newFilmComponent.getElement(), this._filmComponent.getElement());
 
@@ -119,13 +157,6 @@ export default class MovieController {
     if (this._filmDetailComponent !== null) {
       this._filmDetailComponent.film = this._film;
       this._filmDetailComponent.rerender();
-    }
-  }
-
-  _removeFilmComponent() {
-    if (this._filmComponent !== null) {
-      this._filmComponent.removeElement();
-      this._filmComponent = null;
     }
   }
 

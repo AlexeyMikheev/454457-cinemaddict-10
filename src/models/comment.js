@@ -16,7 +16,7 @@ export default class Comment {
       'emotion': this.emotion,
       'author': this.author,
       'comment': this.text,
-      'data': this.commentDate ? new Date(this.commentDate).toISOString() : null
+      'date': this.commentDate ? new Date(this.commentDate).toISOString() : null
     };
   }
 

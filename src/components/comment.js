@@ -42,13 +42,19 @@ export default class Comment extends AbstractComponent {
     this._deletebutton = null;
   }
 
+  set deleteButtonText(value) {
+    if (this._deletebutton !== null) {
+      this._deletebutton.innerText = value;
+    }
+  }
+
   getTemplate() {
     return getCommentTemplate(this._comment);
   }
 
   addDeleteButtonClick(cb) {
     this._onDeleteButtonClickCb = (evt) => {
-      cb(evt);
+      cb(evt, this);
     };
 
     this._deletebutton = this._element.querySelector(`.film-details__comment-delete`);

@@ -12,7 +12,6 @@ export default class Films {
     this._sortTypeChangeCb = null;
     this._filterTypeChangeCb = null;
     this._moreButtonClickCb = null;
-    this._datachangeCb = null;
   }
 
   set films(value) {
@@ -45,7 +44,7 @@ export default class Films {
       return f.comments !== null && f.comments.length > 0;
     });
 
-    return Utils.getTopFilmsByProperty(hasCommentsFilms, `comments`);
+    return Utils.getTopFilmsByProperty(hasCommentsFilms, `comments`, false);
   }
 
   get isAvaliableLoad() {
@@ -94,14 +93,6 @@ export default class Films {
     this._filterTypeChangeCb = cb;
   }
 
-  set dataChangeCb(cb) {
-    this._datachangeCb = cb;
-  }
-
-  isFilmAvaliableAtCurrentFilter(film) {
-    return Utils.isFilmAvaliableAtFilter(this._filterType, film);
-  }
-
   getWathedFilmsByPeriod(period = Period.ALL) {
     const watchedfilms = Utils.getFiltredFilms(Filters.HISTORY.title, this._films);
     const today = new Date().valueOf();
@@ -133,7 +124,9 @@ export default class Films {
   }
 
   getFilmById(id) {
-    return Utils.getFilmByid(this._films, id);
+    return this._films.find((film) => {
+      return film.id === id;
+    });
   }
 
   getPreparedFilms() {
@@ -150,19 +143,21 @@ export default class Films {
       return false;
     }
 
+    film.comments = this._films[index].comments.slice();
+
     this._films = [].concat(this._films.slice(0, index), film, this._films.slice(index + 1));
 
     return true;
   }
 
-  addComment(comment, filmId) {
+  setComments(comments, filmId) {
     const film = this.getFilmById(filmId);
 
     if (film === null) {
       return false;
     }
 
-    film.comments = [].concat(film.comments, comment);
+    film.comments = comments;
 
     return true;
   }

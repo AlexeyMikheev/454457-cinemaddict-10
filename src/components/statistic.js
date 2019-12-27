@@ -95,6 +95,10 @@ export default class Statistic extends AbstractComponent {
     this._update();
   }
 
+  addFiltesChangeEvents() {
+    this._element.querySelector(`.statistic__filters`).addEventListener(`change`, this._onStatisticFiltersContainerChangeCb);
+  }
+
   _update() {
     this._updateStatistics();
     this._updateStatisticHeader();
@@ -107,10 +111,6 @@ export default class Statistic extends AbstractComponent {
     const oldStatisticHeaderElement = this._statisticHeaderElement !== null ? this._statisticHeaderElement : this._element.querySelector(`.statistic__text-list`);
 
     this._element.replaceChild(statisticHeaderElement, oldStatisticHeaderElement);
-  }
-
-  addFiltesChangeEvents() {
-    this._element.querySelector(`.statistic__filters`).addEventListener(`change`, this._onStatisticFiltersContainerChangeCb);
   }
 
   _renderChart() {
