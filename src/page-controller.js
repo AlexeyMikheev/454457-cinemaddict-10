@@ -312,4 +312,5 @@ export default class PageController {
   _removeDocumentEvents() {
     document.removeEventListener(`keydown`, this._onDocumentKeyDown);
   }
+  
 }
