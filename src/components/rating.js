@@ -1,5 +1,5 @@
 
-import { MIN_RATING_VALUE, MAX_RATING_VALUE, RATING_RANGE } from '../const';
+import {MIN_RATING_VALUE, MAX_RATING_VALUE, RATING_RANGE} from '../const';
 import AbstractComponent from './abstract-component.js';
 import Film from '../models/film';
 
@@ -16,7 +16,7 @@ const getRatingValuesTemplate = (selectedValue) => {
 
 const getRatingTemplate = (film) => {
 
-  const { poster, title, personalRating } = film;
+  const {poster, title, personalRating} = film;
 
   const ratingValuesTemplate = getRatingValuesTemplate(personalRating);
 
@@ -103,7 +103,7 @@ export default class Rating extends AbstractComponent {
       this._selectedPersonalRating = personalRating;
 
       const updatedFilm = new Film({});
-      Object.assign(updatedFilm, this._film, { personalRating });
+      Object.assign(updatedFilm, this._film, {personalRating});
 
       cb(this._film, updatedFilm);
     };
@@ -118,7 +118,7 @@ export default class Rating extends AbstractComponent {
       }
 
       const updatedFilm = new Film({});
-      Object.assign(updatedFilm, this._film, { personalRating: 0 });
+      Object.assign(updatedFilm, this._film, {personalRating: 0});
 
       cb(this._film, updatedFilm);
     };
