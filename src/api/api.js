@@ -1,5 +1,5 @@
-import Film from './models/film.js';
-import Comment from './models/comment.js';
+import Film from '../models/film.js';
+import Comment from '../models/comment.js';
 
 const Method = {
   GET: `GET`,
@@ -16,7 +16,7 @@ const checkStatus = (response) => {
   }
 };
 
-const API = class {
+export default class API {
   constructor(endPoint, authorization) {
     this._endPoint = endPoint;
     this._authorization = authorization;
@@ -69,6 +69,4 @@ const API = class {
         throw err;
       });
   }
-};
-
-export default API;
+}

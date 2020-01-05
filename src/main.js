@@ -2,7 +2,7 @@
 
 import PageController from './page-controller.js';
 import Films from './models/films.js';
-import API from './api.js';
+import API from './api/api.js';
 
 const AUTHORIZATION = `Basic eo0w590ik29889a`;
 const END_POINT = `https://htmlacademy-es-10.appspot.com/cinemaddict`;

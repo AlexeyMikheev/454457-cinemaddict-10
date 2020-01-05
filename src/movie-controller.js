@@ -42,12 +42,20 @@ export default class MovieController {
     };
   }
 
+  get container() {
+    return this._container;
+  }
+
   get film() {
     return this._film;
   }
 
   set defaultModeVisibility(value) {
     this._renderMode.default = value;
+  }
+
+  get defaultModeVisibility() {
+    return this._renderMode.default;
   }
 
   get detailsModeVisibility() {
@@ -58,13 +66,15 @@ export default class MovieController {
     return this._filmDetailComponent;
   }
 
-  render(film) {
-    this._film = film;
+  render(film = null) {
+    if (film !== null) {
+      this._film = film;
+    }
 
     if (this._renderMode.default) {
       this._renderFilmComponent();
     } else {
-      this._removeFilmComponent();
+      this.removeFilmComponent();
     }
 
     if (this._renderMode.details) {

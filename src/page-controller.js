@@ -27,7 +27,7 @@ export default class PageController {
     this._footer = footer;
     this._topRatedFilmsComponentElement = null;
     this._mostCommentFilmsComponentElement = null;
-    this._hiddentComponentsController = null;
+    this._popupController = null;
 
     this._profileComponent = null;
     this._filterController = null;
@@ -40,7 +40,7 @@ export default class PageController {
       if (evt.keyCode === ESC_KEY) {
         this._setDefaultView();
         this._removeDocumentEvents();
-        this._clearHiddenController();
+        this._clearPopupController();
       }
     };
 
@@ -51,7 +51,8 @@ export default class PageController {
             const isSuccess = this._films.updateFilm(oldValue.id, filmModel);
             if (isSuccess) {
 
-              filmController.render(filmModel);
+              const updatedFilm = this._films.getFilmById(oldValue.id);
+              filmController.render(updatedFilm);
 
               this._initFilters();
               this._initProfile();
@@ -112,6 +113,7 @@ export default class PageController {
           movieController._film.comments = comments;
           movieController.showFilmDetail();
           this._initDocumentEvents();
+          this._popupController = movieController;
         });
       } else {
         this._removeDocumentEvents();
@@ -192,55 +194,54 @@ export default class PageController {
     this._renderFilms(container, films, this._filmsControllers);
   }
 
-  _updateAllControllers(updatedFilmController) {
+  _updateAllControllers() {
     const oldFilmsControllers = this._filmsControllers.slice();
     this._filmsControllers = [];
-    this._updateControllers(updatedFilmController, oldFilmsControllers, this._filmsControllers, this._films.getPreparedFilms(), this._filmsComponentElement);
+    this._updateControllers(oldFilmsControllers, this._filmsControllers, this._films.getPreparedFilms(), this._filmsComponentElement);
 
     const oldTopRatedFilmsControllers = this._topRatedFilmsControllers.slice();
     this._topRatedFilmsControllers = [];
-    this._updateControllers(updatedFilmController, oldTopRatedFilmsControllers, this._topRatedFilmsControllers, this._films.topRatedFilms, this._topRatedFilmsComponentElement);
+    this._updateControllers(oldTopRatedFilmsControllers, this._topRatedFilmsControllers, this._films.topRatedFilms, this._topRatedFilmsComponentElement);
 
     const oldMostCommentFilmsControllers = this._mostCommentFilmsControllers.slice();
     this._mostCommentFilmsControllers = [];
 
-    this._updateControllers(updatedFilmController, oldMostCommentFilmsControllers, this._mostCommentFilmsControllers, this._films.mostCommentFilms, this._mostCommentFilmsComponentElement);
+    this._updateControllers(oldMostCommentFilmsControllers, this._mostCommentFilmsControllers, this._films.mostCommentFilms, this._mostCommentFilmsComponentElement);
   }
 
-  _updateControllers(filmController, oldFilmsControllers, filmsControllers, currentPageFilms, container) {
-    currentPageFilms.forEach((film, index) => {
-      if (index < oldFilmsControllers.length) {
-        let controller = oldFilmsControllers[index];
+  _updateControllers(oldFilmsControllers, filmsControllers, currentPageFilms, container) {
+    let isPopupExistInOldFilmControllers = false;
+    const isPopupExistInContainer = this._popupController !== null && this._popupController.container === container;
 
-        if (controller.film.id === film.id) {
-          if (controller.film.id === filmController.film.id) {
-            controller.render(film);
-          }
-        } else {
-          controller.render(film);
-        }
-
-        filmsControllers.push(controller);
-      } else {
-        const controller = new MovieController(container, this._onDataChange, this._onViewChange);
-        controller.render(film);
-
-        filmsControllers.push(controller);
-      }
-    });
-
-    oldFilmsControllers.forEach((controller, index) => {
-      if (index < currentPageFilms.length) {
-        const film = currentPageFilms[index];
-        if (controller.film.id !== film.id) {
-          controller.removeComponents();
-          controller = null;
-        }
+    oldFilmsControllers.forEach((controller) => {
+      if (isPopupExistInContainer && controller.film.id === this._popupController.film.id) {
+        this._popupController.defaultModeVisibility = false;
+        this._popupController.render();
+        isPopupExistInOldFilmControllers = true;
       } else {
         controller.removeComponents();
         controller = null;
       }
     });
+
+    let isPopupControllerAdded = false;
+
+    currentPageFilms.forEach((film) => {
+      if (isPopupExistInContainer && film.id === this._popupController.film.id && !isPopupControllerAdded && isPopupExistInOldFilmControllers) {
+        this._popupController.defaultModeVisibility = true;
+        this._popupController.render(film);
+        filmsControllers.push(this._popupController);
+        isPopupControllerAdded = true;
+      } else {
+        const controller = new MovieController(container, this._onDataChange, this._onViewChange);
+        controller.render(film);
+        filmsControllers.push(controller);
+      }
+    });
+
+    if (isPopupExistInContainer && !isPopupControllerAdded && isPopupExistInOldFilmControllers) {
+      filmsControllers.push(this._popupController);
+    }
   }
 
   _renderTopRatedFilms(container, films) {
@@ -373,10 +374,9 @@ export default class PageController {
     document.removeEventListener(`keydown`, this._onDocumentKeyDown);
   }
 
-  _clearHiddenController() {
-    if (this._hiddentComponentsController !== null) {
-      this._hiddentComponentsController.removeComponents();
-      this._hiddentComponentsController = null;
+  _clearPopupController() {
+    if (this._popupController !== null) {
+      this._popupController = null;
     }
   }
 }
