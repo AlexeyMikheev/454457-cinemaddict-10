@@ -6,7 +6,7 @@ export default class Provider {
   constructor(api, store) {
     this._api = api;
     this._store = store;
-    this._isSynchronized = false;
+    this._isSynchronized = true;
   }
 
   getFilms() {
@@ -35,6 +35,7 @@ export default class Provider {
       return this._api.updateFilm(id, data);
     } else {
       this._setStoreItem(id, data, ObjectState.UPDATED);
+      this._isSynchronized = false;
       return Promise.resolve(data);
     }
   }
@@ -73,6 +74,7 @@ export default class Provider {
       if (storeFilm) {
         storeFilm.comments.push(comment.toRAW());
         this._setStoreItem(storeFilm.id, storeFilm);
+        this._isSynchronized = false;
         return Promise.resolve(Comment.parseComments(storeFilm.comments));
       }
       return Promise.resolve([]);
@@ -83,10 +85,12 @@ export default class Provider {
     if (this._isOnline()) {
       return this._api.deleteComment(commentId).then(() => {
         this._deleteStoreComment(commentId);
+        this._isSynchronized = false;
         return Promise.resolve();
       });
     } else {
       this._deleteStoreComment(commentId);
+      this._isSynchronized = false;
       return Promise.resolve();
     }
   }
