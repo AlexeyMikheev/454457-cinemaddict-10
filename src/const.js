@@ -76,3 +76,9 @@ export const DURATION_FORMAT = `h[h] mm[m]`;
 export const DIFFERENCE_DATE_FORMAT = `YYYY/MM/DD HH:mm`;
 
 export const SHAKE_ANIMATION_TIMEOUT = 600;
+
+export const ObjectState = {
+  INITIAL: `initial`,
+  DELETED: `deleted`,
+  UPDATED: `updated`
+};

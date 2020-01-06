@@ -36,7 +36,7 @@ export default class Film {
   toRAW() {
     return {
       'id': this.id,
-      'comments': [],
+      'comments': Film.toRawComments(this),
       'film_info': Film.toRawFilmInfo(this),
       'user_details': Film.toRawUserDetail(this)
     };
@@ -108,6 +108,12 @@ export default class Film {
       'watching_date': data.watchedDate ? new Date(data.watchedDate).toISOString() : new Date(0).toISOString(),
       'already_watched': data.isWatched
     };
+  }
+
+  static toRawComments(data) {
+    return data.comments !== null ? data.comments.map((comment) => {
+      return comment.id ? comment.id : comment;
+    }) : [];
   }
 
   static clone(data) {

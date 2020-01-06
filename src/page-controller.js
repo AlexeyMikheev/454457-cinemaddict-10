@@ -313,7 +313,7 @@ export default class PageController {
 
     Utils.render(this._mainContainer, filmsContainerComponentElement);
 
-    if (this._films.length === 0) {
+    if (this._films.totalFilms === 0) {
       Utils.render(filmsContainerComponentElement, new NoFilms().getElement());
       return;
     }
