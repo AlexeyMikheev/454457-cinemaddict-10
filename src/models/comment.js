@@ -6,7 +6,7 @@ export default class Comment {
     this.id = data[`id`];
     this.emotion = data[`emotion`];
     this.author = data[`author`];
-    this.text = data[`comment`];
+    this.comment = data[`comment`];
     this.commentDate = Utils.paserDate(data[`date`]) || null;
   }
 
@@ -15,7 +15,7 @@ export default class Comment {
       'id': this.id,
       'emotion': this.emotion,
       'author': this.author,
-      'comment': this.text,
+      'comment': this.comment,
       'date': this.commentDate ? new Date(this.commentDate).toISOString() : null
     };
   }

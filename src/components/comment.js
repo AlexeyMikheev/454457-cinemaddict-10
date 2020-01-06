@@ -11,13 +11,13 @@ const getCommentTemplate = (comment) => {
   const emoji = Utils.getEmoji(emotion);
   const emojiImg = emoji !== null ? emoji.img : null;
 
-  let {text} = comment;
+  let {comment: commentText} = comment;
 
-  if (text.length > MAX_TEXT_LENGTH) {
-    text = `${text.substring(0, MAX_TEXT_LENGTH - 1)}...`;
+  if (commentText.length > MAX_TEXT_LENGTH) {
+    commentText = `${commentText.substring(0, MAX_TEXT_LENGTH - 1)}...`;
   }
 
-  const displayText = he.encode(text);
+  const displayText = he.encode(commentText);
 
   return `<li class="film-details__comment">
                 <span class="film-details__comment-emoji">

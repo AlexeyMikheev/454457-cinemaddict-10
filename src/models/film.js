@@ -36,7 +36,7 @@ export default class Film {
   toRAW() {
     return {
       'id': this.id,
-      'comments': Film.toRawComments(this),
+      'comments': this.comments,
       'film_info': Film.toRawFilmInfo(this),
       'user_details': Film.toRawUserDetail(this)
     };
@@ -110,11 +110,11 @@ export default class Film {
     };
   }
 
-  static toRawComments(data) {
-    return data.comments !== null ? data.comments.map((comment) => {
-      return comment.id ? comment.id : comment;
-    }) : [];
-  }
+  // static toRawComments(data) {
+  //   return data.comments !== null ? data.comments.map((comment) => {
+  //     return comment.id ? comment.id : comment;
+  //   }) : [];
+  // }
 
   static clone(data) {
     return new Film(data.toRAW());

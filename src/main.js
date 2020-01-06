@@ -19,9 +19,8 @@ const store = new Store(STORE_KEY, window.localStorage);
 const provider = new Provider(api, store);
 const filmsModel = new Films();
 
-const pageController = new PageController(headerContainer, mainContainer, footer, filmsModel, api);
+const pageController = new PageController(headerContainer, mainContainer, footer, filmsModel, provider);
 
-debugger;
 provider.getFilms()
   .then((films) => {
     filmsModel.films = films;

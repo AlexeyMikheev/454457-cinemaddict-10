@@ -72,7 +72,7 @@ export default class AddNewCommentForm extends AbstractComponent {
 
         Object.assign(newComment, {
           id: new Date().valueOf().toString(),
-          text: commentText,
+          comment: commentText,
           emotion: this._selectedEmoji !== null ? this._selectedEmoji.value : null,
           commentDate: new Date().valueOf(),
           author: `author`

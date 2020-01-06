@@ -1,5 +1,6 @@
 import {ObjectState} from '../const.js';
 import Film from '../models/film.js';
+import Comment from '../models/comment.js';
 
 export default class Provider {
   constructor(api, store) {
@@ -28,37 +29,66 @@ export default class Provider {
     }
   }
 
-  // updateFilm(id, data) {
-  //   return this._send({
-  //     url: `movies/${id}`,
-  //     method: Method.PUT,
-  //     body: JSON.stringify(data.toRAW()),
-  //     headers: new Headers({ 'Content-Type': `application/json` })
-  //   })
-  //     .then((response) => response.json())
-  //     .then((json) => Film.parseFilm(json));
-  // }
 
-  // getComments(movieId) {
-  //   return this._send({ url: `comments/${movieId}` })
-  //     .then((response) => response.json())
-  //     .then((json) => Comment.parseComments(json));
-  // }
+  updateFilm(id, data) {
+    if (this._isOnline()) {
+      return this._api.updateFilm(id, data);
+    } else {
+      this._setStoreItem(id, data, ObjectState.UPDATED);
+      return Promise.resolve(data);
+    }
+  }
 
-  // createComment(comment, movieId) {
-  //   return this._send({
-  //     url: `comments/${movieId}`,
-  //     method: Method.POST,
-  //     body: JSON.stringify(comment.toRAW()),
-  //     headers: new Headers({ 'Content-Type': `application/json` })
-  //   })
-  //     .then((response) => response.json())
-  //     .then((json) => Comment.parseComments(json.comments));
-  // }
+  getComments(movieId) {
+    if (this._isOnline()) {
+      return this._api.getComments(movieId).then((comments) => {
+        const storeFilm = this._store.getDataById(movieId);
+        if (storeFilm) {
+          storeFilm.comments = comments;
+          this._setStoreItem(storeFilm.id, storeFilm);
+        }
+        return Promise.resolve(comments);
+      });
+    } else {
+      const storeFilm = this._store.getDataById(movieId);
+      if (storeFilm) {
+        return Promise.resolve(Comment.parseComments(storeFilm.comments));
+      }
+      return Promise.resolve([]);
+    }
+  }
+
+  createComment(comment, movieId) {
+    if (this._isOnline()) {
+      return this._api.createComment(comment, movieId).then((comments) => {
+        const storeFilm = this._store.getDataById(movieId);
+        if (storeFilm) {
+          storeFilm.comments = comments;
+          this._setStoreItem(storeFilm.id, storeFilm);
+        }
+        return Promise.resolve(comments);
+      });
+    } else {
+      const storeFilm = this._store.getDataById(movieId);
+      if (storeFilm) {
+        storeFilm.comments.push(comment.toRAW());
+        this._setStoreItem(storeFilm.id, storeFilm);
+        return Promise.resolve(Comment.parseComments(storeFilm.comments));
+      }
+      return Promise.resolve([]);
+    }
+  }
 
   // deleteComment(id) {
   //   return this._send({ url: `comments/${id}`, method: Method.DELETE });
   // }
+
+  _setStoreItem(key, data, state = ObjectState.INITIAL) {
+    this._store.setItem(key, {
+      state,
+      data: data.toRAW()
+    });
+  }
 
   _isOnline() {
     return !navigator.onLine;

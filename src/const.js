@@ -79,6 +79,5 @@ export const SHAKE_ANIMATION_TIMEOUT = 600;
 
 export const ObjectState = {
   INITIAL: `initial`,
-  DELETED: `deleted`,
   UPDATED: `updated`
 };
