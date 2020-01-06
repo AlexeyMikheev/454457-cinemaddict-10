@@ -79,9 +79,26 @@ export default class Provider {
     }
   }
 
-  // deleteComment(id) {
-  //   return this._send({ url: `comments/${id}`, method: Method.DELETE });
-  // }
+  deleteComment(commentId) {
+    if (this._isOnline()) {
+      return this._api.deleteComment(commentId).then(() => {
+        this._deleteStoreComment(commentId);
+        return Promise.resolve();
+      });
+    } else {
+      this._deleteStoreComment(commentId);
+      return Promise.resolve();
+    }
+  }
+
+  _deleteStoreComment(commentId) {
+    const storeFilm = this._store.getDataByCommentId(commentId);
+    if (storeFilm) {
+      const index = storeFilm.comments.findIndex((it) => it.id === commentId);
+      storeFilm.comments = [].concat(storeFilm.comments.slice(0, index), storeFilm.comments.slice(index + 1));
+      this._setStoreItem(storeFilm.id, storeFilm);
+    }
+  }
 
   _setStoreItem(key, data, state = ObjectState.INITIAL) {
     this._store.setItem(key, {
@@ -91,6 +108,6 @@ export default class Provider {
   }
 
   _isOnline() {
-    return !navigator.onLine;
+    return navigator.onLine;
   }
 }

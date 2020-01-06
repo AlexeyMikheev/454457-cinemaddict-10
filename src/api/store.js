@@ -29,6 +29,22 @@ export default class Store {
     return null;
   }
 
+  getDataByCommentId(id) {
+    const store = this.getData();
+    if (store) {
+      const item = Object.values(store).map((storeItem) => storeItem.data).find((dataItem) => {
+        if (dataItem.comments && dataItem.comments.length) {
+          return dataItem.comments.some((comment) => {
+            return comment.id ? comment.id === id : comment === id;
+          });
+        }
+        return false;
+      });
+      return Film.parseFilm(item);
+    }
+    return null;
+  }
+
   setItem(key, value) {
     const store = this.getData();
     const newValue = {};
