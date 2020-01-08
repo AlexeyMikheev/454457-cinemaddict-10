@@ -14,6 +14,8 @@ const headerContainer = document.querySelector(`.header`);
 const mainContainer = document.querySelector(`.main`);
 const footer = document.querySelector(`.footer`);
 
+const windowTitle = document.title;
+
 const api = new API(END_POINT, AUTHORIZATION);
 const store = new Store(STORE_KEY, window.localStorage);
 const provider = new Provider(api, store);
@@ -26,4 +28,16 @@ provider.getFilms()
     filmsModel.films = films;
     pageController.render();
   });
+
+window.addEventListener(`online`, () => {
+  document.title = windowTitle;
+
+  if (!provider._isSynchronized) {
+
+  }
+});
+
+window.addEventListener(`offline`, () => {
+  document.title = `${windowTitle} [offline]`;
+});
 
