@@ -1,4 +1,4 @@
-import {ObjectState} from '../const.js';
+import { ObjectState } from '../const.js';
 import Film from '../models/film.js';
 import Comment from '../models/comment.js';
 
@@ -7,6 +7,10 @@ export default class Provider {
     this._api = api;
     this._store = store;
     this._isSynchronized = true;
+  }
+
+  get isSynchronized() {
+    return this._isSynchronized;
   }
 
   getFilms() {
@@ -93,6 +97,24 @@ export default class Provider {
       this._isSynchronized = false;
       return Promise.resolve();
     }
+  }
+
+  sync() {
+    const data = this._store.getData();
+    const items = Object.values(data).filter((dataItem) => {
+      return dataItem.state === ObjectState.UPDATED;
+    }).map((item) => {
+      return item.data;
+    });
+    return this._api.sync(items).then((result) => {
+      this._isSynchronized = true;
+
+      if (result && result.updated) {
+        const updatedFilms = Film.parseFilms(result.updated);
+        return Promise.resolve(updatedFilms);
+      }
+      return Promise.resolve([]);
+    });
   }
 
   _deleteStoreComment(commentId) {

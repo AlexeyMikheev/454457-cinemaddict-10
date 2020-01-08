@@ -9,7 +9,7 @@ import NoFilms from './components/no-films.js';
 import MovieController from './movie-controller.js';
 import FilterController from './filter-controller.js';
 
-import {FIMLS_COMPONENT_TYPES, ESC_KEY, Filters} from './const.js';
+import { FIMLS_COMPONENT_TYPES, ESC_KEY, Filters } from './const.js';
 import Utils from './utils.js';
 
 export default class PageController {
@@ -56,7 +56,7 @@ export default class PageController {
 
               this._initFilters();
               this._initProfile();
-              this._updateAllControllers(filmController);
+              this._updateAllControllers();
               this._refreshMoreButton();
             }
           }).catch(() => {
@@ -182,6 +182,10 @@ export default class PageController {
     this._initContent();
     this._initStatistic();
     this._initFooterStatistic();
+  }
+
+  refresh() {
+    this._updateAllControllers();
   }
 
   _getFilmsControlles() {

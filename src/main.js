@@ -32,8 +32,14 @@ provider.getFilms()
 window.addEventListener(`online`, () => {
   document.title = windowTitle;
 
-  if (!provider._isSynchronized) {
+  if (!provider.isSynchronized) {
+    provider.sync().then((updatedFilms) => {
+      updatedFilms.forEach((updatedFilm) => {
+        filmsModel.updateFilm(updatedFilm.id, updatedFilm);
+      });
 
+      pageController.refresh();
+    });
   }
 });
 
