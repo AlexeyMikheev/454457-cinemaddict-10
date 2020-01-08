@@ -1,4 +1,4 @@
-import { ObjectState } from '../const.js';
+import {ObjectState} from '../const.js';
 import Film from '../models/film.js';
 import Comment from '../models/comment.js';
 
