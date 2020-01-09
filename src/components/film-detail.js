@@ -5,6 +5,7 @@ import AddNewCommentForm from './add-comment-form.js';
 import {FilmDetailType, RELEASE_DATE_FORMAT, DURATION_FORMAT} from '../const.js';
 import AbstractSmartComponent from './abstract-smart-component.js';
 import Film from '../models/film';
+import {debounce} from '../debounce.js';
 
 const getGenresTemplate = (genres) => {
   return genres.map((genre) => {
@@ -145,30 +146,8 @@ export default class FilmDetail extends AbstractSmartComponent {
 
     this._onDetailCheckedChange = (evt) => {
       const target = evt.target;
-      const updatedFilm = new Film({});
 
-      switch (target.dataset[`detailType`]) {
-        case FilmDetailType.WATCHLIST:
-          const isWaitingWatched = target.checked;
-          Object.assign(updatedFilm, this._film, {isWaitingWatched});
-
-          this._onDataChange(this._film, updatedFilm);
-          break;
-        case FilmDetailType.WATCHED:
-          const isWatched = target.checked;
-          const personalRating = isWatched ? this._film.personalRating : 0;
-          const watchedDate = isWatched ? new Date().valueOf() : 0;
-
-          Object.assign(updatedFilm, this._film, {personalRating, isWatched, watchedDate});
-          this._onDataChange(this._film, updatedFilm);
-          break;
-        case FilmDetailType.FAVORITE:
-          const isFavorite = target.checked;
-
-          Object.assign(updatedFilm, this._film, {isFavorite});
-          this._onDataChange(this._film, updatedFilm);
-          break;
-      }
+      debounce(this._onDetailChange.bind(this, target));
     };
 
     this._onCommentsChanged = (oldValue, newValue) => {
@@ -294,6 +273,33 @@ export default class FilmDetail extends AbstractSmartComponent {
 
     if (this._ratingComponent !== null) {
       this._ratingComponent.removeRatingEvents();
+    }
+  }
+
+  _onDetailChange(target) {
+    const updatedFilm = new Film({});
+
+    switch (target.dataset[`detailType`]) {
+      case FilmDetailType.WATCHLIST:
+        const isWaitingWatched = target.checked;
+        Object.assign(updatedFilm, this._film, {isWaitingWatched});
+
+        this._onDataChange(this._film, updatedFilm);
+        break;
+      case FilmDetailType.WATCHED:
+        const isWatched = target.checked;
+        const personalRating = isWatched ? this._film.personalRating : 0;
+        const watchedDate = isWatched ? new Date().valueOf() : 0;
+
+        Object.assign(updatedFilm, this._film, {personalRating, isWatched, watchedDate});
+        this._onDataChange(this._film, updatedFilm);
+        break;
+      case FilmDetailType.FAVORITE:
+        const isFavorite = target.checked;
+
+        Object.assign(updatedFilm, this._film, {isFavorite});
+        this._onDataChange(this._film, updatedFilm);
+        break;
     }
   }
 
