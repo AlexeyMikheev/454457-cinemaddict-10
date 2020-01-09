@@ -5,6 +5,10 @@ import Films from './models/films.js';
 import API from './api/api.js';
 import Provider from './api/provider.js';
 import Store from './api/store.js';
+import FilmsContainer from './components/films-container.js';
+import NoFilms from './components/no-films.js';
+import Utils from './utils.js';
+import {NoFilmTypes} from './const.js';
 
 const AUTHORIZATION = `Basic eo0w590ik29889a`;
 const END_POINT = `https://htmlacademy-es-10.appspot.com/cinemaddict`;
@@ -23,8 +27,16 @@ const filmsModel = new Films();
 
 const pageController = new PageController(headerContainer, mainContainer, footer, filmsModel, provider);
 
+const filmsContainerComponent = new FilmsContainer();
+const filmsContainerComponentElement = filmsContainerComponent.getElement();
+Utils.render(mainContainer, filmsContainerComponentElement);
+Utils.render(filmsContainerComponentElement, new NoFilms(NoFilmTypes.LOADING).getElement());
+
+
 provider.getFilms()
   .then((films) => {
+    filmsContainerComponent.removeElement();
+
     filmsModel.films = films;
     pageController.render();
   });

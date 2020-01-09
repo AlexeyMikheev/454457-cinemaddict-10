@@ -83,3 +83,8 @@ export const ObjectState = {
 };
 
 export const DEBOUNCE_TIMEOUT = 500;
+
+export const NoFilmTypes = {
+  LOADING: 0,
+  EMPTY: 1,
+};
