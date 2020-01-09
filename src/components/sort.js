@@ -11,9 +11,9 @@ export const getSortFilterTemplate = (selectedFilter, sortFilter) => {
 export const getSortFiltersTemplate = () => `<ul class="sort"></ul>`;
 
 export default class Sort extends AbstractComponent {
-  constructor(sortType) {
+  constructor() {
     super();
-    this._sortType = sortType;
+    this._sortType = SortTypes.DEFAULT;
     this._sortElements = [];
     this._sortFilters = [
       {value: SortTypes.DEFAULT, text: `Sort by default`},

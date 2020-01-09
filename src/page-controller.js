@@ -20,7 +20,7 @@ export default class PageController {
     this._filmsComponent = null;
     this._filmsComponentElement = null;
     this._moreButton = null;
-    this._sortComponent = new Sort(this._sortType);
+    this._sortComponent = new Sort();
     this._statisticComponent = null;
     this._headerContainer = headerContainer;
     this._mainContainer = mainContainer;
