@@ -14,6 +14,14 @@ module.exports = {
     compress: true,
     watchContentBase: true
   },
+  module: {
+    rules: [
+      {
+        test: /\.css$/i,
+        use: [`style-loader`, `css-loader`],
+      },
+    ],
+  },
   plugins: [
     new MomentLocalesPlugin({
       localesToKeep: [`es-us`],

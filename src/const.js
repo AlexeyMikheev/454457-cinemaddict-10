@@ -81,3 +81,5 @@ export const ObjectState = {
   INITIAL: `initial`,
   UPDATED: `updated`
 };
+
+export const DEBOUNCE_TIMEOUT = 500;

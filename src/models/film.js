@@ -36,6 +36,17 @@ export default class Film {
   toRAW() {
     return {
       'id': this.id,
+      'comments': this.comments.map((comment) => {
+        return comment.id ? comment.id : comment;
+      }),
+      'film_info': Film.toRawFilmInfo(this),
+      'user_details': Film.toRawUserDetail(this)
+    };
+  }
+
+  toStoreRAW() {
+    return {
+      'id': this.id,
       'comments': this.comments,
       'film_info': Film.toRawFilmInfo(this),
       'user_details': Film.toRawUserDetail(this)

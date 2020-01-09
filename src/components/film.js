@@ -1,8 +1,9 @@
 
 import Utils from '../utils.js';
-import {FilmDetailType, DURATION_FORMAT} from '../const.js';
+import {FilmDetailType, DURATION_FORMAT, DEBOUNCE_TIMEOUT} from '../const.js';
 import AbstractComponent from './abstract-component.js';
 import Film from '../models/film';
+import debounce from 'lodash/debounce';
 
 const getFilmTemplate = (filmCard) => {
 
@@ -53,7 +54,10 @@ export default class FilmComponent extends AbstractComponent {
 
   addFilmCardClickEvent(cb) {
     this._onFilmCardClickCb = (evt) => {
-      cb(evt);
+      evt.preventDefault();
+      if (!evt.target.classList.contains(`film-card__controls-item`)) {
+        cb(evt);
+      }
     };
     this._element.addEventListener(`click`, this._onFilmCardClickCb);
   }
@@ -87,7 +91,7 @@ export default class FilmComponent extends AbstractComponent {
       }
     };
     this._detailsContainer = this._element.querySelector(`.film-card__controls`);
-    this._detailsContainer.addEventListener(`click`, this._onDetailButtonClick);
+    this._detailsContainer.addEventListener(`click`, debounce(this._onDetailButtonClick, DEBOUNCE_TIMEOUT));
   }
 
   removeEvents() {

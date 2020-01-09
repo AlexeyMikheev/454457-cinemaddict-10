@@ -19,7 +19,7 @@ export default class Provider {
         films.forEach((film) => {
           this._store.setItem(film.id, {
             state: ObjectState.INITIAL,
-            data: film.toRAW()
+            data: film.toStoreRAW()
           });
         });
         return Promise.resolve(films);
@@ -77,7 +77,7 @@ export default class Provider {
       const storeFilm = this._store.getDataById(movieId);
       if (storeFilm) {
         storeFilm.comments.push(comment.toRAW());
-        this._setStoreItem(storeFilm.id, storeFilm);
+        this._setStoreItem(storeFilm.id, storeFilm, ObjectState.UPDATED);
         this._isSynchronized = false;
         return Promise.resolve(Comment.parseComments(storeFilm.comments));
       }
@@ -120,16 +120,16 @@ export default class Provider {
   _deleteStoreComment(commentId) {
     const storeFilm = this._store.getDataByCommentId(commentId);
     if (storeFilm) {
-      const index = storeFilm.comments.findIndex((it) => it.id === commentId);
+      const index = storeFilm.comments.findIndex((it) => it.id ? it.id === commentId : it === commentId);
       storeFilm.comments = [].concat(storeFilm.comments.slice(0, index), storeFilm.comments.slice(index + 1));
-      this._setStoreItem(storeFilm.id, storeFilm);
+      this._setStoreItem(storeFilm.id, storeFilm, ObjectState.UPDATED);
     }
   }
 
   _setStoreItem(key, data, state = ObjectState.INITIAL) {
     this._store.setItem(key, {
       state,
-      data: data.toRAW()
+      data: data.toStoreRAW()
     });
   }
 
