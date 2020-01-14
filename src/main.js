@@ -14,6 +14,16 @@ const AUTHORIZATION = `Basic eo0w590ik29889a`;
 const END_POINT = `https://htmlacademy-es-10.appspot.com/cinemaddict`;
 const STORE_KEY = `Cinemaddict eo0w590ik29889a`;
 
+window.addEventListener(`load`, () => {
+  navigator.serviceWorker.register(`/sw.js`)
+    .then(() => {
+      console.log(`Действие, в случае успешной регистрации ServiceWorker`);
+    }).catch(() => {
+      console.log(`Действие, в случае ошибки при регистрации ServiceWorker`);
+    });
+});
+
+
 const headerContainer = document.querySelector(`.header`);
 const mainContainer = document.querySelector(`.main`);
 const footer = document.querySelector(`.footer`);

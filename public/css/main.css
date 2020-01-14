@@ -1,3 +1,27 @@
+@font-face {
+  font-family: "OpenSans";
+  src: local("OpenSans-Regular"),
+    url("../fonts/OpenSans-Regular.woff") format("woff");
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "OpenSans";
+  src: local("OpenSans-Bold"),
+    url("../fonts/OpenSans-Bold.woff") format("woff");
+  font-weight: 700;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "OpenSans";
+  src: local("OpenSans-ExtraBold"),
+    url("../fonts/OpenSans-ExtraBold.woff") format("woff");
+  font-weight: 800;
+  font-style: normal;
+}
+
 :root {
   --text-color: #fff;
   --text-color-active: #ffe800;
