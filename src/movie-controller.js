@@ -67,7 +67,7 @@ export default class MovieController {
     return this._filmDetailComponent;
   }
 
-  set readOnly(value) {
+  set isReadOnly(value) {
     this._isCommentsReadOnly = value;
   }
 
@@ -179,6 +179,7 @@ export default class MovieController {
   _renderFilmDetailComponent() {
     if (this._filmDetailComponent !== null) {
       this._filmDetailComponent.film = this._film;
+      this._filmDetailComponent.isCommentsReadOnly = this._isCommentsReadOnly;
       this._filmDetailComponent.rerender();
     }
   }

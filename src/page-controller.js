@@ -9,11 +9,12 @@ import NoFilms from './components/no-films.js';
 import MovieController from './movie-controller.js';
 import FilterController from './filter-controller.js';
 
-import { FIMLS_COMPONENT_TYPES, ESC_KEY, Filters } from './const.js';
+import {FIMLS_COMPONENT_TYPES, ESC_KEY, Filters} from './const.js';
 import Utils from './utils.js';
 
 export default class PageController {
   constructor(headerContainer, mainContainer, footer, films, api) {
+    this._isReadOnly = false;
     this._films = films;
     this._api = api;
     this._filmsContainerComponent = null;
@@ -76,7 +77,7 @@ export default class PageController {
 
                 filmController.render(updatedFilm);
 
-                this._updateAllControllers(filmController);
+                this._updateAllControllers();
                 this._refreshMoreButton();
               }
             }).catch(() => {
@@ -95,7 +96,7 @@ export default class PageController {
 
                 filmController.render(updatedFilm);
 
-                this._updateAllControllers(filmController);
+                this._updateAllControllers();
                 this._refreshMoreButton();
               }
             }).catch(() => {
@@ -185,9 +186,14 @@ export default class PageController {
   }
 
   setReadOnlyMode(isReadOnly) {
+    this._isReadOnly = isReadOnly;
     this._filmsControllers.forEach((controller) => {
-      controller.readOnly = isReadOnly;
+      controller.isReadOnly = isReadOnly;
     });
+
+    if (this._popupController !== null) {
+      this._popupController.render();
+    }
   }
 
   _getFilmsControlles() {
@@ -240,6 +246,7 @@ export default class PageController {
         isPopupControllerAdded = true;
       } else {
         const controller = new MovieController(container, this._onDataChange, this._onViewChange);
+        controller.isReadOnly = this._isReadOnly;
         controller.render(film);
         filmsControllers.push(controller);
       }
@@ -263,6 +270,7 @@ export default class PageController {
   _renderFilms(container, films, filmsControllers) {
     films.forEach((film) => {
       const filmControler = new MovieController(container, this._onDataChange, this._onViewChange);
+      filmControler.isReadOnly = this._isReadOnly;
       filmControler.render(film);
 
       filmsControllers.push(filmControler);
