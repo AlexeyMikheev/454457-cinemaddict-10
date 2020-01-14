@@ -1,4 +1,4 @@
-import {ProfileRating, Filters, ONE_TASKS_PAGE_COUNT, RenderPosition, MINUTE_IN_HOUR, MIN_DESCRIPTION_LENGTH, MAX_DESCRIPTION_LENGTH, DESCRIPTION_SPACE, MANY_COMMENTS_COUNT, ONE_DAY, SortTypes, DIFFERENCE_DATE_FORMAT, Emoji} from './const.js';
+import {ProfileRating, Filters, ONE_TASKS_PAGE_COUNT, RenderPosition, MINUTE_IN_HOUR, MIN_DESCRIPTION_LENGTH, MAX_DESCRIPTION_LENGTH, DESCRIPTION_SPACE, MANY_COMMENTS_COUNT, SortTypes, Emoji} from './const.js';
 import moment from 'moment';
 import 'moment-duration-format';
 
@@ -45,16 +45,27 @@ export default class Utils {
 
   static getFormatedDiffrenceDate(date, currentDate) {
     const differenceTimestamp = currentDate - date;
-    if (differenceTimestamp < ONE_DAY) {
-      return `Today`;
-    }
+    const differenceTimestampInSeconds = Math.round(differenceTimestamp / 1000);
+    const differenceTimestampInMinutes = Math.round(differenceTimestampInSeconds / 60);
+    const differenceTimestampInHours = Math.round(differenceTimestampInMinutes / 60);
+    const differenceTimestampInDays = Math.round(differenceTimestampInHours / 24);
 
-    const differenceDays = differenceTimestamp % ONE_DAY;
-    if (differenceDays > 3) {
-      return this.formatTimeStamp(date, DIFFERENCE_DATE_FORMAT);
+    if (differenceTimestampInDays > 1) {
+      return `a ${differenceTimestampInDays} days ago`;
+    } else if (differenceTimestampInDays === 1) {
+      return `a day ago`;
+    } else if (differenceTimestampInHours >= 2 && differenceTimestampInHours <= 23 && differenceTimestampInMinutes === 59) {
+      return `a few hours ago`;
+    } else if (differenceTimestampInHours >= 1 && differenceTimestampInHours <= 2 && differenceTimestampInMinutes === 59) {
+      return `a hour ago`;
+    } else if (differenceTimestampInMinutes >= 4 && differenceTimestampInMinutes <= 59) {
+      return ` a few minutes ago`;
+    } else if (differenceTimestampInMinutes >= 1 && differenceTimestampInMinutes <= 3) {
+      return `a minute ago`;
+    } else if (differenceTimestampInSeconds >= 0 && differenceTimestampInSeconds <= 59) {
+      return `now`;
     }
-    return (differenceDays > 1) ? `${differenceDays} days ago` : `${differenceDays} day ago`;
-
+    return ``;
   }
 
   static getFormatedCommentsTitle(comments) {
