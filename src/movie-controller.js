@@ -134,6 +134,14 @@ export default class MovieController {
     }
   }
 
+  setAddCommentWarning() {
+    this._filmDetailComponent.setAddCommentWarning();
+  }
+
+  resetAddCommentWarning() {
+    this._filmDetailComponent.resetAddCommentWarning();
+  }
+
   _closeDetail() {
     if (this._filmDetailComponent !== null) {
       this._filmDetailComponent.removeEvents();

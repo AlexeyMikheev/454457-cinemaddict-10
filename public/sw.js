@@ -12,9 +12,9 @@ self.addEventListener(`install`, (evt) => {
             `/bundle.js`,
             `/css/normalize.css`,
             `/css/main.css`,
-            `/fonts/OpenSans-Regular.eot`,
-            `/fonts/OpenSans-Regular.ttf`,
             `/fonts/OpenSans-Regular.woff`,
+            `/fonts/OpenSans-Bold.woff`,
+            `/fonts/OpenSans-ExtraBold.woff`,
             `/images/background.png`,
             `/images/bitmap.png`,
             `/images/bitmap@2x.png`,
@@ -36,7 +36,7 @@ self.addEventListener(`install`, (evt) => {
             `/images/posters/santa-claus-conquers-the-martians.jpg`,
             `/images/posters/the-dance-of-life.jpg`,
             `/images/posters/the-great-flamarion.jpg`,
-            `/images/posters/the-man-with-the-golden-arm.jpg`
+            `/images/posters/the-man-with-the-golden-arm.jpg`,
           ]);
         })
   );

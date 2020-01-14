@@ -81,9 +81,9 @@ export default class PageController {
               }
             }).catch(() => {
               filmController.shake(() => {
-                filmController.filmDetailComponent.setAddCommentWarning();
+                filmController.setAddCommentWarning();
               }, () => {
-                filmController.render(parentValue);
+                filmController.resetAddCommentWarning();
               });
             });
         } else if (oldValue !== null) {
@@ -108,18 +108,15 @@ export default class PageController {
     };
 
     this._onViewChange = (movieController) => {
+      this._setDefaultView();
+
       if (movieController.detailsModeVisibility) {
-        this._api.getComments(movieController._film.id).then((comments) => {
-          movieController._film.comments = comments;
-          movieController.showFilmDetail();
-          this._initDocumentEvents();
-          this._popupController = movieController;
-        });
+        movieController.showFilmDetail();
+        this._initDocumentEvents();
+        this._popupController = movieController;
       } else {
         this._removeDocumentEvents();
       }
-
-      this._setDefaultView();
     };
 
     this._onMoreButtonClick = () => {

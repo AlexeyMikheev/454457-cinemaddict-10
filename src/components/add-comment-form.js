@@ -101,7 +101,7 @@ export default class AddNewCommentForm extends AbstractComponent {
   }
 
   resetWarning() {
-    this._commentInput.style.border = ``;
+    this._commentInput.style.border = `none`;
   }
 
   initEvents() {

@@ -46,9 +46,17 @@ Utils.render(filmsContainerComponentElement, new NoFilms(NoFilmTypes.LOADING).ge
 provider.getFilms()
   .then((films) => {
     filmsContainerComponent.removeElement();
-
     filmsModel.films = films;
-    pageController.render();
+
+    const commentsPromisses = filmsModel.films.map((film) => {
+      return provider.getComments(film.id).then((comments) => {
+        film.comments = comments;
+      });
+    });
+
+    Promise.all(commentsPromisses).then(() => {
+      pageController.render();
+    });
   });
 
 window.addEventListener(`online`, () => {

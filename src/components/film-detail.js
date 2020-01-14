@@ -211,6 +211,11 @@ export default class FilmDetail extends AbstractSmartComponent {
     this._addCommentComponent.showWarning();
   }
 
+  resetAddCommentWarning() {
+    this._addCommentComponent.enabled = true;
+    this._addCommentComponent.resetWarning();
+  }
+
   setRatingWarning() {
     if (this._ratingComponent !== null) {
       this._ratingComponent.showWarning();
