@@ -17,9 +17,9 @@ const STORE_KEY = `Cinemaddict eo0w590ik29889a`;
 window.addEventListener(`load`, () => {
   navigator.serviceWorker.register(`/sw.js`)
     .then(() => {
-      console.log(`Действие, в случае успешной регистрации ServiceWorker`);
+
     }).catch(() => {
-      console.log(`Действие, в случае ошибки при регистрации ServiceWorker`);
+
     });
 });
 
