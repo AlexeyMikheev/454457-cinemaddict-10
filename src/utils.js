@@ -1,6 +1,7 @@
 import {ProfileRating, Filters, ONE_TASKS_PAGE_COUNT, RenderPosition, MINUTE_IN_HOUR, SECONDS_IN_MINUTE, MIN_DESCRIPTION_LENGTH, MAX_DESCRIPTION_LENGTH, DESCRIPTION_SPACE, MANY_COMMENTS_COUNT, SortTypes, Emoji} from './const.js';
 import moment from 'moment';
 import 'moment-duration-format';
+import numberToWords from 'number-to-words';
 
 export default class Utils {
 
@@ -43,6 +44,10 @@ export default class Utils {
     return formatedProfileRating;
   }
 
+  static numberToWords(valueNumber) {
+    return numberToWords.toWords(valueNumber);
+  }
+
   static getFormatedDiffrenceDate(date, currentDate) {
     const differenceTimestamp = currentDate - date;
 
@@ -51,22 +56,25 @@ export default class Utils {
     const minutesCount = this.getMinutes(differenceTimestamp);
     const secondCount = this.getSeconds(differenceTimestamp);
 
+    let formatedDate = ``;
+
     if (daysCount > 1) {
-      return `a ${daysCount} days ago`;
+      const daysCountText = this.numberToWords(daysCount);
+      formatedDate = `a ${daysCountText.toLowerCase()} days ago`;
     } else if (daysCount === 1) {
-      return `a day ago`;
+      formatedDate = `a day ago`;
     } else if (hoursCount >= 2 && hoursCount <= 23 && minutesCount >= 0 && minutesCount <= 59) {
-      return `a few hours ago`;
+      formatedDate = `a few hours ago`;
     } else if (hoursCount === 1 && minutesCount >= 0 && minutesCount <= 59) {
-      return `a hour ago`;
+      formatedDate = `a hour ago`;
     } else if (minutesCount >= 4 && minutesCount <= 59) {
-      return ` a few minutes ago`;
+      formatedDate = ` a few minutes ago`;
     } else if (minutesCount >= 1 && minutesCount <= 3) {
-      return `a minute ago`;
+      formatedDate = `a minute ago`;
     } else if (secondCount >= 0 && secondCount <= 59) {
-      return `now`;
+      formatedDate = `now`;
     }
-    return ``;
+    return formatedDate;
   }
 
   static getFormatedCommentsTitle(comments) {
