@@ -5,7 +5,7 @@ import he from 'he';
 
 const MAX_TEXT_LENGTH = 140;
 
-const getCommentTemplate = (comment) => {
+const getCommentTemplate = (comment, isReadOnly) => {
   const {id, emotion, author, commentDate} = comment;
   const formatedDifferenceDate = Utils.getFormatedDiffrenceDate(commentDate, new Date().valueOf());
   const emoji = Utils.getEmoji(emotion);
@@ -19,6 +19,8 @@ const getCommentTemplate = (comment) => {
 
   const displayText = he.encode(commentText);
 
+  const deteleTemplate = !isReadOnly ? `<button class="film-details__comment-delete" data-id="${id}">Delete</button>` : ``;
+
   return `<li class="film-details__comment">
                 <span class="film-details__comment-emoji">
                   ${ emojiImg !== null ? `<img src="./images/emoji/${emojiImg}.png" width="55" height="55" alt="emoji">` : ``}
@@ -28,7 +30,7 @@ const getCommentTemplate = (comment) => {
                   <p class="film-details__comment-info">
                     <span class="film-details__comment-author">${author}</span>
                     <span class="film-details__comment-day">${formatedDifferenceDate}</span>
-                    <button class="film-details__comment-delete" data-id="${id}">Delete</button>
+                    ${deteleTemplate}
                   </p>
                 </div>
             </li>`;
@@ -36,9 +38,10 @@ const getCommentTemplate = (comment) => {
 
 export default class Comment extends AbstractComponent {
 
-  constructor(comment) {
+  constructor(comment, isReadObly) {
     super();
     this._comment = comment;
+    this._isReadOnly = isReadObly;
     this._deletebutton = null;
   }
 
@@ -49,7 +52,7 @@ export default class Comment extends AbstractComponent {
   }
 
   getTemplate() {
-    return getCommentTemplate(this._comment);
+    return getCommentTemplate(this._comment, this._isReadOnly);
   }
 
   addDeleteButtonClick(cb) {

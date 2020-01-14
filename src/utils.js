@@ -1,4 +1,4 @@
-import {ProfileRating, Filters, ONE_TASKS_PAGE_COUNT, RenderPosition, MINUTE_IN_HOUR, MIN_DESCRIPTION_LENGTH, MAX_DESCRIPTION_LENGTH, DESCRIPTION_SPACE, MANY_COMMENTS_COUNT, SortTypes, Emoji} from './const.js';
+import {ProfileRating, Filters, ONE_TASKS_PAGE_COUNT, RenderPosition, MINUTE_IN_HOUR, SECONDS_IN_MINUTE, MIN_DESCRIPTION_LENGTH, MAX_DESCRIPTION_LENGTH, DESCRIPTION_SPACE, MANY_COMMENTS_COUNT, SortTypes, Emoji} from './const.js';
 import moment from 'moment';
 import 'moment-duration-format';
 
@@ -45,24 +45,25 @@ export default class Utils {
 
   static getFormatedDiffrenceDate(date, currentDate) {
     const differenceTimestamp = currentDate - date;
-    const differenceTimestampInSeconds = Math.round(differenceTimestamp / 1000);
-    const differenceTimestampInMinutes = Math.round(differenceTimestampInSeconds / 60);
-    const differenceTimestampInHours = Math.round(differenceTimestampInMinutes / 60);
-    const differenceTimestampInDays = Math.round(differenceTimestampInHours / 24);
 
-    if (differenceTimestampInDays > 1) {
-      return `a ${differenceTimestampInDays} days ago`;
-    } else if (differenceTimestampInDays === 1) {
+    const daysCount = this.getDays(differenceTimestamp);
+    const hoursCount = this.getHours(differenceTimestamp);
+    const minutesCount = this.getMinutes(differenceTimestamp);
+    const secondCount = this.getSeconds(differenceTimestamp);
+
+    if (daysCount > 1) {
+      return `a ${daysCount} days ago`;
+    } else if (daysCount === 1) {
       return `a day ago`;
-    } else if (differenceTimestampInHours >= 2 && differenceTimestampInHours <= 23 && differenceTimestampInMinutes === 59) {
+    } else if (hoursCount >= 2 && hoursCount <= 23 && minutesCount >= 0 && minutesCount <= 59) {
       return `a few hours ago`;
-    } else if (differenceTimestampInHours >= 1 && differenceTimestampInHours <= 2 && differenceTimestampInMinutes === 59) {
+    } else if (hoursCount === 1 && minutesCount >= 0 && minutesCount <= 59) {
       return `a hour ago`;
-    } else if (differenceTimestampInMinutes >= 4 && differenceTimestampInMinutes <= 59) {
+    } else if (minutesCount >= 4 && minutesCount <= 59) {
       return ` a few minutes ago`;
-    } else if (differenceTimestampInMinutes >= 1 && differenceTimestampInMinutes <= 3) {
+    } else if (minutesCount >= 1 && minutesCount <= 3) {
       return `a minute ago`;
-    } else if (differenceTimestampInSeconds >= 0 && differenceTimestampInSeconds <= 59) {
+    } else if (secondCount >= 0 && secondCount <= 59) {
       return `now`;
     }
     return ``;
@@ -165,6 +166,10 @@ export default class Utils {
     return moment.duration(date, `milliseconds`).format(format);
   }
 
+  static getDays(timestamp) {
+    return moment.duration(timestamp, `milliseconds`).days();
+  }
+
   static getHours(timestamp) {
     return moment.duration(timestamp, `milliseconds`).hours();
   }
@@ -176,6 +181,15 @@ export default class Utils {
       return minutes - (hours * MINUTE_IN_HOUR);
     }
     return minutes;
+  }
+
+  static getSeconds(timestamp) {
+    const seconds = moment.duration(timestamp, `milliseconds`).seconds();
+    if (seconds > SECONDS_IN_MINUTE) {
+      const minutes = this.getMinutes(timestamp);
+      return seconds - (minutes * SECONDS_IN_MINUTE);
+    }
+    return seconds;
   }
 
   static isDateInRange(date, startDate, entDate) {

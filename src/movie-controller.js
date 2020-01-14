@@ -11,6 +11,7 @@ export default class MovieController {
     this._filmComponent = null;
     this._api = api;
     this._onDataChange = onDataChange;
+    this._isCommentsReadOnly = false;
 
     this._onDataChangeCb = (oldValue, newValue, parentValue = null) => {
       this._onDataChange(this, oldValue, newValue, parentValue);
@@ -66,6 +67,10 @@ export default class MovieController {
     return this._filmDetailComponent;
   }
 
+  set readOnly(value) {
+    this._isCommentsReadOnly = value;
+  }
+
   render(film = null) {
     if (film !== null) {
       this._film = film;
@@ -89,7 +94,7 @@ export default class MovieController {
   }
 
   showFilmDetail() {
-    this._filmDetailComponent = new FilmDetail(this._film, document.body, this._onDataChangeCb);
+    this._filmDetailComponent = new FilmDetail(this._film, document.body, this._onDataChangeCb, this._isCommentsReadOnly);
     Utils.render(this._filmDetailComponent.container, this._filmDetailComponent.getElement());
 
     this._filmDetailComponent.initComponents();

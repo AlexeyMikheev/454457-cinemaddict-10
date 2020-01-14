@@ -129,7 +129,7 @@ const getFilmDetailTemplate = (filmCard) => {
 };
 
 export default class FilmDetail extends AbstractSmartComponent {
-  constructor(film, container, onDataChange) {
+  constructor(film, container, onDataChange, isCommentsReadOnly) {
     super();
     this._container = container;
     this._film = film;
@@ -143,6 +143,7 @@ export default class FilmDetail extends AbstractSmartComponent {
     this._addCommentComponent = null;
     this._onDataChange = onDataChange;
     this._commentWrapper = null;
+    this._isCommentsReadOnly = isCommentsReadOnly;
 
     this._onDetailCheckedChange = (evt) => {
       const target = evt.target;
@@ -176,6 +177,10 @@ export default class FilmDetail extends AbstractSmartComponent {
     this._film = value;
   }
 
+  set isCommentsReadOnly(value) {
+    this._isCommentsReadOnly = value;
+  }
+
   getTemplate() {
     return getFilmDetailTemplate(this._film);
   }
@@ -201,7 +206,9 @@ export default class FilmDetail extends AbstractSmartComponent {
     this.removeComponents();
 
     this._initComments();
-    this._initAddCommentForm();
+    if (!this._isCommentsReadOnly) {
+      this._initAddCommentForm();
+    }
     this._initDetails();
     this._initRating();
     this._updateRating();
@@ -343,7 +350,7 @@ export default class FilmDetail extends AbstractSmartComponent {
     const {comments} = this._film;
 
     if (comments !== null && comments.length > 0) {
-      this._commentsComponent = new Comments(comments, this._onCommentsChanged);
+      this._commentsComponent = new Comments(comments, this._onCommentsChanged, this._isCommentsReadOnly);
 
       const commentWrapper = this._getCommentWrapper();
       if (commentWrapper !== null) {

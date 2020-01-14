@@ -62,6 +62,8 @@ provider.getFilms()
 window.addEventListener(`online`, () => {
   document.title = windowTitle;
 
+  pageController.setReadOnlyMode(false);
+
   if (!provider.isSynchronized) {
     provider.sync().then((updatedFilms) => {
       updatedFilms.forEach((updatedFilm) => {
@@ -75,5 +77,7 @@ window.addEventListener(`online`, () => {
 
 window.addEventListener(`offline`, () => {
   document.title = `${windowTitle} [offline]`;
+
+  pageController.setReadOnlyMode(true);
 });
 

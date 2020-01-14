@@ -9,7 +9,7 @@ import NoFilms from './components/no-films.js';
 import MovieController from './movie-controller.js';
 import FilterController from './filter-controller.js';
 
-import {FIMLS_COMPONENT_TYPES, ESC_KEY, Filters} from './const.js';
+import { FIMLS_COMPONENT_TYPES, ESC_KEY, Filters } from './const.js';
 import Utils from './utils.js';
 
 export default class PageController {
@@ -109,7 +109,6 @@ export default class PageController {
 
     this._onViewChange = (movieController) => {
       this._setDefaultView();
-
       if (movieController.detailsModeVisibility) {
         movieController.showFilmDetail();
         this._initDocumentEvents();
@@ -183,6 +182,12 @@ export default class PageController {
 
   refresh() {
     this._updateAllControllers();
+  }
+
+  setReadOnlyMode(isReadOnly) {
+    this._filmsControllers.forEach((controller) => {
+      controller.readOnly = isReadOnly;
+    });
   }
 
   _getFilmsControlles() {

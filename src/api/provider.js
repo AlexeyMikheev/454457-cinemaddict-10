@@ -13,6 +13,10 @@ export default class Provider {
     return this._isSynchronized;
   }
 
+  get isOnline() {
+    return this._isOnline;
+  }
+
   getFilms() {
     if (this._isOnline()) {
       return this._api.getFilms().then((films) => {

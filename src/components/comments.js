@@ -13,12 +13,13 @@ const getCommentsTemplate = () => {
 
 export default class Comments extends AbstractComponent {
 
-  constructor(comments, onCommentsChanged) {
+  constructor(comments, onCommentsChanged, isReadOnly) {
     super();
     this._comments = comments;
     this._onCommentsChanged = onCommentsChanged;
     this._deletingCommentComponent = null;
     this._enabled = true;
+    this._isReadOnly = isReadOnly;
     this._onDeleteCb = (evt, commentComponent) => {
       evt.preventDefault();
       if (!this._enabled) {
@@ -67,19 +68,23 @@ export default class Comments extends AbstractComponent {
 
   initComments() {
     this._commentsComponents = this._comments.map((c) => {
-      return new Comment(c);
+      return new Comment(c, this._isReadOnly);
     });
 
     this._commentsComponents.forEach((comment) => {
       this._element.appendChild(comment.getElement());
-      comment.addDeleteButtonClick(this._onDeleteCb);
+      if (!this._isReadOnly) {
+        comment.addDeleteButtonClick(this._onDeleteCb);
+      }
     });
   }
 
   removeComments() {
     if (this._commentsComponents !== null) {
       this._commentsComponents.forEach((comment) => {
-        comment.removeEvents();
+        if (!this._isReadOnly) {
+          comment.removeEvents();
+        }
         comment.removeElement();
       });
       this._commentsComponents = null;

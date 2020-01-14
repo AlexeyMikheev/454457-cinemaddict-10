@@ -44,14 +44,13 @@ export const FIMLS_COMPONENT_TYPES = {
 };
 
 export const MINUTE_IN_HOUR = 60;
+export const SECONDS_IN_MINUTE = 60;
 
 export const MIN_DESCRIPTION_LENGTH = 0;
 export const MAX_DESCRIPTION_LENGTH = 140;
 export const DESCRIPTION_SPACE = 1;
 
 export const MANY_COMMENTS_COUNT = 1;
-
-export const ONE_DAY = 86400000;
 
 export const SortTypes = {
   DEFAULT: 0,
