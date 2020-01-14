@@ -14,7 +14,7 @@ import Utils from './utils.js';
 
 export default class PageController {
   constructor(headerContainer, mainContainer, footer, films, api) {
-    this._isReadOnly = false;
+    this._isReadOnly = !api.isOnline;
     this._films = films;
     this._api = api;
     this._filmsContainerComponent = null;

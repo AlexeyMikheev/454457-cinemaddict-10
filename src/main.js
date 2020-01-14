@@ -14,14 +14,14 @@ const AUTHORIZATION = `Basic eo0w590ik29889a`;
 const END_POINT = `https://htmlacademy-es-10.appspot.com/cinemaddict`;
 const STORE_KEY = `Cinemaddict eo0w590ik29889a`;
 
-// window.addEventListener(`load`, () => {
-//   navigator.serviceWorker.register(`/sw.js`)
-//     .then(() => {
+window.addEventListener(`load`, () => {
+  navigator.serviceWorker.register(`/sw.js`)
+    .then(() => {
 
-//     }).catch(() => {
+    }).catch(() => {
 
-//     });
-// });
+    });
+});
 
 
 const headerContainer = document.querySelector(`.header`);
@@ -62,7 +62,7 @@ provider.getFilms()
 window.addEventListener(`online`, () => {
   document.title = windowTitle;
 
-  pageController.setReadOnlyMode(false);
+  pageController.setReadOnlyMode(!provider.isOnline);
 
   if (!provider.isSynchronized) {
     provider.sync().then((updatedFilms) => {
@@ -78,6 +78,6 @@ window.addEventListener(`online`, () => {
 window.addEventListener(`offline`, () => {
   document.title = `${windowTitle} [offline]`;
 
-  pageController.setReadOnlyMode(true);
+  pageController.setReadOnlyMode(provider.isOnline);
 });
 
