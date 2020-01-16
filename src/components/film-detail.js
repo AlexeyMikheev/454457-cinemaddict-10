@@ -134,7 +134,6 @@ export default class FilmDetail extends AbstractSmartComponent {
     this._container = container;
     this._film = film;
     this._onCloseButtonClickCb = null;
-    this._onUndoButtonClickCb = null;
     this._closeBtn = null;
     this._detailsContainer = null;
     this._ratingContainer = null;

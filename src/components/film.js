@@ -73,6 +73,9 @@ export default class FilmComponent extends AbstractComponent {
 
   removeEvents() {
     this._detailsContainer.removeEventListener(`click`, this._onDetailButtonClick);
+    this._onDetailButtonClick = null;
+    this._element.removeEventListener(`click`, this._onFilmCardClickCb);
+    this._onDetailButtonClick = null;
   }
 
   _onDetailChange(cb, evt) {

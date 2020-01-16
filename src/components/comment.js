@@ -43,6 +43,7 @@ export default class Comment extends AbstractComponent {
     this._comment = comment;
     this._isReadOnly = isReadObly;
     this._deletebutton = null;
+    this._onDeleteButtonClickCb = null;
   }
 
   set deleteButtonText(value) {
@@ -68,6 +69,7 @@ export default class Comment extends AbstractComponent {
     if (this._deletebutton !== null) {
       this._deletebutton.removeEventListener(`click`, this._onDeleteButtonClickCb);
       this._deletebutton = null;
+      this._onDeleteButtonClickCb = null;
     }
   }
 }
