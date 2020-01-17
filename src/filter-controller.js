@@ -7,7 +7,9 @@ export default class FilterController {
     this._films = films;
     this._container = container;
     this._filterComponent = null;
-    this._filters = Utils.getFilters();
+    this._filters = Utils.getFilters().map((filter) => {
+      return Object.assign({}, filter, {count: 0});
+    });
     this._onClickCb = null;
   }
 

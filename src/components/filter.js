@@ -6,14 +6,11 @@ const getFilterTemplate = (selectedFilter, filter) => {
   const {title, anchor, count} = filter;
 
   const activeClass = selectedFilter === filter.title ? `main-navigation__item--active` : ``;
-  let additionClass = ``;
 
   const isStat = filter.title === Filters.STATS.title;
   const isAll = filter.title === Filters.ALL.title;
 
-  if (isStat) {
-    additionClass = `main-navigation__item--additional`;
-  }
+  const additionClass = isStat ? `main-navigation__item--additional` : ``;
 
   if (isStat || isAll) {
     return `<a href="#${anchor}" data-filter="${title}" class="main-navigation__item ${activeClass} ${additionClass}">${title}</a>`;
@@ -37,7 +34,7 @@ export default class Filter extends AbstractComponent {
   }
 
   removeExist() {
-    let filtersContainer = document.querySelector(`.main-navigation`);
+    const filtersContainer = document.querySelector(`.main-navigation`);
     if (filtersContainer !== null) {
       filtersContainer.remove();
     }

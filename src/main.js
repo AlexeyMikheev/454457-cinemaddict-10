@@ -10,19 +10,18 @@ import NoFilms from './components/no-films.js';
 import Utils from './utils.js';
 import {NoFilmTypes} from './const.js';
 
-const AUTHORIZATION = `Basic eo0w590ik29889a`;
+const AUTHORIZATION = `Basic ${ new Date().valueOf() }`;
 const END_POINT = `https://htmlacademy-es-10.appspot.com/cinemaddict`;
 const STORE_KEY = `Cinemaddict eo0w590ik29889a`;
 
-window.addEventListener(`load`, () => {
-  navigator.serviceWorker.register(`/sw.js`)
-    .then(() => {
+// window.addEventListener(`load`, () => {
+//   navigator.serviceWorker.register(`/sw.js`)
+//     .then(() => {
 
-    }).catch(() => {
+//     }).catch(() => {
 
-    });
-});
-
+//     });
+// });
 
 const headerContainer = document.querySelector(`.header`);
 const mainContainer = document.querySelector(`.main`);

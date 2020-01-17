@@ -1,12 +1,12 @@
 
-import {MIN_RATING_VALUE, MAX_RATING_VALUE, RATING_RANGE} from '../const';
+import {RatingValue, RATING_RANGE} from '../const';
 import AbstractComponent from './abstract-component.js';
 import Film from '../models/film';
 
 const getRatingValuesTemplate = (selectedValue) => {
   let template = ``;
 
-  for (let rating = MIN_RATING_VALUE; rating <= MAX_RATING_VALUE; rating += RATING_RANGE) {
+  for (let rating = RatingValue.MIN; rating <= RatingValue.MAX; rating += RATING_RANGE) {
     const isChecked = rating === selectedValue ? `checked` : ``;
     template += `<input type="radio" name="score" class="film-details__user-rating-input visually-hidden" value="${rating}" id="rating-${rating}" ${isChecked}>
     <label id="label-rating-${rating}" class="film-details__user-rating-label" for="rating-${rating}">${rating}</label>`;

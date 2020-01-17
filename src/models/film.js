@@ -121,12 +121,6 @@ export default class Film {
     };
   }
 
-  // static toRawComments(data) {
-  //   return data.comments !== null ? data.comments.map((comment) => {
-  //     return comment.id ? comment.id : comment;
-  //   }) : [];
-  // }
-
   static clone(data) {
     return new Film(data.toRAW());
   }

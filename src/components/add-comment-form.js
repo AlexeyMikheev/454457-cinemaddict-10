@@ -22,9 +22,9 @@ const getAddNewCommentTemplate = () => {
           <img src="./images/emoji/${Emoji.SLEEPING.img}.png" width="30" height="30" alt="emoji">
         </label>
 
-        <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-gpuke" value="${Emoji.GRINNING.value}">
+        <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-gpuke" value="${Emoji.PUKE.value}">
         <label class="film-details__emoji-label" for="emoji-gpuke">
-          <img src="./images/emoji/${Emoji.GRINNING.img}.png" width="30" height="30" alt="emoji">
+          <img src="./images/emoji/${Emoji.PUKE.img}.png" width="30" height="30" alt="emoji">
         </label>
 
         <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-angry" value="${Emoji.ANGRY.value}">

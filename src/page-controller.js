@@ -9,7 +9,7 @@ import NoFilms from './components/no-films.js';
 import MovieController from './movie-controller.js';
 import FilterController from './filter-controller.js';
 
-import {FIMLS_COMPONENT_TYPES, ESC_KEY, Filters} from './const.js';
+import {FilmComponentType, ESC_KEY, Filters} from './const.js';
 import Utils from './utils.js';
 
 export default class PageController {
@@ -47,63 +47,12 @@ export default class PageController {
 
     this._onDataChange = (filmController, oldValue, newValue, parentValue = null) => {
       if (parentValue === null) {
-        this._api.updateFilm(oldValue.id, newValue)
-          .then((filmModel) => {
-            const isSuccess = this._films.updateFilm(oldValue.id, filmModel);
-            if (isSuccess) {
-
-              const updatedFilm = this._films.getFilmById(oldValue.id);
-              filmController.render(updatedFilm);
-
-              this._initFilters();
-              this._initProfile();
-              this._updateAllControllers();
-              this._refreshMoreButton();
-            }
-          }).catch(() => {
-            filmController.shake(() => {
-              filmController.filmDetailComponent.setRatingWarning();
-            }, () => {
-              filmController.render(oldValue);
-            });
-          });
+        this._updateFilm(filmController, oldValue, newValue);
       } else {
         if (newValue !== null) {
-          this._api.createComment(newValue, parentValue.id)
-            .then((commentsModel) => {
-              const isSuccess = this._films.setComments(commentsModel, parentValue.id);
-              if (isSuccess) {
-                const updatedFilm = this._films.getFilmById(parentValue.id);
-
-                filmController.render(updatedFilm);
-
-                this._updateAllControllers();
-                this._refreshMoreButton();
-              }
-            }).catch(() => {
-              filmController.shake(() => {
-                filmController.setAddCommentWarning();
-              }, () => {
-                filmController.resetAddCommentWarning();
-              });
-            });
+          this._createComment(filmController, newValue, parentValue);
         } else if (oldValue !== null) {
-          this._api.deleteComment(oldValue.id)
-            .then(() => {
-              const isSuccess = this._films.removeComment(oldValue.id, parentValue.id);
-              if (isSuccess) {
-                const updatedFilm = this._films.getFilmById(parentValue.id);
-
-                filmController.render(updatedFilm);
-
-                this._updateAllControllers();
-                this._refreshMoreButton();
-              }
-            }).catch(() => {
-              filmController.shake(null, () => {
-                filmController.render(parentValue);
-              });
-            });
+          this._deleteComment(filmController, oldValue, parentValue);
         }
       }
     };
@@ -194,6 +143,69 @@ export default class PageController {
     if (this._popupController !== null) {
       this._popupController.render();
     }
+  }
+
+  _updateFilm(filmController, oldValue, newValue) {
+    this._api.updateFilm(oldValue.id, newValue)
+      .then((filmModel) => {
+        const isSuccess = this._films.updateFilm(oldValue.id, filmModel);
+        if (isSuccess) {
+
+          const updatedFilm = this._films.getFilmById(oldValue.id);
+          filmController.render(updatedFilm);
+
+          this._initFilters();
+          this._initProfile();
+          this._updateAllControllers();
+          this._refreshMoreButton();
+        }
+      }).catch(() => {
+        filmController.shake(() => {
+          filmController.filmDetailComponent.setRatingWarning();
+        }, () => {
+          filmController.render(oldValue);
+        });
+      });
+  }
+
+  _createComment(filmController, newComment, film) {
+    this._api.createComment(newComment, film.id)
+      .then((commentsModel) => {
+        const isSuccess = this._films.setComments(commentsModel, film.id);
+        if (isSuccess) {
+          const updatedFilm = this._films.getFilmById(film.id);
+
+          filmController.render(updatedFilm);
+
+          this._updateAllControllers();
+          this._refreshMoreButton();
+        }
+      }).catch(() => {
+        filmController.shake(() => {
+          filmController.setAddCommentWarning();
+        }, () => {
+          filmController.resetAddCommentWarning();
+        });
+      });
+  }
+
+  _deleteComment(filmController, comment, film) {
+    this._api.deleteComment(comment.id)
+      .then(() => {
+        const isSuccess = this._films.removeComment(comment.id, film.id);
+        if (isSuccess) {
+          const updatedFilm = this._films.getFilmById(film.id);
+
+          filmController.render(updatedFilm);
+
+          this._updateAllControllers();
+          this._refreshMoreButton();
+        }
+      }).catch(() => {
+        filmController.shake(null, () => {
+          filmController.render(film);
+        });
+      });
   }
 
   _getFilmsControlles() {
@@ -334,16 +346,16 @@ export default class PageController {
 
     const currentPageFimls = this._films.getPreparedFilms();
 
-    this._filmsComponent = new Films(FIMLS_COMPONENT_TYPES.FIMLS);
+    this._filmsComponent = new Films(FilmComponentType.LIST);
     this._filmsComponentElement = this._filmsComponent.getElement();
     Utils.render(filmsContainerComponentElement, this._filmsComponentElement);
     this._renderListFilms(this._filmsComponentElement, currentPageFimls);
 
-    this._topRatedFilmsComponentElement = new Films(FIMLS_COMPONENT_TYPES.TOP_RATED).getElement();
+    this._topRatedFilmsComponentElement = new Films(FilmComponentType.TOP_RATED).getElement();
     Utils.render(filmsContainerComponentElement, this._topRatedFilmsComponentElement);
     this._renderTopRatedFilms(this._topRatedFilmsComponentElement, this._films.topRatedFilms);
 
-    this._mostCommentFilmsComponentElement = new Films(FIMLS_COMPONENT_TYPES.MOST_COMMENTS).getElement();
+    this._mostCommentFilmsComponentElement = new Films(FilmComponentType.MOST_COMMENTS).getElement();
     Utils.render(filmsContainerComponentElement, this._mostCommentFilmsComponentElement);
     this._renderMostCommentFilms(this._mostCommentFilmsComponentElement, this._films.mostCommentFilms);
 

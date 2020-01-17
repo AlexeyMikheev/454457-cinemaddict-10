@@ -1,9 +1,9 @@
 export const Filters = {
-  ALL: {title: `All movies`, anchor: `all`, count: 0},
-  WATCHLIST: {title: `Watchlist`, anchor: `watchlist`, count: 0},
-  HISTORY: {title: `History`, anchor: `history`, count: 0},
-  FAVORITES: {title: `Favorites`, anchor: `favorites`, count: 0},
-  STATS: {title: `Stats`, anchor: `stats`, count: 0},
+  ALL: {title: `All movies`, anchor: `all`},
+  WATCHLIST: {title: `Watchlist`, anchor: `watchlist`},
+  HISTORY: {title: `History`, anchor: `history`},
+  FAVORITES: {title: `Favorites`, anchor: `favorites`},
+  STATS: {title: `Stats`, anchor: `stats`},
 };
 
 export const Period = {
@@ -17,7 +17,7 @@ export const Period = {
 export const Emoji = {
   SMILE: {value: `smile`, img: `smile`},
   SLEEPING: {value: `sleeping`, img: `sleeping`},
-  GRINNING: {value: `grinning`, img: `puke`},
+  PUKE: {value: `puke`, img: `puke`},
   ANGRY: {value: `angry`, img: `angry`}
 };
 
@@ -37,8 +37,8 @@ export const RenderPosition = {
   BEFOREEND: `beforeend`
 };
 
-export const FIMLS_COMPONENT_TYPES = {
-  FIMLS: 1,
+export const FilmComponentType = {
+  LIST: 1,
   TOP_RATED: 2,
   MOST_COMMENTS: 3
 };
@@ -46,8 +46,10 @@ export const FIMLS_COMPONENT_TYPES = {
 export const MINUTE_IN_HOUR = 60;
 export const SECONDS_IN_MINUTE = 60;
 
-export const MIN_DESCRIPTION_LENGTH = 0;
-export const MAX_DESCRIPTION_LENGTH = 140;
+export const DescriptionLength = {
+  MIN: 0,
+  MAX: 140
+};
 export const DESCRIPTION_SPACE = 1;
 
 export const MANY_COMMENTS_COUNT = 1;
@@ -64,6 +66,10 @@ export const FilmDetailType = {
   FAVORITE: `favorite`,
 };
 
+export const RatingValue = {
+  MIN: 1,
+  MAX: 9
+};
 export const MIN_RATING_VALUE = 1;
 export const MAX_RATING_VALUE = 9;
 export const RATING_RANGE = 1;

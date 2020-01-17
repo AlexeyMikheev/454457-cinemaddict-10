@@ -1,4 +1,4 @@
-import {ProfileRating, Filters, ONE_TASKS_PAGE_COUNT, RenderPosition, MINUTE_IN_HOUR, SECONDS_IN_MINUTE, MIN_DESCRIPTION_LENGTH, MAX_DESCRIPTION_LENGTH, DESCRIPTION_SPACE, MANY_COMMENTS_COUNT, SortTypes, Emoji} from './const.js';
+import {ProfileRating, Filters, ONE_TASKS_PAGE_COUNT, RenderPosition, MINUTE_IN_HOUR, SECONDS_IN_MINUTE, DescriptionLength, DESCRIPTION_SPACE, MANY_COMMENTS_COUNT, SortTypes, Emoji} from './const.js';
 import moment from 'moment';
 import 'moment-duration-format';
 import numberToWords from 'number-to-words';
@@ -27,7 +27,7 @@ export default class Utils {
   }
 
   static getEllipsisDescription(description) {
-    return (description.length > MAX_DESCRIPTION_LENGTH) ? `${description.substring(MIN_DESCRIPTION_LENGTH, (MAX_DESCRIPTION_LENGTH - DESCRIPTION_SPACE))}...` : description;
+    return (description.length > DescriptionLength.MAX) ? `${description.substring(DescriptionLength.MIN, (DescriptionLength.MAX - DESCRIPTION_SPACE))}...` : description;
   }
 
   static getFormatedRating(totalWatchedFilms) {
@@ -237,8 +237,8 @@ export default class Utils {
         return Emoji.SMILE;
       case Emoji.SLEEPING.value:
         return Emoji.SLEEPING;
-      case Emoji.GRINNING.value:
-        return Emoji.GRINNING;
+      case Emoji.PUKE.value:
+        return Emoji.PUKE;
       case Emoji.ANGRY.value:
         return Emoji.ANGRY;
       default: return null;

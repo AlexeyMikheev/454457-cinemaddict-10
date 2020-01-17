@@ -1,4 +1,4 @@
-import {FIMLS_COMPONENT_TYPES} from '../const.js';
+import {FilmComponentType} from '../const.js';
 import AbstractComponent from './abstract-component.js';
 
 const createFilmsListTemplate = () =>
@@ -27,11 +27,11 @@ export default class Films extends AbstractComponent {
 
   getTemplate() {
     switch (this._componentType) {
-      case FIMLS_COMPONENT_TYPES.FIMLS:
+      case FilmComponentType.LIST:
         return createFilmsListTemplate();
-      case FIMLS_COMPONENT_TYPES.TOP_RATED:
+      case FilmComponentType.TOP_RATED:
         return createFilmsTopRatedTemplate();
-      case FIMLS_COMPONENT_TYPES.MOST_COMMENTS:
+      case FilmComponentType.MOST_COMMENTS:
         return createFilmsMostCommentedTemplate();
       default: return ``;
     }
