@@ -70,8 +70,6 @@ export const RatingValue = {
   MIN: 1,
   MAX: 9
 };
-export const MIN_RATING_VALUE = 1;
-export const MAX_RATING_VALUE = 9;
 export const RATING_RANGE = 1;
 
 export const RELEASE_DATE_FORMAT = `DD MMMM YYYY`;
